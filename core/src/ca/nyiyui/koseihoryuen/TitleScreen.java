@@ -26,7 +26,7 @@ public class TitleScreen extends ScreenAdapter2 {
         param.color = new Color(0x666666ff);
         param.borderColor = new Color(0xbec8d1ff);
         optionFont =game.font.generateFont(param);
-        backdrop = new Texture(Gdx.files.internal("title.jpg"));
+        backdrop = new Texture(Gdx.files.internal("title.png"));
     }
 
     @Override
