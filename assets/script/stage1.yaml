@@ -1,0 +1,17 @@
+heads:
+  inst:
+    - sprite: images/player-sprite-large.png
+    - dialogue:
+        - Aren't bees super cool?
+        - I agree. In fact, we should learn more bees.
+        - To do so, fly around the beehive and talk to the different bees frolicking around.
+        - You can move using the WASD keys.
+        - Interact with other bees using the ENTER key.
+        - Each bee will tell you something very poggers about BEES!
+        - Have fun out there. ;)
+
+
+  npc1:
+    - emotion: dead
+      text: >
+        im dead yey
