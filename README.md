@@ -1,4 +1,4 @@
-# Survibee! ~南方 虹西方龍園~
+# Survibee! \~南方 虹西方龍園\~
 
 
 High school ICS course final project: Survibee! ~Nampou Kōseihōryūən~
