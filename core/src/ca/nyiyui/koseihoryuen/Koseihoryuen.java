@@ -24,7 +24,7 @@ public class Koseihoryuen extends Game {
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
         font = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoMono/RobotoMono-VariableFont_wght.ttf"));
-        setScreen(new TitleScreen(this));
+        setScreen(new SplashScreen(this));
     }
 //
 //    @Override
