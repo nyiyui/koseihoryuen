@@ -12,6 +12,8 @@ heads:
 
 
   npc1:
-    - emotion: dead
-      text: >
-        im dead yey
+    - emotion: ecstatic
+    - dialogue:
+        - Kikikikiki!
+        - I must say, we Bees contribute so much to the environment!
+        - Did you know that bees pollinate
