@@ -15,7 +15,6 @@ public class SplashScreen extends ScreenAdapter2 {
     private Texture logo;
     BitmapFont presentsFont;
     private long elapsed = 0;
-    private boolean switched = false;
 
     public SplashScreen(Koseihoryuen game) {
         super(game);
@@ -45,7 +44,6 @@ public class SplashScreen extends ScreenAdapter2 {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         game.batch.begin();
-        if (switched) throw new RuntimeException("I should be dead");
         if (elapsed < 2000) {
             Sprite logoSprite = new Sprite(logoVi);
             if (elapsed > 1000) {
@@ -74,7 +72,6 @@ public class SplashScreen extends ScreenAdapter2 {
             s.draw(game.batch);
         } else if (elapsed >= 7000) {
             game.setScreen(new TitleScreen(game));
-            switched = true;
         }
         game.batch.end();
     }
