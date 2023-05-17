@@ -79,5 +79,8 @@ public class SplashScreen extends ScreenAdapter2 {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
+        logo.dispose();
+        logoVi.dispose();
+        presentsFont.dispose();
     }
 }

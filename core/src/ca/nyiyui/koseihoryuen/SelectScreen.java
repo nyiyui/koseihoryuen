@@ -67,4 +67,10 @@ public abstract class SelectScreen extends ScreenAdapter2 {
     public void hide() {
         Gdx.input.setInputProcessor(null);
     }
+
+    @Override
+    public void dispose() {
+        optionFont.dispose();
+        optionSelFont.dispose();
+    }
 }

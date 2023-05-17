@@ -42,4 +42,9 @@ public class TitleScreen extends SelectScreen {
         super.render(delta);
         game.batch.end();
     }
+
+    @Override
+    public void dispose() {
+        backdrop.dispose();
+    }
 }
