@@ -77,8 +77,6 @@ public class LevelsScreen extends SelectScreen {
             // TODO: star
             renderText(optionSel == i ? optionSelFont : optionFont, options[i], getX(i), getY(i));
         }
-        Telop t = new Telop();
-//        t.draw(game.batch,1);
         game.batch.end();
     }
 }
