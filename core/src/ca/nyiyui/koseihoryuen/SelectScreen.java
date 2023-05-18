@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
@@ -13,6 +12,8 @@ public abstract class SelectScreen extends ScreenAdapter2 {
     BitmapFont optionFont;
     BitmapFont optionSelFont;
     int optionSel = 0;
+    protected int BASE_X = 800;
+    protected int BASE_Y = 200;
 
     public SelectScreen(Koseihoryuen game) {
         super(game);
@@ -54,12 +55,28 @@ public abstract class SelectScreen extends ScreenAdapter2 {
 
     abstract protected void act();
 
+    /**
+     * Returns the x coord of the ith entry.
+     * @param i entry index
+     * @return
+     */
+    protected float getX(int i) {
+        return BASE_X;
+    }
+
+    /**
+     * Returns the y coord of the ith entry.
+     * @param i entry index
+     * @return
+     */
+    protected float getY(int i) {
+        return BASE_Y +70*(options.length-i-1);
+    }
+
     @Override
     public void render(float delta) {
-        final int rightSide = 800;
-        final int baseY = 200;
         for (int i = 0; i < options.length; i++) {
-            renderText(optionSel == i ? optionSelFont : optionFont, options[i], rightSide, baseY + 70 * (options.length - i - 1));
+            renderText(optionSel == i ? optionSelFont : optionFont, options[i], getX(i), getY(i));
         }
     }
 
