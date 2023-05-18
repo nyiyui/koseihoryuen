@@ -38,6 +38,9 @@ public class LevelsScreen extends SelectScreen {
                         optionSel += options.length;
                         optionSel %= options.length;
                         break;
+                    case Input.Keys.ESCAPE:
+                        game.setScreen(new TitleScreen(game));
+                        break;
                 }
                 return true;
             }
