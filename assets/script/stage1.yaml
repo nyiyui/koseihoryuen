@@ -13,7 +13,16 @@ heads:
 
   npc1:
     - emotion: ecstatic
+    - sprite: images/beeNPC.png
     - dialogue:
         - Kikikikiki!
         - I must say, we Bees contribute so much to the environment!
-        - Did you know that bees pollinate
+        - Did you know that bees pollinate 75% of the flowering plants and 35% of food crops around the world?
+        - In other words, nothing would be alive bees LMAO
+
+  npc2:
+    - emotion: sadge
+    - sprite: images/beeNPC.png
+    - dialogue:
+        - In recent years, the bee economy has suffered great losses. ;-;
+        - Due to EVIL human practices such as irresponsible urban development, overuse of pesticides
