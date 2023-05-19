@@ -48,12 +48,17 @@ public class LevelsScreen extends SelectScreen {
     }
 
     @Override
+    public void hide() {
+        Gdx.input.setInputProcessor(null);
+    }
+
+    @Override
     protected void act() {
         switch (optionSel) {
             case 0:
-                game.setScreen(new PlayScreen(game,new Reberu1(game)));
+                game.setScreen(new PlayScreen(game, new Reberu1(game)));
                 break;
-                default:
+            default:
                 throw new RuntimeException("L bozo");
         }
     }

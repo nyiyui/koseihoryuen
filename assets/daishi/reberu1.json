@@ -1,0 +1,28 @@
+{
+  "comment": "Stage 1",
+  "lines": [
+    {
+      "persona": "paimon",
+      "ten": "Instructions",
+      "body": "Aren't bees super cool?"
+    },
+    {
+      "body": "I agree. In fact, we should learn more bees."
+    },
+    {
+      "body": "To do so, fly around the beehive and talk to the different bees frolicking around."
+    },
+    {
+      "body": "You can move using the WASD keys."
+    },
+    {
+      "body": "Interact with other bees using the ENTER key."
+    },
+    {
+      "body": "Each bee will tell you something very poggers about BEES!"
+    },
+    {
+      "body": "Have fun out there. ;)"
+    }
+  ]
+}

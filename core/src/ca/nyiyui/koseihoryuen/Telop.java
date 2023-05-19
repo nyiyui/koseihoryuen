@@ -79,7 +79,9 @@ public class Telop extends BaseDrawable {
         batch.draw(tex2, tex2X, tex2Y, 0, 0, tex2.getWidth() / 2, tex2.getHeight());
         batch.draw(tex2, tex2X + tex2Width - tex2.getWidth() / 2, tex2Y, tex2.getWidth() / 2, 0, tex2.getWidth() / 2, tex2.getHeight());
         tex2MiddleTile.draw(batch, tex2X + tex2.getWidth() / 2, tex2Y, tex2Width - tex2.getWidth(), tex2.getHeight());
-        tenFont.draw(batch, tenText, tex2X+20, tex2Y+tex2.getHeight()-26);
-        bodyFont.draw(batch, bodyText, tex2X+20, tex2Y-15);
+        if (tenText != null)
+            tenFont.draw(batch, tenText, tex2X + 20, tex2Y + tex2.getHeight() - 26);
+        if (bodyText != null)
+            bodyFont.draw(batch, bodyText, tex2X + 20, tex2Y - 15);
     }
 }

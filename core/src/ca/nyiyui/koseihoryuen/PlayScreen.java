@@ -22,20 +22,13 @@ public class PlayScreen extends ScreenAdapter2 {
         gameScreen.setPlayScreen(this);
     }
 
+    void invokePause() {
+        gameState = GAME_STATE_PAUSED;
+    }
+
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        switch (gameState) {
-            case GAME_STATE_RUNNING:
-                gameScreen.render(delta);
-                break;
-            case GAME_STATE_PAUSED:
-                pauseScreen.render(delta);
-                break;
-            default:
-                throw new RuntimeException(String.format("invalid state %d", gameState));
-        }
+        game.setScreen(gameScreen);
     }
 
     @Override
