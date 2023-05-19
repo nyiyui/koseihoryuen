@@ -1,13 +1,8 @@
 package ca.nyiyui.koseihoryuen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 public class TitleScreen extends SelectScreen {
     private Texture backdrop;
@@ -28,8 +23,9 @@ public class TitleScreen extends SelectScreen {
                 game.setScreen(new LevelsScreen(game));
                 break;
             case 1:
-                Gdx.app.exit();
-                System.exit(0);
+                game.setScreen(new ExitScreen(game));
+//                Gdx.app.exit();
+//                System.exit(0);
         }
     }
 
