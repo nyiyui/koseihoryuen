@@ -1,15 +1,11 @@
 package ca.nyiyui.koseihoryuen;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g3d.decals.SimpleOrthoGroupStrategy;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Koseihoryuen extends Game {
     OrthographicCamera camera;
@@ -25,7 +21,7 @@ public class Koseihoryuen extends Game {
         img = new Texture("badlogic.jpg");
         font = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoMono/RobotoMono-VariableFont_wght.ttf"));
 //        setScreen(new SplashScreen(this));
-        setScreen(new PlayScreen(this, new Reberu1(this)));
+        setScreen(new TitleScreen(this));
     }
 //
 //    @Override
