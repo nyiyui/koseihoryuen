@@ -18,12 +18,19 @@ public class PlayScreen extends ScreenAdapter2 {
     public PlayScreen(Koseihoryuen game, PlayableScreen gameScreen) {
         super(game);
         pauseScreen = new PauseScreen(game);
+        pauseScreen.setPlayScreen(this);
         this.gameScreen = gameScreen;
         gameScreen.setPlayScreen(this);
     }
 
     void invokePause() {
         gameState = GAME_STATE_PAUSED;
+        game.setScreen(pauseScreen);
+    }
+
+    void invokePlay() {
+        gameState=GAME_STATE_RUNNING;
+        game.setScreen(gameScreen);
     }
 
     @Override

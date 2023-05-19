@@ -2,7 +2,7 @@
   "comment": "Stage 1",
   "lines": [
     {
-      "persona": "paimon",
+      "persona": "emerg-food",
       "ten": "Instructions",
       "body": "Aren't bees super cool?"
     },
@@ -23,6 +23,21 @@
     },
     {
       "body": "Have fun out there. ;)"
+    },
+    {
+      "persona": "bee",
+      "ten": "Bee",
+      "body": "Kikikikiki!",
+      "headVariant": "ecstatic"
+    },
+    {
+      "body": "I must say, we Bees contribute so much to the environment!"
+    },
+    {
+      "body": "Did you know that bees pollinate 75% of the flowering plants and 35% of food crops around the world?"
+    },
+    {
+      "body": "In other words, nothing would be alive bees LMAO"
     }
   ]
 }

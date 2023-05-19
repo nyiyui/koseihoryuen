@@ -42,6 +42,10 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
                     case Input.Keys.SPACE:
                     case Input.Keys.ENTER:
                         curLineIndex++;
+                        if (curLineIndex >= daishi.lines.size()) {
+                            playScreen.invokePause();
+                            throw new RuntimeException("not impld yet");
+                        }
                         break;
                     case Input.Keys.ESCAPE:
                         playScreen.invokePause();

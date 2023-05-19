@@ -1,6 +1,6 @@
 comment: Stage 1
 lines:
-  - persona: paimon
+  - persona: emerg-food
     ten: Instructions
     body: Aren't bees super cool?
   - body: I agree. In fact, we should learn more bees.
@@ -9,15 +9,13 @@ lines:
   - body: Interact with other bees using the ENTER key.
   - body: Each bee will tell you something very poggers about BEES!
   - body: Have fun out there. ;)
-#
-#  -  emotion: ecstatic
-#     sprite: images/beeNPC.png
-#     dialogue:
-#       - Kikikikiki!
-#       - I must say, we Bees contribute so much to the environment!
-#       - Did you know that bees pollinate 75% of the flowering plants and 35% of food crops around the world?
-#       - In other words, nothing would be alive bees LMAO
-#
+  - persona: bee
+    ten: Bee
+    body: Kikikikiki!
+    headVariant: ecstatic
+  - body: I must say, we Bees contribute so much to the environment!
+  - body: Did you know that bees pollinate 75% of the flowering plants and 35% of food crops around the world?
+  - body: In other words, nothing would be alive bees LMAO
 #  -  emotion: sadge
 #     sprite: images/beeNPC.png
 #     dialogue:
