@@ -21,16 +21,8 @@ public class Koseihoryuen extends Game {
         img = new Texture("badlogic.jpg");
         font = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoMono/RobotoMono-VariableFont_wght.ttf"));
 //        setScreen(new SplashScreen(this));
-        setScreen(new TitleScreen(this));
+        setScreen(new PlayScreen(this, new Reberu1(this)));
     }
-//
-//    @Override
-//    public void render() {
-//        ScreenUtils.clear(1, 0, 0, 1);
-//        batch.begin();
-//        batch.draw(img, 0, 0);
-//        batch.end();
-//    }
 
     @Override
     public void dispose() {

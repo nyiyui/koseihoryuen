@@ -3,7 +3,10 @@ lines:
   - persona: emerg-food
     ten: Instructions
     body: Aren't bees super cool?
+    sound: sounds/reberu1-1.wav
   - body: I agree. In fact, we should learn more bees.
+    sound: ""
+  - body: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   - body: To do so, fly around the beehive and talk to the different bees frolicking around.
   - body: You can move using the WASD keys.
   - body: Interact with other bees using the ENTER key.
@@ -15,7 +18,12 @@ lines:
     headVariant: ecstatic
   - body: I must say, we Bees contribute so much to the environment!
   - body: Did you know that bees pollinate 75% of the flowering plants and 35% of food crops around the world?
-  - body: In other words, nothing would be alive bees LMAO
+  - body: In other words, nothing would be alive without bees [LMAO]
+  - persona: ""
+    ten: ""
+    body: ""
+    sound: ""
+    action: explore
 #  -  emotion: sadge
 #     sprite: images/beeNPC.png
 #     dialogue:

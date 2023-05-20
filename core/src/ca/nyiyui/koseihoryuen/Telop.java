@@ -7,14 +7,20 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
+import com.badlogic.gdx.utils.Align;
+
+import java.io.StringReader;
 
 /**
  * Draws an adjustable-width telop.
  * TODO: support showing character in an inset (like nightmelon)
  */
 public class Telop extends BaseDrawable {
+    private final Label.LabelStyle labelStyle;
+    private Label label;
     private Texture tex1;
     private TiledDrawable tex1MiddleTile;
     private Texture tex2;
@@ -46,6 +52,11 @@ public class Telop extends BaseDrawable {
         tenFont = game.font.generateFont(param);
         param.size = 28;
         bodyFont = game.font.generateFont(param);
+
+        labelStyle = new Label.LabelStyle();
+        labelStyle.font=bodyFont;
+        label = new Label(bodyText,labelStyle);
+        label.setWrap(true);
     }
 
     public void setTenText(String tenText) {
@@ -70,6 +81,7 @@ public class Telop extends BaseDrawable {
      */
     @Override
     public void draw(Batch batch, float x, float y, float width, float height) {
+        final float padding = 30;
         batch.draw(tex1, x, y, 0, 0, tex1.getWidth() / 2, tex1.getHeight());
         batch.draw(tex1, x + width - tex1.getWidth() / 2, y, tex1.getWidth() / 2, 0, tex1.getWidth() / 2, tex1.getHeight());
         tex1MiddleTile.draw(batch, x + tex1.getWidth() / 2, y, width - tex1.getWidth(), tex1.getHeight());
@@ -81,7 +93,13 @@ public class Telop extends BaseDrawable {
         tex2MiddleTile.draw(batch, tex2X + tex2.getWidth() / 2, tex2Y, tex2Width - tex2.getWidth(), tex2.getHeight());
         if (tenText != null)
             tenFont.draw(batch, tenText, tex2X + 20, tex2Y + tex2.getHeight() - 26);
-        if (bodyText != null)
-            bodyFont.draw(batch, bodyText, tex2X + 20, tex2Y - 15);
+        if (bodyText != null) {
+            label.setText(bodyText);
+            label.setPosition(x+padding,y+padding);
+            label.setWidth(width-2*padding);
+            label.setHeight(height-2*padding-10);
+            label.setAlignment(Align.topLeft);
+            label.draw(batch,1);
+        }
     }
 }

@@ -6,6 +6,10 @@ public class Line implements Cloneable {
     public String ten;
     public String body;
     public String sound;
+    /**
+     * Level-specfic action to perform for this line. Mutually exclusive with speech-related fields.
+     */
+    public String action;
 
     @Override
     public Object clone() {
@@ -23,5 +27,6 @@ public class Line implements Cloneable {
         if (ten == null) ten = line.ten;
         if (body == null) body = line.body;
         if (sound == null) sound = line.sound;
+        if (action==null)action=line.action;
     }
 }

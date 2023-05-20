@@ -3,10 +3,6 @@ package ca.nyiyui.koseihoryuen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 
 public class PlayScreen extends ScreenAdapter2 {
     private static final int GAME_STATE_RUNNING = 1;
