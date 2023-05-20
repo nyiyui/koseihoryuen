@@ -44,7 +44,7 @@ public class ExitScreen extends ScreenAdapter2 {
     }
 
     @Override
-    public void hide() {
+    public void dispose() {
         bee.dispose();
         backdrop.dispose();
         byeFont.dispose();
