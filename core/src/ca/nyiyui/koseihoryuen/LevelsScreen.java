@@ -58,10 +58,11 @@ public class LevelsScreen extends SelectScreen {
             case 0:
                 game.setScreen(new PlayScreen(game, new Reberu1(game)));
                 break;
+            case 1:
+                game.setScreen(new PlayScreen(game, new Reberu2(game)));
+                break;
             default:
                 throw new RuntimeException("L bozo");
-//            case 1:
-//                game.setScreen(new PlayScreen(game, new Reberu2(game)));
         }
     }
 
