@@ -2,9 +2,7 @@
   "comment": "Stage 1",
   "lines": [
     {
-      "action": "explore"
-    },
-    {
+      "label": "start",
       "action": "",
       "chain": true
     },
@@ -34,14 +32,19 @@
       "body": "Have fun out there. ;)"
     },
     {
-      "action": "explore"
+      "action": "explore",
+      "noDefault": true
     },
     {
+      "noDefault": true,
+      "chain": true
+    },
+    {
+      "label": "idobee1",
       "persona": "bee",
       "ten": "Bee 1",
-      "headVariant": "ecstatic"
-    },
-    {
+      "headVariant": "ecstatic",
+      "action": "",
       "body": "Kikikikiki!"
     },
     {
@@ -54,11 +57,19 @@
       "body": "In other words, nothing would be alive without bees [LMAO]"
     },
     {
-      "persona": "bee",
-      "ten": "Bee 2",
-      "headVariant": "sadge"
+      "action": "explore",
+      "noDefault": true
     },
     {
+      "noDefault": true,
+      "chain": true
+    },
+    {
+      "label": "bee2",
+      "persona": "bee",
+      "ten": "Bee 2",
+      "headVariant": "sadge",
+      "action": "",
       "body": "In recent years, the bee economy has suffered great losses. ;-;"
     },
     {
@@ -69,11 +80,19 @@
       "sound": ""
     },
     {
-      "persona": "bee",
-      "ten": "Bee 3",
-      "headVariant": "livid"
+      "action": "explore",
+      "noDefault": true
     },
     {
+      "noDefault": true,
+      "chain": true
+    },
+    {
+      "label": "immabee3",
+      "persona": "bee",
+      "ten": "Bee 3",
+      "headVariant": "livid",
+      "action": "",
       "body": "The main reason why bees are endangered is habitat loss."
     },
     {
@@ -81,6 +100,10 @@
     },
     {
       "body": "Usually, a beehive can last indefinitely!"
+    },
+    {
+      "action": "explore",
+      "noDefault": true
     }
   ]
 }
