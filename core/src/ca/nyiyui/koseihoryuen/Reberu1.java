@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
+    private static final float MOVEMENT_COEFF = 10;
     private Box2DDebugRenderer debugRenderer;
     private Stage stage;
     private PlayScreen playScreen;
@@ -27,20 +28,18 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
     private int curLineIndex;
     private Texture background;
     private Texture pathway;
+    private Texture playerSpriteSmall;
+    private Texture playerSpriteLarge;
     private Music music;
     private Telop telop;
     private final static int STATE_INST = 1;
     private final static int STATE_EXPLORE = 2;
     private final static int STATE_COMPLETE = 3;
     private int state = STATE_INST;
-    private World world;
-    /**
-     * Frame time accumulator for Box2D timestep.
-     * Used to specify a max delta time for physics simulation
-     */
-    private float box2dFrameAccum = 0;
-    private Body ballBody;
-    private Body player;
+    private float playerX = 0;
+    private float playerY = 0;
+    private double weightedAngle = 0;
+    private boolean playerSpriteIsLarge;
 
     Reberu1(Koseihoryuen game) {
         super(game);
@@ -54,63 +53,8 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
         switchLine(0);
         background = new Texture(Gdx.files.internal("images/stage1-bg.png"));
         pathway = new Texture(Gdx.files.internal("images/stage1-pathway.png"));
-        setupBox2D();
-    }
-
-    private void setupBox2D() {
-        world = new World(new Vector2(0, 10), true);
-        debugRenderer = new Box2DDebugRenderer();
-        debugRenderer.setDrawAABBs(true);
-
-        // First we create a body definition
-        BodyDef bodyDef = new BodyDef();
-// We set our body to dynamic, for something like ground which doesn't move we would set it to StaticBody
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-// Set our body's starting position in the world
-        bodyDef.position.set(10, 100);
-
-// Create our body in the world using our body definition
-        ballBody = world.createBody(bodyDef);
-
-// Create a circle shape and set its radius to 6
-        CircleShape circle = new CircleShape();
-        circle.setRadius(6f);
-
-// Create a fixture definition to apply our shape to
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = circle;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.6f; // Make it bounce a little bit
-
-// Create our fixture and attach it to the body
-        Fixture fixture = ballBody.createFixture(fixtureDef);
-
-// Remember to dispose of any shapes after you're done with them!
-// BodyDef and FixtureDef don't need disposing but shapes do.
-        circle.dispose();
-
-        BodyDef groundBodyDef = new BodyDef();
-        groundBodyDef.position.set(new Vector2(0, 0));
-        Body groundBody = world.createBody(groundBodyDef);
-        PolygonShape groundBox = new PolygonShape();
-        groundBox.setAsBox(game.camera.viewportWidth/2, game.camera.viewportHeight/2);
-        groundBody.createFixture(groundBox, 0.0f);
-        groundBox.dispose();
-
-        bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.KinematicBody;
-        bodyDef.position.set(10, 400);
-        player = world.createBody(bodyDef);
-        circle = new CircleShape();
-        circle.setRadius(50f);
-        fixtureDef = new FixtureDef();
-        fixtureDef.shape = circle;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.6f;
-        fixture = player.createFixture(fixtureDef);
-        circle.dispose();
+        playerSpriteSmall = new Texture(Gdx.files.internal("images/player-sprite-small.png"));
+        playerSpriteLarge = new Texture(Gdx.files.internal("images/player-sprite-large.png"));
     }
 
     @Override
@@ -172,47 +116,71 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
         telop.setTenText(cl.ten);
         if (cl.action != null)
             switch (cl.action) {
+                case "":
+                    playerX = game.camera.viewportWidth * 3 / 4-playerSpriteLarge.getWidth()/2;
+                    playerY = game.camera.viewportWidth / 2-playerSpriteLarge.getHeight()/2;
+                    playerSpriteIsLarge = true;
+                    state = STATE_INST;
+                    break;
                 case "explore":
+                    playerSpriteIsLarge = false;
                     state = STATE_EXPLORE;
                     break;
             }
+        if (cl.chain) switchLine(curLineIndex + 1);
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        renderBox2D(delta);
         game.batch.begin();
-//        game.batch.draw(background, 0, 0);
         if (state == STATE_EXPLORE) {
-//            game.batch.draw(pathway, 0, 0);
-            Vector2 pos = ballBody.getPosition();
-            Vector2 vel = ballBody.getLinearVelocity();
-            if (Gdx.input.isKeyPressed(Input.Keys.A))
-                ballBody.setLinearVelocity(-1.0f,0f);
-            if (Gdx.input.isKeyPressed(Input.Keys.D))
-                ballBody.setLinearVelocity(1.0f,0f);
-//                ballBody.applyForce(100.0f, 0.0f, pos.x, pos.y, true);
+            game.batch.draw(pathway, 0, 0);
+            boolean w = Gdx.input.isKeyPressed(Input.Keys.W);
+            boolean a = Gdx.input.isKeyPressed(Input.Keys.A);
+            boolean s = Gdx.input.isKeyPressed(Input.Keys.S);
+            boolean d = Gdx.input.isKeyPressed(Input.Keys.D);
+            double angle = Math.sqrt(-1);
+            boolean moved = true;
+            if (w && a)
+                angle = (Math.PI * 7 / 4);
+            else if (a && s)
+                angle = (Math.PI * 5 / 4);
+            else if (s && d)
+                angle = (Math.PI * 3 / 4);
+            else if (d && w)
+                angle = (Math.PI * 1 / 4);
+            else if (w)
+                angle = 0;
+            else if (d)
+                angle = (Math.PI / 2);
+            else if (s)
+                angle = (Math.PI);
+            else if (a)
+                angle = (Math.PI * 3 / 2);
+            else
+                moved = false;
+            if (moved) {
+                weightedAngle = weightedAngle * 0.7 + angle * 0.3;
+                playerX += Math.sin(weightedAngle) * MOVEMENT_COEFF;
+                playerY += Math.cos(weightedAngle) * MOVEMENT_COEFF;
+                playerX = clamp(playerX, game.camera.viewportWidth, 0);
+                playerY = clamp(playerY, game.camera.viewportHeight, 0);
+            }
+        } else {
+            game.batch.draw(background, 0, 0);
         }
         if (curLine().body != null && !curLine().body.equals(""))
             telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
-        Vector2 pos = ballBody.getPosition();
-        renderText(game.debugFont, "ball", pos.x, pos.y);
-        pos=player.getPosition();
-        renderText(game.debugFont, "player", pos.x, pos.y);
+        game.batch.draw(playerSpriteIsLarge ? playerSpriteLarge : playerSpriteSmall, playerX - playerSpriteSmall.getWidth() / 2, playerY - playerSpriteSmall.getHeight() / 2);
         game.batch.end();
-        debugRenderer.render(world, game.camera.combined);
     }
 
-    private void renderBox2D(float delta) {
-        float frameTime = Math.min(delta, 0.25f);
-        box2dFrameAccum += frameTime;
-        while (box2dFrameAccum >= Settings.BOX2D_TIME_STEP) {
-            world.step(Settings.BOX2D_TIME_STEP, Settings.BOX2D_VELOCITY_ITERATIONS, Settings.BOX2D_POSITION_ITERATIONS);
-            box2dFrameAccum -= Settings.BOX2D_TIME_STEP;
-        }
-        debugRenderer.render(world, game.camera.combined);
+    private float clamp(float n, float upper, float lower) {
+        if (n > upper) return upper;
+        if (n < lower) return lower;
+        return n;
     }
 
     public Daishi getDaishi() {
@@ -226,6 +194,5 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
     @Override
     public void dispose() {
         debugRenderer.dispose();
-        world.dispose();
     }
 }

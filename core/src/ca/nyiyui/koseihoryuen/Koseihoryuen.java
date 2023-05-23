@@ -22,7 +22,7 @@ public class Koseihoryuen extends Game {
 
     @Override
     public void create() {
-        camera = new OrthographicCamera(16,13);
+        camera = new OrthographicCamera(16*60,13*60);
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
         font = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoMono/RobotoMono-VariableFont_wght.ttf"));
