@@ -134,7 +134,7 @@ public class Reberu2 extends ScreenAdapter2 implements PlayableScreen {
                 playerY = clamp(playerY, game.camera.viewportHeight - player.getHeight(), 0);
             }
             game.batch.draw(player, playerX, playerY);
-            System.out.println(playerX + " " + playerY);
+//            System.out.println(playerX + " " + playerY);
         } else {
 
         }
