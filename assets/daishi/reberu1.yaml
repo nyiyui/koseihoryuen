@@ -1,5 +1,6 @@
 comment: Stage 1
 lines:
+  - action: explore
   - persona: emerg-food
     ten: Instructions
     body: Aren't bees super cool?
