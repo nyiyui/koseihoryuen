@@ -12,9 +12,6 @@
       "sound": ""
     },
     {
-      "body": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    },
-    {
       "body": "To do so, fly around the beehive and talk to the different bees frolicking around."
     },
     {
@@ -30,10 +27,15 @@
       "body": "Have fun out there. ;)"
     },
     {
+      "action": "explore"
+    },
+    {
       "persona": "bee",
-      "ten": "Bee",
-      "body": "Kikikikiki!",
+      "ten": "Bee 1",
       "headVariant": "ecstatic"
+    },
+    {
+      "body": "Kikikikiki!"
     },
     {
       "body": "I must say, we Bees contribute so much to the environment!"
@@ -45,11 +47,33 @@
       "body": "In other words, nothing would be alive without bees [LMAO]"
     },
     {
-      "persona": "",
-      "ten": "",
-      "body": "",
-      "sound": "",
-      "action": "explore"
+      "persona": "bee",
+      "ten": "Bee 2",
+      "headVariant": "sadge"
+    },
+    {
+      "body": "In recent years, the bee economy has suffered great losses. ;-;"
+    },
+    {
+      "body": "Due to EVIL human practices such as irresponsible urban development, overuse of pesticides, and global warming."
+    },
+    {
+      "body": "Humans need to be more aware of how their actions harm us tiny little bees! (uwu)",
+      "sound": ""
+    },
+    {
+      "persona": "bee",
+      "ten": "Bee 3",
+      "headVariant": "livid"
+    },
+    {
+      "body": "The main reason why bees are endangered is habitat loss."
+    },
+    {
+      "body": "Just last year, our colony has had to move because they expanded the nearby town!"
+    },
+    {
+      "body": "Usually, a beehive can last indefinitely!"
     }
   ]
 }
