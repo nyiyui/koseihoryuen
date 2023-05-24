@@ -175,15 +175,12 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
                 state = STATE_EXPLORE;
                 break;
             case "exit":
-                state = STATE_COMPLETE;
-                /*
                 if (canExit()) {
                     state = STATE_COMPLETE;
                 } else {
                     int i = DaishiUtils.findLabel(daishi, "exit-nok");
                     switchLine(i);
                 }
-                 */
         }
         if (cl.chain) switchLine(curLineIndex + 1);
         if (cl.jump != null && cl.jump.length() != 0) {
