@@ -15,8 +15,10 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
+    private static final float NPC_INTERACTION_RADIUS = 70;
     private static final float MOVEMENT_COEFF = 10;
     private Box2DDebugRenderer debugRenderer;
     private Stage stage;
@@ -30,6 +32,7 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
     private Texture pathway;
     private Texture playerSpriteSmall;
     private Texture playerSpriteLarge;
+    private Texture spriteBeeNPC;
     private Music music;
     private Telop telop;
     private final static int STATE_INST = 1;
@@ -40,6 +43,15 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
     private float playerY = 0;
     private double weightedAngle = 0;
     private boolean playerSpriteIsLarge;
+    private ArrayList<NPC> npcs;
+    /**
+     * Index of latest NPC interacted with.
+     */
+    private int latestNPC = -1;
+    /**
+     * Makes player have no interaction with NPCs until it is NPC_INTERACTION_RADIUS away.
+     */
+    private boolean playerNoInteraction;
 
     Reberu1(Koseihoryuen game) {
         super(game);
@@ -50,11 +62,16 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
             e.printStackTrace();
             throw new RuntimeException("loading daishi failed");
         }
-        switchLine(0);
         background = new Texture(Gdx.files.internal("images/stage1-bg.png"));
         pathway = new Texture(Gdx.files.internal("images/stage1-pathway.png"));
         playerSpriteSmall = new Texture(Gdx.files.internal("images/player-sprite-small.png"));
         playerSpriteLarge = new Texture(Gdx.files.internal("images/player-sprite-large.png"));
+        spriteBeeNPC = new Texture(Gdx.files.internal("images/beeNPC.png"));
+        npcs = new ArrayList<>();
+        npcs.add(new NPC(380, 700, "idobee1"));
+        npcs.add(new NPC(850, 550, "bee2"));
+        npcs.add(new NPC(520, 260, "immabee3"));
+        switchLine(0);
     }
 
     @Override
@@ -65,10 +82,12 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
                 switch (keycode) {
                     case Input.Keys.SPACE:
                     case Input.Keys.ENTER:
-                        switchLine(curLineIndex + 1);
-                        if (curLineIndex >= daishi.lines.size()) {
-                            playScreen.invokePause();
-                            throw new RuntimeException("not impld yet");
+                        if (state != STATE_EXPLORE) {
+                            switchLine(curLineIndex + 1);
+                            if (curLineIndex >= daishi.lines.size()) {
+                                playScreen.invokePause();
+                                throw new RuntimeException("not impld yet");
+                            }
                         }
                         break;
                     case Input.Keys.ESCAPE:
@@ -117,17 +136,32 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
         if (cl.action != null)
             switch (cl.action) {
                 case "":
-                    playerX = game.camera.viewportWidth * 3 / 4-playerSpriteLarge.getWidth()/2;
-                    playerY = game.camera.viewportWidth / 2-playerSpriteLarge.getHeight()/2;
+                    playerX = game.camera.viewportWidth * 3 / 4 - playerSpriteLarge.getWidth() / 2;
+                    playerY = game.camera.viewportWidth / 2 - playerSpriteLarge.getHeight() / 2;
                     playerSpriteIsLarge = true;
                     state = STATE_INST;
                     break;
                 case "explore":
+                    playerNoInteraction = true;
                     playerSpriteIsLarge = false;
+                    switch (latestNPC) {
+                        case -1:
+                            playerX = 50;
+                            playerY = 50;
+                            break;
+                        default:
+                            NPC npc = npcs.get(latestNPC);
+                            playerX = npc.x;
+                            playerY = npc.y;
+                    }
                     state = STATE_EXPLORE;
                     break;
             }
         if (cl.chain) switchLine(curLineIndex + 1);
+        if (cl.jump != null && cl.jump.length() != 0) {
+            int i = DaishiUtils.findLabel(daishi, cl.jump);
+            switchLine(i);
+        }
     }
 
     @Override
@@ -174,7 +208,33 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
         if (curLine().body != null && !curLine().body.equals(""))
             telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
         game.batch.draw(playerSpriteIsLarge ? playerSpriteLarge : playerSpriteSmall, playerX - playerSpriteSmall.getWidth() / 2, playerY - playerSpriteSmall.getHeight() / 2);
+        renderText(game.debugFont, String.format("%f,%f", playerX, playerY), game.camera.viewportWidth / 2, 10);
+        renderText(game.debugFont, curLine().toString(), game.camera.viewportWidth / 2, 20);
+        for (int i = 0; i < npcs.size(); i++) {
+            NPC npc = npcs.get(i);
+            game.batch.draw(spriteBeeNPC, npc.x - spriteBeeNPC.getWidth() / 2, npc.y - spriteBeeNPC.getHeight() / 2);
+        }
+        if (state == STATE_EXPLORE)
+            checkNPCInteraction();
         game.batch.end();
+    }
+
+    private void checkNPCInteraction() {
+        boolean inRadius = false;
+        for (int i = 0; i < npcs.size(); i++) {
+            NPC npc = npcs.get(i);
+            if (Math.sqrt(Math.pow(Math.abs(playerX - npc.x), 2) + Math.pow(Math.abs(playerY - npc.y), 2)) < NPC_INTERACTION_RADIUS) {
+                inRadius = true;
+                if (!playerNoInteraction) {
+                    int j = DaishiUtils.findLabel(daishi, npc.label);
+                    latestNPC = i;
+                    switchLine(j);
+                    return;
+                }
+            }
+        }
+        if (!inRadius && playerNoInteraction)
+            playerNoInteraction = false;
     }
 
     private float clamp(float n, float upper, float lower) {
@@ -194,5 +254,17 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
     @Override
     public void dispose() {
         debugRenderer.dispose();
+    }
+}
+
+class NPC {
+    public float x;
+    public float y;
+    public String label;
+
+    public NPC(float x, float y, String label) {
+        this.x = x;
+        this.y = y;
+        this.label = label;
     }
 }

@@ -11,7 +11,33 @@ public class Line implements Cloneable {
      * Level-specfic action to perform for this line. Mutually exclusive with speech-related fields.
      */
     public String action;
+
+    @Override
+    public String toString() {
+        return "Line@" + label +
+                "{p='" + persona + '\'' +
+                ", hV='" + headVariant + '\'' +
+                ", t='" + ten + '\'' +
+                ", b='" + body + '\'' +
+                ", s='" + sound + '\'' +
+                ", a='" + action + '\'' +
+                ", c=" + chain +
+                ", nD=" + noDefault +
+                '}';
+    }
+
+    /**
+     * Switches to the next line immediately after. Not inherited.
+     */
     public boolean chain;
+    /**
+     * Disables default application to and from this line.
+     */
+    public boolean noDefault;
+    /**
+     * Jumps to the line label. Not inherited. Chain takes precedence over this.
+     */
+    public String jump;
 
     @Override
     public Object clone() {
@@ -24,12 +50,13 @@ public class Line implements Cloneable {
     }
 
     public void applyDefault(Line line) {
-        if (label == null) label= line.label;
+        if (noDefault || line.noDefault) return;
+        if (label == null) label = line.label;
         if (persona == null) persona = line.persona;
         if (headVariant == null) headVariant = line.headVariant;
         if (ten == null) ten = line.ten;
         if (body == null) body = line.body;
         if (sound == null) sound = line.sound;
-        if (action==null)action=line.action;
+        if (action == null) action = line.action;
     }
 }

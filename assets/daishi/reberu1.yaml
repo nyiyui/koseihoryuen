@@ -1,7 +1,7 @@
 comment: Stage 1
 lines:
-  - action: explore
-  - action: ""
+  - label: start
+    action: ""
     chain: true
   - persona: emerg-food
     ten: Instructions
@@ -15,23 +15,42 @@ lines:
   - body: Each bee will tell you something very poggers about BEES!
   - body: Have fun out there. ;)
   - action: explore
-  - persona: bee
+    noDefault: true
+  - noDefault: true
+    chain: true
+  - label: idobee1
+    persona: bee
     ten: Bee 1
     headVariant: ecstatic
-  - body: Kikikikiki!
+    action: ""
+    body: Kikikikiki!
   - body: I must say, we Bees contribute so much to the environment!
   - body: Did you know that bees pollinate 75% of the flowering plants and 35% of food crops around the world?
   - body: In other words, nothing would be alive without bees [LMAO]
-  - persona: bee
+  - action: explore
+    noDefault: true
+  - noDefault: true
+    chain: true
+  - label: bee2
+    persona: bee
     ten: Bee 2
     headVariant: sadge
-  - body: In recent years, the bee economy has suffered great losses. ;-;
+    action: ""
+    body: In recent years, the bee economy has suffered great losses. ;-;
   - body: Due to EVIL human practices such as irresponsible urban development, overuse of pesticides, and global warming.
   - body: Humans need to be more aware of how their actions harm us tiny little bees! (uwu)
     sound: ""
-  - persona: bee
+  - action: explore
+    noDefault: true
+  - noDefault: true
+    chain: true
+  - label: immabee3
+    persona: bee
     ten: Bee 3
     headVariant: livid
-  - body: The main reason why bees are endangered is habitat loss.
+    action: ""
+    body: The main reason why bees are endangered is habitat loss.
   - body: Just last year, our colony has had to move because they expanded the nearby town!
   - body: Usually, a beehive can last indefinitely!
+  - action: explore
+    noDefault: true
