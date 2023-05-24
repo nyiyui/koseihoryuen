@@ -1,0 +1,80 @@
+{
+  "comment": "Stage 2",
+  "lines": [
+    {
+      "action": "",
+      "chain": true
+    },
+    {
+      "ten": "Instructions",
+      "body": "Today is a rather sad occasion (pensive emoji)"
+    },
+    {
+      "body": "Why you may ask?"
+    },
+    {
+      "body": "Because this bee has lost its colony!"
+    },
+    {
+      "body": "Fly around as the bee just like in the Learning Stage and interact with the different objects on the screen."
+    },
+    {
+      "label": "explore",
+      "action": "explore"
+    },
+    {
+      "noDefault": true,
+      "label": "city",
+      "ten": "The City",
+      "question": {
+        "question": "Recently, humans have started to build urban infrastructure in the surrounding area. This has caused our bee colony to lose its home! What is the best way to combat this issue?",
+        "options": {
+          "A": "Burn down the city.",
+          "B": "Do more research on what habitats are in the are you're trying to develop ;)",
+          "C": "Never be a loser!",
+          "D": "Ecological restoration to increase bee population and save the bees ;)"
+        },
+        "answer": "D"
+      }
+    },
+    {
+      "jump": "explore"
+    },
+    {
+      "noDefault": true,
+      "label": "pesticide",
+      "ten": "Pesticide Sign",
+      "question": {
+        "question": "The sign shows this area reeks of pesticides and can cause to living be(e)ings that go near it. This is especially harmful to bees as some pesticides can even kill them. What is the best solution to this problem?",
+        "options": {
+          "A": "Use more pesticides.",
+          "B": "Stop using pesticides.",
+          "C": "Apply pesticides from the ground rather than in the air and in the evenings when the bees are snugly asleep. (uwu)",
+          "D": "Evolve into a Crazy B(ee) and dodge the pesticides. (sunglasses emoji)"
+        },
+        "answer": "C"
+      }
+    },
+    {
+      "jump": "explore"
+    },
+    {
+      "noDefault": true,
+      "label": "badgas",
+      "ten": "Greenhouse Gas Emissions",
+      "question": {
+        "question": "Climate change can also negatively impact the bees by making the ecosystems they live in unsuitable for sustaining the bees and the plants they need to pollinate. How should we solve this issue?",
+        "options": {
+          "A": "Reduce human emissions by using less fossil fuels and investing in renewable resources",
+          "B": "Become monke and abandon technology.",
+          "C": "Come On Baby America!",
+          "D": "Fill the air with sulfur to cool the atmosphere."
+        },
+        "answer": "A"
+      }
+    },
+    {
+      "jump": "explore"
+    }
+  ]
+}
