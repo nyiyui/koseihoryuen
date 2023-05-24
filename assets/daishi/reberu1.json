@@ -104,6 +104,25 @@
     {
       "action": "explore",
       "noDefault": true
+    },
+    {
+      "label": "exit",
+      "noDefault": true,
+      "action": "exit"
+    },
+    {
+      "label": "exit-nok",
+      "noDefault": true,
+      "ten": "Instructions",
+      "action": "",
+      "body": "You can't exit yet."
+    },
+    {
+      "body": "Try speaking to all the bees around here, and hear what they have to say! Or, in other words, L bozoz."
+    },
+    {
+      "noDefault": true,
+      "action": "explore"
     }
   ]
 }

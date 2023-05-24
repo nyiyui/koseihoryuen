@@ -25,7 +25,7 @@ public class PlayScreen extends ScreenAdapter2 {
     }
 
     void invokePlay() {
-        gameState=GAME_STATE_RUNNING;
+        gameState = GAME_STATE_RUNNING;
         game.setScreen(gameScreen);
     }
 
@@ -46,5 +46,11 @@ public class PlayScreen extends ScreenAdapter2 {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void dispose() {
+        pauseScreen.dispose();
+        gameScreen.dispose();
     }
 }

@@ -6,20 +6,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import sun.util.resources.cldr.ext.TimeZoneNames_yi;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
     private static final float NPC_INTERACTION_RADIUS = 70;
-    private static final float MOVEMENT_COEFF = 10;
+    private static final float MOVEMENT_COEFF = 0xff;
     private Box2DDebugRenderer debugRenderer;
     private Stage stage;
     private PlayScreen playScreen;
@@ -52,6 +57,12 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
      * Makes player have no interaction with NPCs until it is NPC_INTERACTION_RADIUS away.
      */
     private boolean playerNoInteraction;
+    /**
+     * NPCs encountered with. Used to determine whether to allow the player to end the level now.
+     */
+    private boolean npcInteractions[];
+    private final BitmapFont titleFont;
+    private final BitmapFont subtitleFont;
 
     Reberu1(Koseihoryuen game) {
         super(game);
@@ -71,6 +82,14 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
         npcs.add(new NPC(380, 700, "idobee1"));
         npcs.add(new NPC(850, 550, "bee2"));
         npcs.add(new NPC(520, 260, "immabee3"));
+        npcs.add(new NPC(50, 240, "exit"));
+        npcInteractions = new boolean[npcs.size()];
+        FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        param.color = new Color(0x222222aa);
+        param.size = 52;
+        titleFont = game.font.generateFont(param);
+        param.size = 36;
+        subtitleFont = game.font.generateFont(param);
         switchLine(0);
     }
 
@@ -133,30 +152,39 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
         telop = new Telop(game);
         telop.setBodyText(cl.body);
         telop.setTenText(cl.ten);
-        if (cl.action != null)
-            switch (cl.action) {
-                case "":
-                    playerX = game.camera.viewportWidth * 3 / 4 - playerSpriteLarge.getWidth() / 2;
-                    playerY = game.camera.viewportWidth / 2 - playerSpriteLarge.getHeight() / 2;
-                    playerSpriteIsLarge = true;
-                    state = STATE_INST;
-                    break;
-                case "explore":
-                    playerNoInteraction = true;
-                    playerSpriteIsLarge = false;
-                    switch (latestNPC) {
-                        case -1:
-                            playerX = 50;
-                            playerY = 50;
-                            break;
-                        default:
-                            NPC npc = npcs.get(latestNPC);
-                            playerX = npc.x;
-                            playerY = npc.y;
-                    }
-                    state = STATE_EXPLORE;
-                    break;
-            }
+        if (cl.action != null) switch (cl.action) {
+            case "":
+                playerX = game.camera.viewportWidth * 3 / 4 - playerSpriteLarge.getWidth() / 2;
+                playerY = game.camera.viewportWidth / 2 - playerSpriteLarge.getHeight() / 2;
+                playerSpriteIsLarge = true;
+                state = STATE_INST;
+                break;
+            case "explore":
+                playerNoInteraction = true;
+                playerSpriteIsLarge = false;
+                switch (latestNPC) {
+                    case -1:
+                        playerX = 50;
+                        playerY = 50;
+                        break;
+                    default:
+                        NPC npc = npcs.get(latestNPC);
+                        playerX = npc.x;
+                        playerY = npc.y;
+                }
+                state = STATE_EXPLORE;
+                break;
+            case "exit":
+                state = STATE_COMPLETE;
+                /*
+                if (canExit()) {
+                    state = STATE_COMPLETE;
+                } else {
+                    int i = DaishiUtils.findLabel(daishi, "exit-nok");
+                    switchLine(i);
+                }
+                 */
+        }
         if (cl.chain) switchLine(curLineIndex + 1);
         if (cl.jump != null && cl.jump.length() != 0) {
             int i = DaishiUtils.findLabel(daishi, cl.jump);
@@ -169,54 +197,84 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
-        if (state == STATE_EXPLORE) {
-            game.batch.draw(pathway, 0, 0);
-            boolean w = Gdx.input.isKeyPressed(Input.Keys.W);
-            boolean a = Gdx.input.isKeyPressed(Input.Keys.A);
-            boolean s = Gdx.input.isKeyPressed(Input.Keys.S);
-            boolean d = Gdx.input.isKeyPressed(Input.Keys.D);
-            double angle = Math.sqrt(-1);
-            boolean moved = true;
-            if (w && a)
-                angle = (Math.PI * 7 / 4);
-            else if (a && s)
-                angle = (Math.PI * 5 / 4);
-            else if (s && d)
-                angle = (Math.PI * 3 / 4);
-            else if (d && w)
-                angle = (Math.PI * 1 / 4);
-            else if (w)
-                angle = 0;
-            else if (d)
-                angle = (Math.PI / 2);
-            else if (s)
-                angle = (Math.PI);
-            else if (a)
-                angle = (Math.PI * 3 / 2);
-            else
-                moved = false;
-            if (moved) {
-                weightedAngle = weightedAngle * 0.7 + angle * 0.3;
-                playerX += Math.sin(weightedAngle) * MOVEMENT_COEFF;
-                playerY += Math.cos(weightedAngle) * MOVEMENT_COEFF;
-                playerX = clamp(playerX, game.camera.viewportWidth, 0);
-                playerY = clamp(playerY, game.camera.viewportHeight, 0);
-            }
-        } else {
-            game.batch.draw(background, 0, 0);
+        switch (state) {
+            case STATE_INST:
+                game.batch.draw(background, 0, 0);
+                Sprite s = new Sprite(playerSpriteLarge);
+                s.setX(game.camera.viewportWidth / 4 - playerSpriteLarge.getWidth() / 2);
+                s.setY(game.camera.viewportWidth / 2 - playerSpriteLarge.getHeight() / 2);
+                s.flip(true, false);
+                s.setScale(0.8f);
+                s.draw(game.batch);
+                s.setTexture(spriteBeeNPC);
+                s.setX(game.camera.viewportWidth * 3 / 4 - playerSpriteLarge.getWidth() / 2);
+                s.setY(game.camera.viewportWidth / 2 - playerSpriteLarge.getHeight() / 2);
+                s.flip(true, false);
+                s.setScale(0.8f);
+                s.draw(game.batch);
+                break;
+            case STATE_EXPLORE:
+                game.batch.draw(pathway, 0, 0);
+                game.batch.draw(playerSpriteIsLarge ? playerSpriteLarge : playerSpriteSmall, playerX - playerSpriteSmall.getWidth() / 2, playerY - playerSpriteSmall.getHeight() / 2);
+                for (int i = 0; i < npcs.size(); i++) {
+                    NPC npc = npcs.get(i);
+                    game.batch.draw(spriteBeeNPC, npc.x - spriteBeeNPC.getWidth() / 2, npc.y - spriteBeeNPC.getHeight() / 2);
+                }
+                handleMovement(delta);
+                checkNPCInteraction();
+                break;
+            case STATE_COMPLETE:
+                game.batch.draw(background, 0, 0);
+                renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
+                renderText(subtitleFont, "You finished this level.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2-50);
         }
         if (curLine().body != null && !curLine().body.equals(""))
             telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
-        game.batch.draw(playerSpriteIsLarge ? playerSpriteLarge : playerSpriteSmall, playerX - playerSpriteSmall.getWidth() / 2, playerY - playerSpriteSmall.getHeight() / 2);
+        renderDebug();
+        game.batch.end();
+    }
+
+    private void handleMovement(float delta) {
+        boolean w = Gdx.input.isKeyPressed(Input.Keys.W);
+        boolean a = Gdx.input.isKeyPressed(Input.Keys.A);
+        boolean s = Gdx.input.isKeyPressed(Input.Keys.S);
+        boolean d = Gdx.input.isKeyPressed(Input.Keys.D);
+        double angle = Math.sqrt(-1);
+        boolean moved = true;
+        if (w && a) angle = (Math.PI * 7 / 4);
+        else if (a && s) angle = (Math.PI * 5 / 4);
+        else if (s && d) angle = (Math.PI * 3 / 4);
+        else if (d && w) angle = (Math.PI * 1 / 4);
+        else if (w) angle = 0;
+        else if (d) angle = (Math.PI / 2);
+        else if (s) angle = (Math.PI);
+        else if (a) angle = (Math.PI * 3 / 2);
+        else moved = false;
+        if (moved) {
+            weightedAngle = weightedAngle * 0.7 + angle * 0.3;
+            playerX += Math.sin(weightedAngle) * MOVEMENT_COEFF * delta;
+            playerY += Math.cos(weightedAngle) * MOVEMENT_COEFF * delta;
+            playerX = clamp(playerX, game.camera.viewportWidth, 0);
+            playerY = clamp(playerY, game.camera.viewportHeight, 0);
+        }
+    }
+
+    private void renderDebug() {
         renderText(game.debugFont, String.format("%f,%f", playerX, playerY), game.camera.viewportWidth / 2, 10);
         renderText(game.debugFont, curLine().toString(), game.camera.viewportWidth / 2, 20);
-        for (int i = 0; i < npcs.size(); i++) {
-            NPC npc = npcs.get(i);
-            game.batch.draw(spriteBeeNPC, npc.x - spriteBeeNPC.getWidth() / 2, npc.y - spriteBeeNPC.getHeight() / 2);
+    }
+
+    /**
+     * Whether player completed level requirements.
+     *
+     * @return whether player completed level requirements
+     */
+    private boolean canExit() {
+        // NOTE: ignore last NPC as it is the exit NPC.
+        for (int i = 0; i < npcInteractions.length - 1; i++) {
+            if (!npcInteractions[i]) return false;
         }
-        if (state == STATE_EXPLORE)
-            checkNPCInteraction();
-        game.batch.end();
+        return true;
     }
 
     private void checkNPCInteraction() {
@@ -225,7 +283,8 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
             NPC npc = npcs.get(i);
             if (Math.sqrt(Math.pow(Math.abs(playerX - npc.x), 2) + Math.pow(Math.abs(playerY - npc.y), 2)) < NPC_INTERACTION_RADIUS) {
                 inRadius = true;
-                if (!playerNoInteraction) {
+                if (!playerNoInteraction && Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+                    npcInteractions[i] = true;
                     int j = DaishiUtils.findLabel(daishi, npc.label);
                     latestNPC = i;
                     switchLine(j);
@@ -233,8 +292,7 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
                 }
             }
         }
-        if (!inRadius && playerNoInteraction)
-            playerNoInteraction = false;
+        if (!inRadius && playerNoInteraction) playerNoInteraction = false;
     }
 
     private float clamp(float n, float upper, float lower) {

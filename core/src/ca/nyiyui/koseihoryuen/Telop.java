@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -35,6 +36,7 @@ public class Telop extends BaseDrawable {
     private String bodyText;
     private BitmapFont tenFont;
     private BitmapFont bodyFont;
+    private BitmapFont hintFont;
     private Koseihoryuen game;
 
     Telop(Koseihoryuen game) {
@@ -52,10 +54,12 @@ public class Telop extends BaseDrawable {
         tenFont = game.font.generateFont(param);
         param.size = 28;
         bodyFont = game.font.generateFont(param);
+        param.size = 14;
+        hintFont = game.font.generateFont(param);
 
         labelStyle = new Label.LabelStyle();
-        labelStyle.font=bodyFont;
-        label = new Label(bodyText,labelStyle);
+        labelStyle.font = bodyFont;
+        label = new Label(bodyText, labelStyle);
         label.setWrap(true);
     }
 
@@ -95,11 +99,14 @@ public class Telop extends BaseDrawable {
             tenFont.draw(batch, tenText, tex2X + 20, tex2Y + tex2.getHeight() - 26);
         if (bodyText != null) {
             label.setText(bodyText);
-            label.setPosition(x+padding,y+padding);
-            label.setWidth(width-2*padding);
-            label.setHeight(height-2*padding-10);
+            label.setPosition(x + padding, y + padding);
+            label.setWidth(width - 2 * padding);
+            label.setHeight(height - 2 * padding - 10);
             label.setAlignment(Align.topLeft);
-            label.draw(batch,1);
+            label.draw(batch, 1);
         }
+        String hint = "Press [Enter] to continue";
+        final GlyphLayout gl = new GlyphLayout(hintFont, hint);
+        hintFont.draw(batch, hint, width -  padding - gl.width, y + gl.height/2 + padding);
     }
 }

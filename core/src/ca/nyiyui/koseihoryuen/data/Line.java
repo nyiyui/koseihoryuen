@@ -1,5 +1,7 @@
 package ca.nyiyui.koseihoryuen.data;
 
+import java.util.Objects;
+
 public class Line implements Cloneable {
     public String label;
     public String persona;
@@ -11,21 +13,6 @@ public class Line implements Cloneable {
      * Level-specfic action to perform for this line. Mutually exclusive with speech-related fields.
      */
     public String action;
-
-    @Override
-    public String toString() {
-        return "Line@" + label +
-                "{p='" + persona + '\'' +
-                ", hV='" + headVariant + '\'' +
-                ", t='" + ten + '\'' +
-                ", b='" + body + '\'' +
-                ", s='" + sound + '\'' +
-                ", a='" + action + '\'' +
-                ", c=" + chain +
-                ", nD=" + noDefault +
-                '}';
-    }
-
     /**
      * Switches to the next line immediately after. Not inherited.
      */
@@ -38,6 +25,26 @@ public class Line implements Cloneable {
      * Jumps to the line label. Not inherited. Chain takes precedence over this.
      */
     public String jump;
+    /**
+     * Question to ask, if not null. Not inherited.
+     */
+    public Question question;
+
+    @Override
+    public String toString() {
+        return "Line@" + label +
+                "{p='" + persona + '\'' +
+                ", hV='" + headVariant + '\'' +
+                ", t='" + ten + '\'' +
+                ", b='" + body + '\'' +
+                ", s='" + sound + '\'' +
+                ", a='" + action + '\'' +
+                ", c=" + chain +
+                ", nD=" + noDefault +
+                ", j=" + jump +
+                ", q=" + Objects.toString(question) +
+                '}';
+    }
 
     @Override
     public Object clone() {
