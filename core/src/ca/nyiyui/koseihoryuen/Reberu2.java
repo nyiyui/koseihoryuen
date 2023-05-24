@@ -99,13 +99,13 @@ public class Reberu2 extends ScreenAdapter2 implements PlayableScreen {
         game.batch.begin();
         game.batch.draw(bg, 0, 0);
         if (exploring) {
-            game.batch.draw(itemCity, 0, 0);
-            game.batch.draw(itemPest, 0, 0);
-            game.batch.draw(itemGas, 0, 0);
-            boolean w = Gdx.input.isKeyPressed(Input.Keys.W);
-            boolean a = Gdx.input.isKeyPressed(Input.Keys.A);
-            boolean s = Gdx.input.isKeyPressed(Input.Keys.S);
-            boolean d = Gdx.input.isKeyPressed(Input.Keys.D);
+            game.batch.draw(itemCity, 100, 390);
+            game.batch.draw(itemPest, 150, 50);
+            game.batch.draw(itemGas, 460, 50);
+            boolean w = Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP);
+            boolean a = Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
+            boolean s = Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
+            boolean d = Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
             double angle = Math.sqrt(-1);
             boolean moved = true;
             if (w && a)
