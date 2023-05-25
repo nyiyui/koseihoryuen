@@ -58,7 +58,7 @@ lines:
     noDefault: true
     action: exit
   - label: exit-nok
-    noDefault: true
+    noInherit: true
     ten: Instructions
     action: ""
     body: You can't exit yet.
