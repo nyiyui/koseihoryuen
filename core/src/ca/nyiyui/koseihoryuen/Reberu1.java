@@ -1,6 +1,5 @@
 package ca.nyiyui.koseihoryuen;
 
-import ca.nyiyui.koseihoryuen.data.Daishi;
 import ca.nyiyui.koseihoryuen.data.Line;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -12,14 +11,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import sun.util.resources.cldr.ext.TimeZoneNames_yi;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Reberu1 extends Reberu {
@@ -41,6 +35,7 @@ public class Reberu1 extends Reberu {
     private double weightedAngle = 0;
     private boolean playerSpriteIsLarge;
     private ArrayList<NPC> npcs;
+    private float elapsedToExit = 0;
     /**
      * Index of latest NPC interacted with.
      */
@@ -139,18 +134,21 @@ public class Reberu1 extends Reberu {
                 break;
             case STATE_EXPLORE:
                 game.batch.draw(pathway, 0, 0);
-                game.batch.draw(playerSpriteIsLarge ? playerSpriteLarge : playerSpriteSmall, playerX - playerSpriteSmall.getWidth() / 2, playerY - playerSpriteSmall.getHeight() / 2);
                 for (int i = 0; i < npcs.size(); i++) {
                     NPC npc = npcs.get(i);
                     game.batch.draw(spriteBeeNPC, npc.x - spriteBeeNPC.getWidth() / 2, npc.y - spriteBeeNPC.getHeight() / 2);
                 }
                 handleMovement(delta);
                 checkNPCInteraction();
+                game.batch.draw(playerSpriteIsLarge ? playerSpriteLarge : playerSpriteSmall, playerX - playerSpriteSmall.getWidth() / 2, playerY - playerSpriteSmall.getHeight() / 2);
                 break;
             case STATE_COMPLETE:
                 game.batch.draw(background, 0, 0);
+                elapsedToExit += delta;
                 renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
                 renderText(subtitleFont, "You finished this level.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 50);
+                if (elapsedToExit > 4f)
+                    game.setScreen(new TitleScreen(game));
         }
         if (curLine().body != null && !curLine().body.equals(""))
             telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
@@ -159,10 +157,10 @@ public class Reberu1 extends Reberu {
     }
 
     private void handleMovement(float delta) {
-        boolean w = Gdx.input.isKeyPressed(Input.Keys.W);
-        boolean a = Gdx.input.isKeyPressed(Input.Keys.A);
-        boolean s = Gdx.input.isKeyPressed(Input.Keys.S);
-        boolean d = Gdx.input.isKeyPressed(Input.Keys.D);
+        boolean w = Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP);
+        boolean a = Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
+        boolean s = Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
+        boolean d = Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
         double angle = Math.sqrt(-1);
         boolean moved = true;
         if (w && a) angle = (Math.PI * 7 / 4);
