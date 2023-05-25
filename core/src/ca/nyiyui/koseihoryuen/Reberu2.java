@@ -9,9 +9,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
 
 /**
  * Names: Ivy & Ken
@@ -21,7 +18,7 @@ import java.io.IOException;
  * Contributions: Ivy
  */
 
-public class Reberu2 extends ScreenAdapter2 implements PlayableScreen {
+public class Reberu2 extends Reberu {
     private Stage stage;
     private static final float MOVEMENT_COEFF = 10;
     private PlayScreen playScreen;
@@ -134,6 +131,13 @@ public class Reberu2 extends ScreenAdapter2 implements PlayableScreen {
                 playerY = clamp(playerY, game.camera.viewportHeight - player.getHeight(), 0);
             }
             game.batch.draw(player, playerX, playerY);
+
+            if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+                // check if player is on city
+                if (playerX >= 100 && playerX <= 100 + itemCity.getWidth() && playerY >= 390 && playerY <= 390 + itemCity.getHeight()) {
+                    //TODO: question stuff
+                }
+            }
 //            System.out.println(playerX + " " + playerY);
         } else {
 
@@ -165,15 +169,18 @@ public class Reberu2 extends ScreenAdapter2 implements PlayableScreen {
         if (cl.chain) switchLine(curLineIndex + 1);
     }
 
-    public void hide() {
-        Gdx.input.setInputProcessor(null);
+    @Override
+    protected void handleLineSwitch() {
+
     }
 
-    private void loadDaishi() throws IOException {
-        ObjectMapper om = new ObjectMapper();
-        daishi = om.readValue(Gdx.files.internal("daishi/reberu2.json").read(), Daishi.class);
-        for (int i = 1; i < daishi.lines.size(); i++)
-            daishi.lines.get(i).applyDefault(daishi.lines.get(i - 1));
+    @Override
+    public void dispose() {
+
+    }
+
+    public void hide() {
+        Gdx.input.setInputProcessor(null);
     }
 
     private float clamp(float n, float upper, float lower) {
