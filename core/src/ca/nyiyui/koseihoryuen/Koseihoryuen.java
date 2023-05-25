@@ -22,7 +22,7 @@ public class Koseihoryuen extends Game {
 
     @Override
     public void create() {
-        camera = new OrthographicCamera(16*60,13*60);
+        camera = new OrthographicCamera(16 * 60, 13 * 60);
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
         font = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoMono/RobotoMono-VariableFont_wght.ttf"));
@@ -34,7 +34,7 @@ public class Koseihoryuen extends Game {
         debugFont = font.generateFont(param);
         Box2D.init();
 //        setScreen(new SplashScreen(this));
-        setScreen(new PlayScreen(this, new Reberu1(this)));
+        setScreen(new PlayScreen(this, new Reberu2(this)));
     }
 
     @Override
