@@ -19,7 +19,7 @@ public class ExitScreen extends ScreenAdapter2 {
         param.size = 40;
         param.color = new Color(240, 237, 63, 1);
         byeFont = game.font.generateFont(param);
-        bee = new Texture(Gdx.files.internal("images/player-sprite-large.png"));
+        bee = new Texture(Gdx.files.internal("images/beeExit.png"));
         backdrop = new Texture(Gdx.files.internal("images/title-screen-bg.png"));
         xPos = (int) game.camera.viewportWidth;
     }
@@ -32,12 +32,12 @@ public class ExitScreen extends ScreenAdapter2 {
         game.batch.draw(backdrop, 0, 0);
         renderText(byeFont, "We'll BEE expecting you back soon!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 4);
         if (xPos > game.camera.viewportWidth / 5 * 3 - bee.getWidth() && xPos < game.camera.viewportWidth / 5 * 4 - bee.getWidth()) {
-            xPos -= (game.camera.viewportWidth / 960 * 2)*(delta*60.0f);
+            xPos -= (game.camera.viewportWidth / 960 * 2) * (delta * 60.0f);
         } else if (xPos <= -bee.getWidth()) {
             Gdx.app.exit();
             System.exit(0);
         } else {
-            xPos -= (game.camera.viewportWidth / 960 * 50)*(delta*60.0f);
+            xPos -= (game.camera.viewportWidth / 960 * 50) * (delta * 60.0f);
         }
         game.batch.draw(bee, xPos, game.camera.viewportHeight / 2);
         game.batch.end();
