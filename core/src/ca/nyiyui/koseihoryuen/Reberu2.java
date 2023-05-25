@@ -1,6 +1,5 @@
 package ca.nyiyui.koseihoryuen;
 
-import ca.nyiyui.koseihoryuen.data.Daishi;
 import ca.nyiyui.koseihoryuen.data.Line;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -18,47 +17,44 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
  * Contributions: Ivy
  */
 
-public class Reberu2 extends Reberu {
+
+public class Reberu2 extends Reberu implements PlayableScreen {
+
     private Stage stage;
     private static final float MOVEMENT_COEFF = 10;
-    private PlayScreen playScreen;
     /**
      * images for background, player, and interactable objects.
      */
     private Texture bg, player, playerL, itemCity, itemGas, itemPest;
-    private boolean exploring;
-    /**
-     * stage dialogue
-     */
-    private Daishi daishi;
-    /**
-     * Index of line to currently show.
-     */
-    private int curLineIndex;
-    private Telop telop;
     /**
      * x- and y- coordinates of the player.
      */
     private float playerX, playerY;
     private double weightedAngle = 0;
+    private State state = State.INSTRUCTIONS;
+
+    private enum State {
+        INSTRUCTIONS, EXPLORING
+    }
 
     public Reberu2(Koseihoryuen game) {
         super(game);
+        DAISHI_PATH = "daishi/reberu1.json";
         stage = new Stage(new FillViewport(game.camera.viewportWidth, game.camera.viewportHeight, game.camera), game.batch);
-//        try {
-//            loadDaishi();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("that's a youproblem ;)");
-//        }
-//        switchLine(0);
+        try {
+            loadDaishi();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("loading daishi failed");
+        }
         bg = new Texture(Gdx.files.internal("images/stage2-bg.png"));
         player = new Texture(Gdx.files.internal("images/player-sprite-small.png"));
         playerL = new Texture(Gdx.files.internal("images/player-sprite-large.png"));
         itemCity = new Texture(Gdx.files.internal("images/stage2-city.png"));
         itemGas = new Texture(Gdx.files.internal("images/stage2-greenhouse-gas.png"));
         itemPest = new Texture(Gdx.files.internal("images/stage2-pesticide-sign.png"));
-        exploring = true;
+        switchLine(0);
+        state = State.EXPLORING;
     }
 
     @Override
@@ -95,7 +91,7 @@ public class Reberu2 extends Reberu {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
         game.batch.draw(bg, 0, 0);
-        if (exploring) {
+        if (state == State.EXPLORING) {
             game.batch.draw(itemCity, 100, 390);
             game.batch.draw(itemPest, 150, 50);
             game.batch.draw(itemGas, 460, 50);
@@ -139,45 +135,33 @@ public class Reberu2 extends Reberu {
                 }
             }
 //            System.out.println(playerX + " " + playerY);
-        } else {
-
         }
 
 
         game.batch.end();
     }
 
-    private Line curLine() {
-        return daishi.lines.get(curLineIndex);
-    }
-
-    private void switchLine(int newLineIndex) {
-        curLineIndex = newLineIndex;
-        Line cl = curLine();
-        telop = new Telop(game);
-        telop.setBodyText(cl.body);
-        telop.setTenText(cl.ten);
-        if (cl.action != null)
-            switch (cl.action) {
-                case "":
-
-                    break;
-                case "explore":
-                    exploring = true;
-                    break;
-            }
-        if (cl.chain) switchLine(curLineIndex + 1);
-    }
-
     @Override
     protected void handleLineSwitch() {
-
+        Line cl = curLine();
+        switch (cl.action) {
+            case "":
+                state = State.INSTRUCTIONS;
+            case "explore":
+                state = State.EXPLORING;
+        }
     }
 
     @Override
     public void dispose() {
-
+        bg.dispose();
+        player.dispose();
+        playerL.dispose();
+        itemCity.dispose();
+        itemGas.dispose();
+        itemPest.dispose();
     }
+
 
     public void hide() {
         Gdx.input.setInputProcessor(null);

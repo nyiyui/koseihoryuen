@@ -25,7 +25,6 @@ import java.util.ArrayList;
 public class Reberu1 extends Reberu {
     private static final float NPC_INTERACTION_RADIUS = 70;
     private static final float MOVEMENT_COEFF = 0xff;
-    private Box2DDebugRenderer debugRenderer;
     private Stage stage;
     private Texture background;
     private Texture pathway;
@@ -59,6 +58,7 @@ public class Reberu1 extends Reberu {
 
     Reberu1(Koseihoryuen game) {
         super(game);
+        DAISHI_PATH = "daishi/reberu1.json";
         stage = new Stage(new FillViewport(game.camera.viewportWidth, game.camera.viewportHeight, game.camera), game.batch);
         try {
             loadDaishi();
@@ -262,7 +262,13 @@ public class Reberu1 extends Reberu {
 
     @Override
     public void dispose() {
-        debugRenderer.dispose();
+        background.dispose();
+        pathway.dispose();
+        playerSpriteSmall.dispose();
+        playerSpriteLarge.dispose();
+        spriteBeeNPC.dispose();
+        titleFont.dispose();
+        subtitleFont.dispose();
     }
 }
 

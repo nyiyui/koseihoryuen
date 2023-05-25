@@ -42,5 +42,6 @@ public class Koseihoryuen extends Game {
         batch.dispose();
         img.dispose();
         font.dispose();
+        debugFont.dispose();
     }
 }
