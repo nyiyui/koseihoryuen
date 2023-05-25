@@ -17,6 +17,10 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
      * Index of line to currently show.
      */
     protected int curLineIndex;
+    /**
+     * Internal path of daishi to load.
+     */
+    protected String DAISHI_PATH;
 
     public Reberu(Koseihoryuen game) {
         super(game);
@@ -24,7 +28,7 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
 
     protected void loadDaishi() throws IOException {
         ObjectMapper om = new ObjectMapper();
-        daishi = om.readValue(Gdx.files.internal("daishi/reberu1.json").read(), Daishi.class);
+        daishi = om.readValue(Gdx.files.internal(DAISHI_PATH).read(), Daishi.class);
         for (int i = 1; i < daishi.lines.size(); i++)
             daishi.lines.get(i).applyDefault(daishi.lines.get(i - 1));
     }
