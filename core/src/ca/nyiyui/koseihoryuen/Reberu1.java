@@ -22,24 +22,17 @@ import sun.util.resources.cldr.ext.TimeZoneNames_yi;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
+public class Reberu1 extends Reberu {
     private static final float NPC_INTERACTION_RADIUS = 70;
     private static final float MOVEMENT_COEFF = 0xff;
     private Box2DDebugRenderer debugRenderer;
     private Stage stage;
-    private PlayScreen playScreen;
-    private Daishi daishi;
-    /**
-     * Index of line to currently show.
-     */
-    private int curLineIndex;
     private Texture background;
     private Texture pathway;
     private Texture playerSpriteSmall;
     private Texture playerSpriteLarge;
     private Texture spriteBeeNPC;
     private Music music;
-    private Telop telop;
     private final static int STATE_INST = 1;
     private final static int STATE_EXPLORE = 2;
     private final static int STATE_COMPLETE = 3;
@@ -123,72 +116,6 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
         Gdx.input.setInputProcessor(null);
     }
 
-    private void loadDaishi() throws IOException {
-        ObjectMapper om = new ObjectMapper();
-        daishi = om.readValue(Gdx.files.internal("daishi/reberu1.json").read(), Daishi.class);
-        for (int i = 1; i < daishi.lines.size(); i++)
-            daishi.lines.get(i).applyDefault(daishi.lines.get(i - 1));
-    }
-
-    @Override
-    public void setPlayScreen(PlayScreen ps) {
-        playScreen = ps;
-    }
-
-    private Line curLine() {
-        return daishi.lines.get(curLineIndex);
-    }
-
-    private void switchLine(int newLineIndex) {
-        curLineIndex = newLineIndex;
-        Line cl = curLine();
-        if (music != null) music.dispose();
-        if (cl.sound != null && !cl.sound.equals("")) {
-            music = Gdx.audio.newMusic(Gdx.files.internal(cl.sound));
-            music.setLooping(true);
-            music.play();
-            // TODO: sound doesn't play
-        }
-        telop = new Telop(game);
-        telop.setBodyText(cl.body);
-        telop.setTenText(cl.ten);
-        if (cl.action != null) switch (cl.action) {
-            case "":
-                playerX = game.camera.viewportWidth * 3 / 4 - playerSpriteLarge.getWidth() / 2;
-                playerY = game.camera.viewportWidth / 2 - playerSpriteLarge.getHeight() / 2;
-                playerSpriteIsLarge = true;
-                state = STATE_INST;
-                break;
-            case "explore":
-                playerNoInteraction = true;
-                playerSpriteIsLarge = false;
-                switch (latestNPC) {
-                    case -1:
-                        playerX = 50;
-                        playerY = 50;
-                        break;
-                    default:
-                        NPC npc = npcs.get(latestNPC);
-                        playerX = npc.x;
-                        playerY = npc.y;
-                }
-                state = STATE_EXPLORE;
-                break;
-            case "exit":
-                if (canExit()) {
-                    state = STATE_COMPLETE;
-                } else {
-                    int i = DaishiUtils.findLabel(daishi, "exit-nok");
-                    switchLine(i);
-                }
-        }
-        if (cl.chain) switchLine(curLineIndex + 1);
-        if (cl.jump != null && cl.jump.length() != 0) {
-            int i = DaishiUtils.findLabel(daishi, cl.jump);
-            switchLine(i);
-        }
-    }
-
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -223,7 +150,7 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
             case STATE_COMPLETE:
                 game.batch.draw(background, 0, 0);
                 renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
-                renderText(subtitleFont, "You finished this level.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2-50);
+                renderText(subtitleFont, "You finished this level.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 50);
         }
         if (curLine().body != null && !curLine().body.equals(""))
             telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
@@ -298,12 +225,39 @@ public class Reberu1 extends ScreenAdapter2 implements PlayableScreen {
         return n;
     }
 
-    public Daishi getDaishi() {
-        return daishi;
-    }
-
-    public void setDaishi(Daishi daishi) {
-        this.daishi = daishi;
+    @Override
+    protected void handleLineSwitch() {
+        Line cl = curLine();
+        if (cl.action != null) switch (cl.action) {
+            case "":
+                playerX = game.camera.viewportWidth * 3 / 4 - playerSpriteLarge.getWidth() / 2;
+                playerY = game.camera.viewportWidth / 2 - playerSpriteLarge.getHeight() / 2;
+                playerSpriteIsLarge = true;
+                state = Reberu1.STATE_INST;
+                break;
+            case "explore":
+                playerNoInteraction = true;
+                playerSpriteIsLarge = false;
+                switch (latestNPC) {
+                    case -1:
+                        playerX = 50;
+                        playerY = 50;
+                        break;
+                    default:
+                        NPC npc = npcs.get(latestNPC);
+                        playerX = npc.x;
+                        playerY = npc.y;
+                }
+                state = Reberu1.STATE_EXPLORE;
+                break;
+            case "exit":
+                if (canExit()) {
+                    state = Reberu1.STATE_COMPLETE;
+                } else {
+                    int i = DaishiUtils.findLabel(daishi, "exit-nok");
+                    switchLine(i);
+                }
+        }
     }
 
     @Override

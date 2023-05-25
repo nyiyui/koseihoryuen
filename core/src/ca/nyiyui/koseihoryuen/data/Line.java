@@ -22,6 +22,10 @@ public class Line implements Cloneable {
      */
     public boolean noDefault;
     /**
+     * Disables default application for this line only.
+     */
+    public boolean noInherit;
+    /**
      * Jumps to the line label. Not inherited. Chain takes precedence over this.
      */
     public String jump;
@@ -57,6 +61,7 @@ public class Line implements Cloneable {
     }
 
     public void applyDefault(Line line) {
+        if (noInherit) return;
         if (noDefault || line.noDefault) return;
         if (label == null) label = line.label;
         if (persona == null) persona = line.persona;
