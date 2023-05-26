@@ -15,12 +15,9 @@ import java.util.ArrayList;
 
 public class Reberu1 extends Reberu {
     private static final float NPC_INTERACTION_RADIUS = 70;
-    private static final float MOVEMENT_COEFF = 0xff;
     private Stage stage;
     private Texture background;
     private Texture pathway;
-    private Texture playerSpriteSmall;
-    private Texture playerSpriteLarge;
     private Texture spriteBeeNPC;
     private Music music;
     private int state = STATE_INST;
@@ -54,8 +51,6 @@ public class Reberu1 extends Reberu {
         }
         background = new Texture(Gdx.files.internal("images/stage1-bg.png"));
         pathway = new Texture(Gdx.files.internal("images/stage1-pathway.png"));
-        playerSpriteSmall = new Texture(Gdx.files.internal("images/player-sprite-small.png"));
-        playerSpriteLarge = new Texture(Gdx.files.internal("images/player-sprite-large.png"));
         spriteBeeNPC = new Texture(Gdx.files.internal("images/beeNPC.png"));
         npcs = new ArrayList<>();
         npcs.add(new NPC(380, 700, "idobee1"));
@@ -130,36 +125,12 @@ public class Reberu1 extends Reberu {
             case STATE_COMPLETE:
                 game.batch.draw(background, 0, 0);
                 closingScreen(delta);
+                break;
         }
         if (curLine().body != null && !curLine().body.equals(""))
             telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
         renderDebug();
         game.batch.end();
-    }
-
-    private void handleMovement(float delta) {
-        boolean w = Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP);
-        boolean a = Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
-        boolean s = Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
-        boolean d = Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
-        double angle = Math.sqrt(-1);
-        boolean moved = true;
-        if (w && a) angle = (Math.PI * 7 / 4);
-        else if (a && s) angle = (Math.PI * 5 / 4);
-        else if (s && d) angle = (Math.PI * 3 / 4);
-        else if (d && w) angle = (Math.PI * 1 / 4);
-        else if (w) angle = 0;
-        else if (d) angle = (Math.PI / 2);
-        else if (s) angle = (Math.PI);
-        else if (a) angle = (Math.PI * 3 / 2);
-        else moved = false;
-        if (moved) {
-            weightedAngle = weightedAngle * 0.7 + angle * 0.3;
-            playerX += Math.sin(weightedAngle) * MOVEMENT_COEFF * delta;
-            playerY += Math.cos(weightedAngle) * MOVEMENT_COEFF * delta;
-            playerX = clamp(playerX, game.camera.viewportWidth, 0);
-            playerY = clamp(playerY, game.camera.viewportHeight, 0);
-        }
     }
 
     private void renderDebug() {
@@ -198,12 +169,6 @@ public class Reberu1 extends Reberu {
         if (!inRadius && playerNoInteraction) playerNoInteraction = false;
     }
 
-    private float clamp(float n, float upper, float lower) {
-        if (n > upper) return upper;
-        if (n < lower) return lower;
-        return n;
-    }
-
     @Override
     protected void handleLineSwitch() {
         Line cl = curLine();
@@ -239,13 +204,29 @@ public class Reberu1 extends Reberu {
         }
     }
 
-    @Override
-    public void closingScreen(float delta) {
-        elapsedToExit += delta;
-        renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
-        renderText(subtitleFont, "You finished this level.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 50);
-        if (elapsedToExit > 4f)
-            game.setScreen(new TitleScreen(game));
+    private void handleMovement(float delta) {
+        boolean w = Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP);
+        boolean a = Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
+        boolean s = Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
+        boolean d = Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+        double angle = Math.sqrt(-1);
+        boolean moved = true;
+        if (w && a) angle = (Math.PI * 7 / 4);
+        else if (a && s) angle = (Math.PI * 5 / 4);
+        else if (s && d) angle = (Math.PI * 3 / 4);
+        else if (d && w) angle = (Math.PI * 1 / 4);
+        else if (w) angle = 0;
+        else if (d) angle = (Math.PI / 2);
+        else if (s) angle = (Math.PI);
+        else if (a) angle = (Math.PI * 3 / 2);
+        else moved = false;
+        if (moved) {
+            weightedAngle = weightedAngle * 0.7 + angle * 0.3;
+            playerX += Math.sin(weightedAngle) * MOVEMENT_COEFF * delta;
+            playerY += Math.cos(weightedAngle) * MOVEMENT_COEFF * delta;
+            playerX = clamp(playerX, game.camera.viewportWidth - playerSpriteSmall.getWidth(), 0);
+            playerY = clamp(playerY, game.camera.viewportHeight - playerSpriteSmall.getHeight(), 0);
+        }
     }
 
     @Override

@@ -21,11 +21,10 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 public class Reberu2 extends Reberu implements PlayableScreen {
 
     private Stage stage;
-    private static final float MOVEMENT_COEFF = 0xff;
     /**
      * images for background, player, and interactable objects.
      */
-    private Texture bg, player, playerL, itemCity, itemGas, itemPest;
+    private Texture bg, itemCity, itemGas, itemPest;
     /**
      * x- and y- coordinates of the player.
      */
@@ -35,7 +34,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
 
     public Reberu2(Koseihoryuen game) {
         super(game);
-        DAISHI_PATH = "daishi/reberu1.json";
+        DAISHI_PATH = "daishi/reberu2.json";
         stage = new Stage(new FillViewport(game.camera.viewportWidth, game.camera.viewportHeight, game.camera), game.batch);
         try {
             loadDaishi();
@@ -44,8 +43,6 @@ public class Reberu2 extends Reberu implements PlayableScreen {
             throw new RuntimeException("loading daishi failed");
         }
         bg = new Texture(Gdx.files.internal("images/stage2-bg.png"));
-        player = new Texture(Gdx.files.internal("images/player-sprite-small.png"));
-        playerL = new Texture(Gdx.files.internal("images/player-sprite-large.png"));
         itemCity = new Texture(Gdx.files.internal("images/stage2-city.png"));
         itemGas = new Texture(Gdx.files.internal("images/stage2-greenhouse-gas.png"));
         itemPest = new Texture(Gdx.files.internal("images/stage2-pesticide-sign.png"));
@@ -95,7 +92,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                 game.batch.draw(itemPest, 120, 50);
                 game.batch.draw(itemGas, 620, 190);
                 handleMovement(delta);
-                game.batch.draw(player, playerX, playerY);
+                game.batch.draw(playerSpriteSmall, playerX, playerY);
 
                 if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
                     // check if player is on city
@@ -122,6 +119,32 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         game.batch.end();
     }
 
+    @Override
+    protected void handleLineSwitch() {
+        Line cl = curLine();
+        switch (cl.action) {
+            case "":
+                state = STATE_INST;
+            case "explore":
+                state = STATE_EXPLORE;
+        }
+    }
+
+    @Override
+    public void dispose() {
+        bg.dispose();
+        playerSpriteLarge.dispose();
+        playerSpriteSmall.dispose();
+        itemCity.dispose();
+        itemGas.dispose();
+        itemPest.dispose();
+    }
+
+    @Override
+    public void closingScreen(float delta) {
+
+    }
+
     private void handleMovement(float delta) {
         boolean w = Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean a = Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
@@ -142,45 +165,12 @@ public class Reberu2 extends Reberu implements PlayableScreen {
             weightedAngle = weightedAngle * 0.7 + angle * 0.3;
             playerX += Math.sin(weightedAngle) * MOVEMENT_COEFF * delta;
             playerY += Math.cos(weightedAngle) * MOVEMENT_COEFF * delta;
-            playerX = clamp(playerX, game.camera.viewportWidth - player.getWidth(), 0);
-            playerY = clamp(playerY, game.camera.viewportHeight - player.getHeight(), 0);
+            playerX = clamp(playerX, game.camera.viewportWidth - playerSpriteSmall.getWidth(), 0);
+            playerY = clamp(playerY, game.camera.viewportHeight - playerSpriteSmall.getHeight(), 0);
         }
     }
-
-    @Override
-    protected void handleLineSwitch() {
-        Line cl = curLine();
-        switch (cl.action) {
-            case "":
-                state = STATE_INST;
-            case "explore":
-                state = STATE_EXPLORE;
-        }
-    }
-
-    @Override
-    public void dispose() {
-        bg.dispose();
-        player.dispose();
-        playerL.dispose();
-        itemCity.dispose();
-        itemGas.dispose();
-        itemPest.dispose();
-    }
-
-    @Override
-    public void closingScreen(float delta) {
-
-    }
-
 
     public void hide() {
         Gdx.input.setInputProcessor(null);
-    }
-
-    private float clamp(float n, float upper, float lower) {
-        if (n > upper) return upper;
-        if (n < lower) return lower;
-        return n;
     }
 }

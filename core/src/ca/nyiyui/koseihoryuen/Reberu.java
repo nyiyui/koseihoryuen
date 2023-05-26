@@ -4,6 +4,7 @@ import ca.nyiyui.koseihoryuen.data.Daishi;
 import ca.nyiyui.koseihoryuen.data.Line;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,9 +37,16 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
      */
     protected final BitmapFont titleFont;
     protected final BitmapFont subtitleFont;
+    protected float playerX, playerY;
+    protected double weightedAngle = 0;
+    protected static final float MOVEMENT_COEFF = 0xff;
+    protected Texture playerSpriteSmall;
+    protected Texture playerSpriteLarge;
 
     public Reberu(Koseihoryuen game) {
         super(game);
+        playerSpriteSmall = new Texture(Gdx.files.internal("images/player-sprite-small.png"));
+        playerSpriteLarge = new Texture(Gdx.files.internal("images/player-sprite-large.png"));
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
         param.color = new Color(0x222222aa);
         param.size = 52;
@@ -90,5 +98,19 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
     @Override
     public abstract void dispose();
 
-    public abstract void closingScreen(float delta);
+    public void closingScreen(float delta) {
+        elapsedToExit += delta;
+        renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
+        renderText(subtitleFont, "You finished this level.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 50);
+        if (elapsedToExit > 4f)
+            game.setScreen(new TitleScreen(game));
+    }
+
+    protected float clamp(float n, float upper, float lower) {
+        if (n > upper) return upper;
+        if (n < lower) return lower;
+        return n;
+    }
+
+
 }
