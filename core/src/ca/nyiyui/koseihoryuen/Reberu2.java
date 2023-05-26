@@ -31,11 +31,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
      */
     private float playerX, playerY;
     private double weightedAngle = 0;
-    private State state = State.INSTRUCTIONS;
-
-    private enum State {
-        INSTRUCTIONS, EXPLORING
-    }
+    private int state = STATE_INST;
 
     public Reberu2(Koseihoryuen game) {
         super(game);
@@ -56,7 +52,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         playerX = game.camera.viewportWidth / 2;
         playerY = game.camera.viewportHeight / 2;
         switchLine(0);
-        state = State.EXPLORING;
+        state = STATE_EXPLORE;
     }
 
     @Override
@@ -93,32 +89,36 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
         game.batch.draw(bg, 0, 0);
-        if (state == State.EXPLORING) {
-            game.batch.draw(itemCity, 100, 390);
-            game.batch.draw(itemPest, 120, 50);
-            game.batch.draw(itemGas, 620, 190);
-            handleMovement(delta);
-            game.batch.draw(player, playerX, playerY);
+        switch (state) {
+            case STATE_EXPLORE:
+                game.batch.draw(itemCity, 100, 390);
+                game.batch.draw(itemPest, 120, 50);
+                game.batch.draw(itemGas, 620, 190);
+                handleMovement(delta);
+                game.batch.draw(player, playerX, playerY);
 
-            if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-                // check if player is on city
-                if (playerX >= 100 && playerX <= 100 + itemCity.getWidth() && playerY >= 390 && playerY <= 390 + itemCity.getHeight()) {
-                    System.out.println("on city");
-                    //TODO: add questions
+                if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+                    // check if player is on city
+                    if (playerX >= 100 && playerX <= 100 + itemCity.getWidth() && playerY >= 390 && playerY <= 390 + itemCity.getHeight()) {
+                        System.out.println("on city");
+                        //TODO: add questions
+                    }
+                    // check if player is on pesticide warning sign
+                    else if (playerX >= 120 && playerX <= 120 + itemPest.getWidth() && playerY >= 50 && playerY <= 50 + itemPest.getHeight()) {
+                        System.out.println("on pest");
+                    }
+                    // check if player is on greenhouse gas emissions
+                    else if (playerX >= 6 && playerX <= 620 + itemGas.getWidth() && playerY >= 190 && playerY <= 190 + itemGas.getHeight()) {
+                        System.out.println("on greenhouse gas");
+                    }
                 }
-                // check if player is on pesticide warning sign
-                else if (playerX >= 120 && playerX <= 120 + itemPest.getWidth() && playerY >= 50 && playerY <= 50 + itemPest.getHeight()) {
-                    System.out.println("on pest");
-                }
-                // check if player is on greenhouse gas emissions
-                else if (playerX >= 6 && playerX <= 620 + itemGas.getWidth() && playerY >= 190 && playerY <= 190 + itemGas.getHeight()) {
-                    System.out.println("on greenhouse gas");
-                }
-            }
-//            System.out.println(playerX + " " + playerY);
+                break;
+            case STATE_INST:
+                break;
+            case STATE_COMPLETE:
+
+                break;
         }
-
-
         game.batch.end();
     }
 
@@ -152,9 +152,9 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         Line cl = curLine();
         switch (cl.action) {
             case "":
-                state = State.INSTRUCTIONS;
+                state = STATE_INST;
             case "explore":
-                state = State.EXPLORING;
+                state = STATE_EXPLORE;
         }
     }
 
@@ -166,6 +166,11 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         itemCity.dispose();
         itemGas.dispose();
         itemPest.dispose();
+    }
+
+    @Override
+    public void closingScreen(float delta) {
+
     }
 
 

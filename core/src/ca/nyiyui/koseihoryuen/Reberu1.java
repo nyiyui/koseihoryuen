@@ -5,12 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
@@ -26,16 +23,12 @@ public class Reberu1 extends Reberu {
     private Texture playerSpriteLarge;
     private Texture spriteBeeNPC;
     private Music music;
-    private final static int STATE_INST = 1;
-    private final static int STATE_EXPLORE = 2;
-    private final static int STATE_COMPLETE = 3;
     private int state = STATE_INST;
     private float playerX = 0;
     private float playerY = 0;
     private double weightedAngle = 0;
     private boolean playerSpriteIsLarge;
     private ArrayList<NPC> npcs;
-    private float elapsedToExit = 0;
     /**
      * Index of latest NPC interacted with.
      */
@@ -48,8 +41,6 @@ public class Reberu1 extends Reberu {
      * NPCs encountered with. Used to determine whether to allow the player to end the level now.
      */
     private boolean npcInteractions[];
-    private final BitmapFont titleFont;
-    private final BitmapFont subtitleFont;
 
     Reberu1(Koseihoryuen game) {
         super(game);
@@ -72,12 +63,6 @@ public class Reberu1 extends Reberu {
         npcs.add(new NPC(520, 260, "immabee3"));
         npcs.add(new NPC(50, 240, "exit"));
         npcInteractions = new boolean[npcs.size()];
-        FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        param.color = new Color(0x222222aa);
-        param.size = 52;
-        titleFont = game.font.generateFont(param);
-        param.size = 36;
-        subtitleFont = game.font.generateFont(param);
         switchLine(0);
     }
 
@@ -144,11 +129,7 @@ public class Reberu1 extends Reberu {
                 break;
             case STATE_COMPLETE:
                 game.batch.draw(background, 0, 0);
-                elapsedToExit += delta;
-                renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
-                renderText(subtitleFont, "You finished this level.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 50);
-                if (elapsedToExit > 4f)
-                    game.setScreen(new TitleScreen(game));
+                closingScreen(delta);
         }
         if (curLine().body != null && !curLine().body.equals(""))
             telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
@@ -259,6 +240,15 @@ public class Reberu1 extends Reberu {
     }
 
     @Override
+    public void closingScreen(float delta) {
+        elapsedToExit += delta;
+        renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
+        renderText(subtitleFont, "You finished this level.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 50);
+        if (elapsedToExit > 4f)
+            game.setScreen(new TitleScreen(game));
+    }
+
+    @Override
     public void dispose() {
         background.dispose();
         pathway.dispose();
@@ -280,4 +270,5 @@ class NPC {
         this.y = y;
         this.label = label;
     }
+
 }

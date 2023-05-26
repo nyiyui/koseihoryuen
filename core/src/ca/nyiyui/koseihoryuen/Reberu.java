@@ -3,8 +3,9 @@ package ca.nyiyui.koseihoryuen;
 import ca.nyiyui.koseihoryuen.data.Daishi;
 import ca.nyiyui.koseihoryuen.data.Line;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -22,8 +23,28 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
      */
     protected String DAISHI_PATH;
 
+    protected final static int STATE_INST = 1;
+    protected final static int STATE_EXPLORE = 2;
+    protected final static int STATE_COMPLETE = 3;
+
+    /**
+     * counts how many seconds have elapsed since player has cleared a stage.
+     */
+    protected float elapsedToExit = 0;
+    /**
+     * fonts
+     */
+    protected final BitmapFont titleFont;
+    protected final BitmapFont subtitleFont;
+
     public Reberu(Koseihoryuen game) {
         super(game);
+        FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        param.color = new Color(0x222222aa);
+        param.size = 52;
+        titleFont = game.font.generateFont(param);
+        param.size = 36;
+        subtitleFont = game.font.generateFont(param);
     }
 
     protected void loadDaishi() throws IOException {
@@ -68,4 +89,6 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
 
     @Override
     public abstract void dispose();
+
+    public abstract void closingScreen(float delta);
 }
