@@ -31,7 +31,6 @@ public class Reberu2 extends Reberu implements PlayableScreen {
      */
     private float playerX, playerY;
     private double weightedAngle = 0;
-    private int state = STATE_INST;
 
     public Reberu2(Koseihoryuen game) {
         super(game);
@@ -52,7 +51,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         playerX = game.camera.viewportWidth / 2;
         playerY = game.camera.viewportHeight / 2;
         switchLine(0);
-        state = STATE_EXPLORE;
+        state = State.EXPLORE;
     }
 
     @Override
@@ -91,7 +90,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         game.batch.begin();
         game.batch.draw(bg, 0, 0);
         switch (state) {
-            case STATE_EXPLORE:
+            case EXPLORE:
                 game.batch.draw(itemCity, 100, 390);
                 game.batch.draw(itemPest, 120, 50);
                 game.batch.draw(itemGas, 620, 190);
@@ -114,13 +113,11 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                     }
                 }
                 break;
-            case STATE_INST:
+            case INSTRUCTIONS:
                 break;
-            case STATE_COMPLETE:
-
-                break;
+            case COMPLETE:
         }
-        if (cl.question != null) renderQuestion();
+        if (curLine().question != null) renderQuestion();
         game.batch.end();
     }
 
@@ -154,9 +151,10 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         Line cl = curLine();
         switch (cl.action) {
             case "":
-                state = STATE_INST;
+                state = State.INSTRUCTIONS;
+                break;
             case "explore":
-                state = STATE_EXPLORE;
+                state = State.EXPLORE;
         }
     }
 
