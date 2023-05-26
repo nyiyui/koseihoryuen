@@ -11,9 +11,11 @@ public class Reberu3 extends Reberu implements PlayableScreen {
 
     @Override
     public void dispose() {
+        super.dispose();
     }
 
     @Override
     public void closingScreen(float delta) {
+        throw new RuntimeException("not yet implemented");
     }
 }

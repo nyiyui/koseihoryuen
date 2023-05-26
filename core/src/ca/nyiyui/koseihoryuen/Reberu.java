@@ -128,7 +128,11 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
      * See libGDX docs.
      */
     @Override
-    public abstract void dispose();
+    public void dispose() {
+        playScreen.dispose();
+        titleFont.dispose();
+        subtitleFont.dispose();
+    }
 
     /**
      * Shows the congratulations screen.

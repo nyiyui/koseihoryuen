@@ -160,6 +160,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
 
     @Override
     public void dispose() {
+        super.dispose();
         bg.dispose();
         player.dispose();
         playerL.dispose();
