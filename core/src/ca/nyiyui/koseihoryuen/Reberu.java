@@ -2,6 +2,7 @@ package ca.nyiyui.koseihoryuen;
 
 import ca.nyiyui.koseihoryuen.data.Daishi;
 import ca.nyiyui.koseihoryuen.data.Line;
+import ca.nyiyui.koseihoryuen.data.Question;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.Queue;
 
 public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
     protected Daishi daishi;
@@ -22,6 +24,8 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
      * Internal path of daishi to load.
      */
     protected String DAISHI_PATH;
+    protected Telop questionDrawableTelop;
+    protected QuestionDrawable questionDrawable;
 
     protected final static int STATE_INST = 1;
     protected final static int STATE_EXPLORE = 2;
@@ -45,6 +49,8 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
         titleFont = game.font.generateFont(param);
         param.size = 36;
         subtitleFont = game.font.generateFont(param);
+        questionDrawableTelop = new Telop(game);
+        questionDrawable = new QuestionDrawable(game, questionDrawableTelop);
     }
 
     protected void loadDaishi() throws IOException {
@@ -75,6 +81,8 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
             int i = DaishiUtils.findLabel(daishi, cl.jump);
             switchLine(i);
         }
+        if (cl.question != null)
+            questionDrawable.loadQuestion(cl.question);
     }
 
     protected abstract void handleLineSwitch();
@@ -85,6 +93,11 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
 
     public void setDaishi(Daishi daishi) {
         this.daishi = daishi;
+    }
+
+    protected void renderQuestion() {
+        questionDrawable.draw(game.batch, 0, 0, game.camera.viewportWidth, game.camera.viewportHeight);
+        questionDrawable.handleInput();
     }
 
     @Override

@@ -35,7 +35,6 @@ public class Telop extends BaseDrawable {
      */
     private String bodyText;
     private BitmapFont tenFont;
-    private BitmapFont bodyFont;
     private BitmapFont hintFont;
     private Koseihoryuen game;
 
@@ -48,19 +47,18 @@ public class Telop extends BaseDrawable {
         tex2 = new Texture(Gdx.files.internal("images/telop2.png"));
         TextureRegion tex2Middle = new TextureRegion(tex2, tex2.getWidth() / 4, 0, tex2.getWidth() / 2, tex2.getHeight());
         tex2MiddleTile = new TiledDrawable(tex2Middle);
+        labelStyle = new Label.LabelStyle();
+        labelStyle.font=game.debugFont; // placeholder
+        label = new Label(bodyText, labelStyle);
+        label.setWrap(true);
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
         param.color = new Color(0xffffffff);
         param.size = 22;
         tenFont = game.font.generateFont(param);
         param.size = 28;
-        bodyFont = game.font.generateFont(param);
+        setBodyFont(game.font.generateFont(param));
         param.size = 14;
         hintFont = game.font.generateFont(param);
-
-        labelStyle = new Label.LabelStyle();
-        labelStyle.font = bodyFont;
-        label = new Label(bodyText, labelStyle);
-        label.setWrap(true);
     }
 
     public void setTenText(String tenText) {
@@ -75,8 +73,19 @@ public class Telop extends BaseDrawable {
         this.tenFont = tenFont;
     }
 
+    public BitmapFont getTenFont() {
+        return tenFont;
+    }
+
     public void setBodyFont(BitmapFont bodyFont) {
-        this.bodyFont = bodyFont;
+        Label.LabelStyle ls = label.getStyle();
+        ls.font=bodyFont;
+        label.setStyle(ls);
+    }
+
+    public BitmapFont getBodyFont() {
+        Label.LabelStyle ls = label.getStyle();
+        return ls.font;
     }
 
     /**
@@ -107,6 +116,6 @@ public class Telop extends BaseDrawable {
         }
         String hint = "Press [Enter] to continue";
         final GlyphLayout gl = new GlyphLayout(hintFont, hint);
-        hintFont.draw(batch, hint, width -  padding - gl.width, y + gl.height/2 + padding);
+        hintFont.draw(batch, hint, width - padding - gl.width, y + gl.height / 2 + padding);
     }
 }

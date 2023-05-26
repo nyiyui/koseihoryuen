@@ -74,7 +74,7 @@ public class Reberu1 extends Reberu {
                 switch (keycode) {
                     case Input.Keys.SPACE:
                     case Input.Keys.ENTER:
-                        if (state != STATE_EXPLORE) {
+                        if (state != STATE_EXPLORE&&questionDrawable.state!= QuestionDrawable.State.ASKING) {
                             switchLine(curLineIndex + 1);
                             if (curLineIndex >= daishi.lines.size()) {
                                 playScreen.invokePause();
@@ -133,6 +133,8 @@ public class Reberu1 extends Reberu {
         }
         if (curLine().body != null && !curLine().body.equals(""))
             telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
+        Line cl = curLine();
+        if (cl.question != null) renderQuestion();
         renderDebug();
         game.batch.end();
     }
