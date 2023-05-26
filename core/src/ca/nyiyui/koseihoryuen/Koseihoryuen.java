@@ -34,7 +34,8 @@ public class Koseihoryuen extends Game {
         debugFont = font.generateFont(param);
         Box2D.init();
 //        setScreen(new SplashScreen(this));
-        setScreen(new PlayScreen(this, new Reberu2(this)));
+//        setScreen(new PlayScreen(this, new Reberu2(this)));
+        setScreen(new PlayScreen(this, new Reberu3(this)));
     }
 
     @Override
