@@ -14,10 +14,12 @@ import java.util.ArrayList;
 
 public class Reberu1 extends Reberu {
     private static final float NPC_INTERACTION_RADIUS = 70;
-    private Stage stage;
-    private Texture background;
-    private Texture pathway;
-    private Texture spriteBeeNPC;
+    private static final float MOVEMENT_COEFF = 0xff;
+    private final Texture background;
+    private final Texture pathway;
+    private final Texture playerSpriteSmall;
+    private final Texture playerSpriteLarge;
+    private final Texture spriteBeeNPC;
     private float playerX = 0;
     private float playerY = 0;
     private double weightedAngle = 0;
@@ -39,7 +41,6 @@ public class Reberu1 extends Reberu {
     Reberu1(Koseihoryuen game) {
         super(game);
         DAISHI_PATH = "daishi/reberu1.json";
-        stage = new Stage(new FillViewport(game.camera.viewportWidth, game.camera.viewportHeight, game.camera), game.batch);
         try {
             loadDaishi();
         } catch (Exception e) {

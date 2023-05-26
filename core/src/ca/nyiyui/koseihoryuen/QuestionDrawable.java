@@ -27,6 +27,7 @@ public class QuestionDrawable extends BaseDrawable {
     State state;
 
     enum State {
+        DISABLED,
         ASKING,
         CORRECT,
         WRONG
@@ -34,7 +35,7 @@ public class QuestionDrawable extends BaseDrawable {
 
     QuestionDrawable(Koseihoryuen game, Telop optsT) {
         super();
-        state = State.ASKING;
+        state = State.DISABLED;
         this.optsT = optsT;
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
         param.color = new Color(0xffffffff);
@@ -106,6 +107,7 @@ public class QuestionDrawable extends BaseDrawable {
     }
 
     public void loadQuestion(Question q) {
+        state=State.ASKING;
         question = q;
         optsT.setTenText("Question!");
         StringBuilder opts = new StringBuilder();

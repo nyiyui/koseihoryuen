@@ -45,9 +45,22 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
     State state;
 
     enum State {
+        /**
+         * Show instructions.
+         */
         INSTRUCTIONS,
+        /**
+         * Exploring the stage (only levels 1 and 2).
+         */
         EXPLORE,
-        COMPLETE
+        /**
+         * Level completed.
+         */
+        COMPLETE,
+        /**
+         * Use state defined by subclass' state variable.
+         */
+        CUSTOM
     }
 
     /**
