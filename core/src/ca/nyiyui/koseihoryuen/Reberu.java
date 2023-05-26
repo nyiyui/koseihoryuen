@@ -2,14 +2,15 @@ package ca.nyiyui.koseihoryuen;
 
 import ca.nyiyui.koseihoryuen.data.Daishi;
 import ca.nyiyui.koseihoryuen.data.Line;
+import ca.nyiyui.koseihoryuen.data.Question;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.Queue;
 
 public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
     protected Daishi daishi;
@@ -23,10 +24,21 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
      * Internal path of daishi to load.
      */
     protected String DAISHI_PATH;
+    /**
+     * Telop for questionDrawable.
+     */
+    protected Telop questionDrawableTelop;
+    /**
+     * Draws Line Questions.
+     */
+    protected QuestionDrawable questionDrawable;
 
-    protected final static int STATE_INST = 1;
-    protected final static int STATE_EXPLORE = 2;
-    protected final static int STATE_COMPLETE = 3;
+        State state;
+    enum State {
+        INSTRUCTIONS,
+        EXPLORE,
+        COMPLETE
+    }
 
     /**
      * counts how many seconds have elapsed since player has cleared a stage.
@@ -37,24 +49,23 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
      */
     protected final BitmapFont titleFont;
     protected final BitmapFont subtitleFont;
-    protected float playerX, playerY;
-    protected double weightedAngle = 0;
-    protected static final float MOVEMENT_COEFF = 0xff;
-    protected Texture playerSpriteSmall;
-    protected Texture playerSpriteLarge;
 
     public Reberu(Koseihoryuen game) {
         super(game);
-        playerSpriteSmall = new Texture(Gdx.files.internal("images/player-sprite-small.png"));
-        playerSpriteLarge = new Texture(Gdx.files.internal("images/player-sprite-large.png"));
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
         param.color = new Color(0x222222aa);
         param.size = 52;
         titleFont = game.font.generateFont(param);
         param.size = 36;
         subtitleFont = game.font.generateFont(param);
+        questionDrawableTelop = new Telop(game);
+        questionDrawable = new QuestionDrawable(game, questionDrawableTelop);
     }
 
+    /**
+     * Load daishi from DAISHI_PATH
+     * @throws IOException if daishi reading/decoding fails
+     */
     protected void loadDaishi() throws IOException {
         ObjectMapper om = new ObjectMapper();
         daishi = om.readValue(Gdx.files.internal(DAISHI_PATH).read(), Daishi.class);
@@ -67,10 +78,18 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
         playScreen = ps;
     }
 
+    /**
+     * Returns current Line.
+     * @return current Line.
+     */
     protected Line curLine() {
         return daishi.lines.get(curLineIndex);
     }
 
+    /**
+     * Applies state changes to change from an unspecified to this line.
+     * @param newLineIndex new line index
+     */
     protected void switchLine(int newLineIndex) {
         curLineIndex = newLineIndex;
         Line cl = curLine();
@@ -83,6 +102,8 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
             int i = DaishiUtils.findLabel(daishi, cl.jump);
             switchLine(i);
         }
+        if (cl.question != null)
+            questionDrawable.loadQuestion(cl.question);
     }
 
     protected abstract void handleLineSwitch();
@@ -95,22 +116,27 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
         this.daishi = daishi;
     }
 
+    /**
+     * Render the questionDrawable. Assumes questionDrawable is in a renderable state.
+     */
+    protected void renderQuestion() {
+        questionDrawable.draw(game.batch, 0, 0, game.camera.viewportWidth, game.camera.viewportHeight);
+        questionDrawable.handleInput();
+    }
+
+    /**
+     * See libGDX docs.
+     */
     @Override
-    public abstract void dispose();
-
-    public void closingScreen(float delta) {
-        elapsedToExit += delta;
-        renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
-        renderText(subtitleFont, "You finished this level.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 50);
-        if (elapsedToExit > 4f)
-            game.setScreen(new TitleScreen(game));
+    public void dispose() {
+        playScreen.dispose();
+        titleFont.dispose();
+        subtitleFont.dispose();
     }
 
-    protected float clamp(float n, float upper, float lower) {
-        if (n > upper) return upper;
-        if (n < lower) return lower;
-        return n;
-    }
-
-
+    /**
+     * Shows the congratulations screen.
+     * @param delta render delta time
+     */
+    public abstract void closingScreen(float delta);
 }

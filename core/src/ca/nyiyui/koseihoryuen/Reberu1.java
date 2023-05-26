@@ -4,7 +4,6 @@ import ca.nyiyui.koseihoryuen.data.Line;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -19,8 +18,6 @@ public class Reberu1 extends Reberu {
     private Texture background;
     private Texture pathway;
     private Texture spriteBeeNPC;
-    private Music music;
-    private int state = STATE_INST;
     private float playerX = 0;
     private float playerY = 0;
     private double weightedAngle = 0;
@@ -69,7 +66,7 @@ public class Reberu1 extends Reberu {
                 switch (keycode) {
                     case Input.Keys.SPACE:
                     case Input.Keys.ENTER:
-                        if (state != STATE_EXPLORE) {
+                        if (state != State.EXPLORE&&questionDrawable.state!= QuestionDrawable.State.ASKING) {
                             switchLine(curLineIndex + 1);
                             if (curLineIndex >= daishi.lines.size()) {
                                 playScreen.invokePause();
@@ -97,7 +94,7 @@ public class Reberu1 extends Reberu {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
         switch (state) {
-            case STATE_INST:
+            case INSTRUCTIONS:
                 game.batch.draw(background, 0, 0);
                 Sprite s = new Sprite(playerSpriteLarge);
                 s.setX(game.camera.viewportWidth / 4 - playerSpriteLarge.getWidth() / 2);
@@ -112,7 +109,7 @@ public class Reberu1 extends Reberu {
                 s.setScale(0.8f);
                 s.draw(game.batch);
                 break;
-            case STATE_EXPLORE:
+            case EXPLORE:
                 game.batch.draw(pathway, 0, 0);
                 for (int i = 0; i < npcs.size(); i++) {
                     NPC npc = npcs.get(i);
@@ -122,13 +119,15 @@ public class Reberu1 extends Reberu {
                 checkNPCInteraction();
                 game.batch.draw(playerSpriteIsLarge ? playerSpriteLarge : playerSpriteSmall, playerX - playerSpriteSmall.getWidth() / 2, playerY - playerSpriteSmall.getHeight() / 2);
                 break;
-            case STATE_COMPLETE:
+            case COMPLETE:
                 game.batch.draw(background, 0, 0);
                 closingScreen(delta);
                 break;
         }
         if (curLine().body != null && !curLine().body.equals(""))
             telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
+        Line cl = curLine();
+        if (cl.question != null) renderQuestion();
         renderDebug();
         game.batch.end();
     }
@@ -177,7 +176,7 @@ public class Reberu1 extends Reberu {
                 playerX = game.camera.viewportWidth * 3 / 4 - playerSpriteLarge.getWidth() / 2;
                 playerY = game.camera.viewportWidth / 2 - playerSpriteLarge.getHeight() / 2;
                 playerSpriteIsLarge = true;
-                state = Reberu1.STATE_INST;
+                state = State.INSTRUCTIONS;
                 break;
             case "explore":
                 playerNoInteraction = true;
@@ -192,11 +191,11 @@ public class Reberu1 extends Reberu {
                         playerX = npc.x;
                         playerY = npc.y;
                 }
-                state = Reberu1.STATE_EXPLORE;
+                state = State.EXPLORE;
                 break;
             case "exit":
                 if (canExit()) {
-                    state = Reberu1.STATE_COMPLETE;
+                    state = State.COMPLETE;
                 } else {
                     int i = DaishiUtils.findLabel(daishi, "exit-nok");
                     switchLine(i);
