@@ -68,6 +68,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                 switch (keycode) {
                     case Input.Keys.SPACE:
                     case Input.Keys.ENTER:
+                        if (questionDrawable.state == QuestionDrawable.State.ASKING) break;
                         switchLine(curLineIndex + 1);
                         if (curLineIndex >= daishi.lines.size()) {
                             playScreen.invokePause();
@@ -119,6 +120,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
 
                 break;
         }
+        if (cl.question != null) renderQuestion();
         game.batch.end();
     }
 
