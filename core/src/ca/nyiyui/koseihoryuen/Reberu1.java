@@ -202,11 +202,7 @@ public class Reberu1 extends Reberu {
     public void dispose() {
         background.dispose();
         pathway.dispose();
-        playerSpriteSmall.dispose();
-        playerSpriteLarge.dispose();
         spriteBeeNPC.dispose();
-        titleFont.dispose();
-        subtitleFont.dispose();
     }
 
     /**

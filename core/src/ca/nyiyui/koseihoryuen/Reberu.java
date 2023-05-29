@@ -13,6 +13,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
+    protected static final int MOVEMENT_COEFF = 0xff;
+    /**
+     * fonts
+     */
+    protected final BitmapFont titleFont;
+    protected final BitmapFont subtitleFont;
     protected Daishi daishi;
     protected Telop telop;
     protected PlayScreen playScreen;
@@ -40,42 +46,14 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
      * small player sprite
      */
     protected Texture playerSpriteSmall;
-
-    protected static final int MOVEMENT_COEFF = 0xff;
     protected float playerX;
     protected float playerY;
     protected float weightedAngle = 0f;
-
-    State state;
-
-    enum State {
-        /**
-         * Show instructions.
-         */
-        INSTRUCTIONS,
-        /**
-         * Exploring the stage (only levels 1 and 2).
-         */
-        EXPLORE,
-        /**
-         * Level completed.
-         */
-        COMPLETE,
-        /**
-         * Use state defined by subclass' state variable.
-         */
-        CUSTOM
-    }
-
     /**
      * counts how many seconds have elapsed since player has cleared a stage.
      */
     protected float elapsedToExit = 0;
-    /**
-     * fonts
-     */
-    protected final BitmapFont titleFont;
-    protected final BitmapFont subtitleFont;
+    State state;
 
     public Reberu(Koseihoryuen game) {
         super(game);
@@ -134,8 +112,9 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
             int i = DaishiUtils.findLabel(daishi, cl.jump);
             switchLine(i);
         }
-        if (cl.question != null)
+        if (cl.question != null) {
             questionDrawable.loadQuestion(cl.question);
+        }
     }
 
     protected abstract void handleLineSwitch();
@@ -189,6 +168,8 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
         playScreen.dispose();
         titleFont.dispose();
         subtitleFont.dispose();
+        playerSpriteLarge.dispose();
+        playerSpriteSmall.dispose();
     }
 
     protected float clamp(float n, float upper, float lower) {
@@ -201,4 +182,23 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
      * @param delta render delta time
      */
     public abstract void closingScreen(float delta);
+
+    enum State {
+        /**
+         * Show instructions.
+         */
+        INSTRUCTIONS,
+        /**
+         * Exploring the stage (only levels 1 and 2).
+         */
+        EXPLORE,
+        /**
+         * Level completed.
+         */
+        COMPLETE,
+        /**
+         * Use state defined by subclass' state variable.
+         */
+        CUSTOM
+    }
 }
