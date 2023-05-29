@@ -3,6 +3,7 @@ package ca.nyiyui.koseihoryuen;
 import ca.nyiyui.koseihoryuen.data.Daishi;
 import ca.nyiyui.koseihoryuen.data.Line;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -41,6 +42,9 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
     protected Texture playerSpriteSmall;
 
     protected static final int MOVEMENT_COEFF = 0xff;
+    protected float playerX;
+    protected float playerY;
+    protected float weightedAngle = 0f;
 
     State state;
 
@@ -150,6 +154,31 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
     protected void renderQuestion() {
         questionDrawable.draw(game.batch, 0, 0, game.camera.viewportWidth, game.camera.viewportHeight);
         questionDrawable.handleInput();
+    }
+
+    protected void handleMovement(float delta) {
+        boolean w = Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP);
+        boolean a = Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
+        boolean s = Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
+        boolean d = Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+        double angle = Math.sqrt(-1);
+        boolean moved = true;
+        if (w && a) angle = (Math.PI * 7 / 4);
+        else if (a && s) angle = (Math.PI * 5 / 4);
+        else if (s && d) angle = (Math.PI * 3 / 4);
+        else if (d && w) angle = (Math.PI * 1 / 4);
+        else if (w) angle = 0;
+        else if (d) angle = (Math.PI / 2);
+        else if (s) angle = (Math.PI);
+        else if (a) angle = (Math.PI * 3 / 2);
+        else moved = false;
+        if (moved) {
+            weightedAngle = (float) (weightedAngle * 0.7f + angle * 0.3f);
+            playerX += Math.sin(weightedAngle) * MOVEMENT_COEFF * delta;
+            playerY += Math.cos(weightedAngle) * MOVEMENT_COEFF * delta;
+            playerX = clamp(playerX, game.camera.viewportWidth - playerSpriteSmall.getWidth(), 0);
+            playerY = clamp(playerY, game.camera.viewportHeight - playerSpriteSmall.getHeight(), 0);
+        }
     }
 
     /**

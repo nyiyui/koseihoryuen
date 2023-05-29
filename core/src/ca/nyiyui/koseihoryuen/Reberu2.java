@@ -21,7 +21,6 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 public class Reberu2 extends Reberu implements PlayableScreen {
 
     private Stage stage;
-    private static final float MOVEMENT_COEFF = 0xff;
     /**
      * background image
      */
@@ -38,11 +37,10 @@ public class Reberu2 extends Reberu implements PlayableScreen {
      * image of pesticide warning sign.
      */
     private Texture itemPest;
+
     /**
      * x- and y- coordinates of the player.
      */
-    private float playerX, playerY;
-    private double weightedAngle = 0;
 
     public Reberu2(Koseihoryuen game) {
         super(game);
@@ -129,31 +127,6 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         }
         if (curLine().question != null) renderQuestion();
         game.batch.end();
-    }
-
-    private void handleMovement(float delta) {
-        boolean w = Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP);
-        boolean a = Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
-        boolean s = Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
-        boolean d = Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
-        double angle = Math.sqrt(-1);
-        boolean moved = true;
-        if (w && a) angle = (Math.PI * 7 / 4);
-        else if (a && s) angle = (Math.PI * 5 / 4);
-        else if (s && d) angle = (Math.PI * 3 / 4);
-        else if (d && w) angle = (Math.PI * 1 / 4);
-        else if (w) angle = 0;
-        else if (d) angle = (Math.PI / 2);
-        else if (s) angle = (Math.PI);
-        else if (a) angle = (Math.PI * 3 / 2);
-        else moved = false;
-        if (moved) {
-            weightedAngle = weightedAngle * 0.7 + angle * 0.3;
-            playerX += Math.sin(weightedAngle) * MOVEMENT_COEFF * delta;
-            playerY += Math.cos(weightedAngle) * MOVEMENT_COEFF * delta;
-            playerX = clamp(playerX, game.camera.viewportWidth - playerSpriteSmall.getWidth(), 0);
-            playerY = clamp(playerY, game.camera.viewportHeight - playerSpriteSmall.getHeight(), 0);
-        }
     }
 
     @Override
