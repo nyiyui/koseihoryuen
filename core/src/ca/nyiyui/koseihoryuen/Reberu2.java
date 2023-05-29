@@ -23,9 +23,21 @@ public class Reberu2 extends Reberu implements PlayableScreen {
     private Stage stage;
     private static final float MOVEMENT_COEFF = 0xff;
     /**
-     * images for background, player, and interactable objects.
+     * background image
      */
-    private Texture bg, player, playerL, itemCity, itemGas, itemPest;
+    private Texture bg;
+    /**
+     * image of "the city".
+     */
+    private Texture itemCity;
+    /**
+     * image of greenhouse gas emissions
+     */
+    private Texture itemGas;
+    /**
+     * image of pesticide warning sign.
+     */
+    private Texture itemPest;
     /**
      * x- and y- coordinates of the player.
      */
@@ -43,8 +55,6 @@ public class Reberu2 extends Reberu implements PlayableScreen {
             throw new RuntimeException("loading daishi failed");
         }
         bg = new Texture(Gdx.files.internal("images/stage2-bg.png"));
-        player = new Texture(Gdx.files.internal("images/player-sprite-small.png"));
-        playerL = new Texture(Gdx.files.internal("images/player-sprite-large.png"));
         itemCity = new Texture(Gdx.files.internal("images/stage2-city.png"));
         itemGas = new Texture(Gdx.files.internal("images/stage2-greenhouse-gas.png"));
         itemPest = new Texture(Gdx.files.internal("images/stage2-pesticide-sign.png"));
@@ -95,7 +105,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                 game.batch.draw(itemPest, 120, 50);
                 game.batch.draw(itemGas, 620, 190);
                 handleMovement(delta);
-                game.batch.draw(player, playerX, playerY);
+                game.batch.draw(playerSpriteSmall, playerX, playerY);
 
                 if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
                     // check if player is on city
@@ -141,8 +151,8 @@ public class Reberu2 extends Reberu implements PlayableScreen {
             weightedAngle = weightedAngle * 0.7 + angle * 0.3;
             playerX += Math.sin(weightedAngle) * MOVEMENT_COEFF * delta;
             playerY += Math.cos(weightedAngle) * MOVEMENT_COEFF * delta;
-            playerX = clamp(playerX, game.camera.viewportWidth - player.getWidth(), 0);
-            playerY = clamp(playerY, game.camera.viewportHeight - player.getHeight(), 0);
+            playerX = clamp(playerX, game.camera.viewportWidth - playerSpriteSmall.getWidth(), 0);
+            playerY = clamp(playerY, game.camera.viewportHeight - playerSpriteSmall.getHeight(), 0);
         }
     }
 
@@ -162,8 +172,8 @@ public class Reberu2 extends Reberu implements PlayableScreen {
     public void dispose() {
         super.dispose();
         bg.dispose();
-        player.dispose();
-        playerL.dispose();
+        playerSpriteSmall.dispose();
+        playerSpriteLarge.dispose();
         itemCity.dispose();
         itemGas.dispose();
         itemPest.dispose();
@@ -177,11 +187,5 @@ public class Reberu2 extends Reberu implements PlayableScreen {
 
     public void hide() {
         Gdx.input.setInputProcessor(null);
-    }
-
-    private float clamp(float n, float upper, float lower) {
-        if (n > upper) return upper;
-        if (n < lower) return lower;
-        return n;
     }
 }

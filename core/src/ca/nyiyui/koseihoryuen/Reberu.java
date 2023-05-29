@@ -2,15 +2,14 @@ package ca.nyiyui.koseihoryuen;
 
 import ca.nyiyui.koseihoryuen.data.Daishi;
 import ca.nyiyui.koseihoryuen.data.Line;
-import ca.nyiyui.koseihoryuen.data.Question;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.util.Queue;
 
 public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
     protected Daishi daishi;
@@ -32,8 +31,19 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
      * Draws Line Questions.
      */
     protected QuestionDrawable questionDrawable;
+    /**
+     * larger player sprite
+     */
+    protected Texture playerSpriteLarge;
+    /**
+     * small player sprite
+     */
+    protected Texture playerSpriteSmall;
 
-        State state;
+    protected static final int MOVEMENT_COEFF = 0xff;
+
+    State state;
+
     enum State {
         INSTRUCTIONS,
         EXPLORE,
@@ -60,10 +70,13 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
         subtitleFont = game.font.generateFont(param);
         questionDrawableTelop = new Telop(game);
         questionDrawable = new QuestionDrawable(game, questionDrawableTelop);
+        playerSpriteSmall = new Texture(Gdx.files.internal("images/player-sprite-small.png"));
+        playerSpriteLarge = new Texture(Gdx.files.internal("images/player-sprite-large.png"));
     }
 
     /**
      * Load daishi from DAISHI_PATH
+     *
      * @throws IOException if daishi reading/decoding fails
      */
     protected void loadDaishi() throws IOException {
@@ -80,6 +93,7 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
 
     /**
      * Returns current Line.
+     *
      * @return current Line.
      */
     protected Line curLine() {
@@ -88,6 +102,7 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
 
     /**
      * Applies state changes to change from an unspecified to this line.
+     *
      * @param newLineIndex new line index
      */
     protected void switchLine(int newLineIndex) {
@@ -134,8 +149,13 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
         subtitleFont.dispose();
     }
 
+    protected float clamp(float n, float upper, float lower) {
+        return n < lower ? lower : (n > upper ? upper : n);
+    }
+
     /**
      * Shows the congratulations screen.
+     *
      * @param delta render delta time
      */
     public abstract void closingScreen(float delta);

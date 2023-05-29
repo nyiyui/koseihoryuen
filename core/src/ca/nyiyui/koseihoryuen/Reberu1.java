@@ -66,7 +66,7 @@ public class Reberu1 extends Reberu {
                 switch (keycode) {
                     case Input.Keys.SPACE:
                     case Input.Keys.ENTER:
-                        if (state != State.EXPLORE&&questionDrawable.state!= QuestionDrawable.State.ASKING) {
+                        if (state != State.EXPLORE && questionDrawable.state != QuestionDrawable.State.ASKING) {
                             switchLine(curLineIndex + 1);
                             if (curLineIndex >= daishi.lines.size()) {
                                 playScreen.invokePause();
@@ -237,6 +237,20 @@ public class Reberu1 extends Reberu {
         spriteBeeNPC.dispose();
         titleFont.dispose();
         subtitleFont.dispose();
+    }
+
+    /**
+     * Shows the congratulations screen.
+     *
+     * @param delta render delta time
+     */
+    @Override
+    public void closingScreen(float delta) {
+        elapsedToExit += delta;
+        renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
+        renderText(subtitleFont, "You finished this level.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 50);
+        if (elapsedToExit > 4f)
+            game.setScreen(new TitleScreen(game));
     }
 }
 
