@@ -7,8 +7,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 
 import java.util.ArrayList;
 
@@ -17,8 +15,6 @@ public class Reberu1 extends Reberu {
     private static final float MOVEMENT_COEFF = 0xff;
     private final Texture background;
     private final Texture pathway;
-    private final Texture playerSpriteSmall;
-    private final Texture playerSpriteLarge;
     private final Texture spriteBeeNPC;
     private float playerX = 0;
     private float playerY = 0;
