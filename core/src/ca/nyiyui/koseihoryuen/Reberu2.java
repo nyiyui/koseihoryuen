@@ -38,10 +38,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
      * image of pesticide warning sign.
      */
     private Item pest;
-
-    /**
-     * x- and y- coordinates of the player.
-     */
+    private String curQuestion;
 
     public Reberu2(Koseihoryuen game) {
         super(game);
@@ -54,9 +51,9 @@ public class Reberu2 extends Reberu implements PlayableScreen {
             throw new RuntimeException("loading daishi failed");
         }
         bg = new Texture(Gdx.files.internal("images/stage2-bg.png"));
-        city = new Item(new Texture(Gdx.files.internal("images/stage2-city.png")), 100, 390);
-        gas = new Item(new Texture(Gdx.files.internal("images/stage2-greenhouse-gas.png")), 120, 50);
-        pest = new Item(new Texture(Gdx.files.internal("images/stage2-pesticide-sign.png")), 620, 190);
+        city = new Item(new Texture(Gdx.files.internal("images/stage2-city.png")), 100, 450);
+        gas = new Item(new Texture(Gdx.files.internal("images/stage2-greenhouse-gas.png")), 160, 30);
+        pest = new Item(new Texture(Gdx.files.internal("images/stage2-pesticide-sign.png")), 600, 190);
         playerX = game.camera.viewportWidth / 2;
         playerY = game.camera.viewportHeight / 2;
         switchLine(0);
@@ -82,6 +79,8 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                                 playScreen.invokePause();
                                 throw new RuntimeException("not impld yet");
                             }
+                        } else if (questionDrawable.state != QuestionDrawable.State.ASKING) {
+                            switchLine(curLineIndex + 1);
                         }
                         break;
                     case Input.Keys.ESCAPE:
@@ -101,12 +100,11 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         game.batch.draw(bg, 0, 0);
         switch (state) {
             case EXPLORE:
-                game.batch.draw(city.image, city.x, city.y);
-                game.batch.draw(pest.image, pest.x, pest.y);
-                game.batch.draw(gas.image, gas.x, gas.y);
+                game.batch.draw(city.image, city.getX(), city.getY());
+                game.batch.draw(pest.image, pest.getX(), pest.getY());
+                game.batch.draw(gas.image, gas.getX(), gas.getY());
                 handleMovement(delta);
                 game.batch.draw(playerSpriteSmall, playerX, playerY);
-
                 if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
                     checkItemInteraction();
                 }
@@ -118,40 +116,74 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                 s.flip(true, false);
                 s.setScale(0.8f);
                 s.draw(game.batch);
+                if (curLine().body != null && !curLine().body.equals(""))
+                    telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
                 break;
+            case CUSTOM:
+                Line cl = curLine();
+                if (cl.question != null) {
+                    renderQuestion();
+                }
+                // check if question if correct
+                if (questionDrawable.state == QuestionDrawable.State.CORRECT) {
+                    if (curQuestion.equals("city")) {
+                        city.answeredCorrect = true;
+                    } else if (curQuestion.equals("pest")) {
+                        pest.answeredCorrect = true;
+                    } else if (curQuestion.equals("gas")) {
+                        gas.answeredCorrect = true;
+                    }
+                }
             case COMPLETE:
+                closingScreen(delta);
         }
-        if (curLine().question != null) renderQuestion();
+        checkAllAnswers();
         game.batch.end();
     }
 
     private void checkItemInteraction() {
         // check if player is on city
-        if (playerX >= city.x && playerX <= city.x + city.image.getWidth() && playerY >= city.y && playerY <= city.y + city.image.getHeight()) {
+        if (playerX >= city.getX() && playerX <= city.getX() + city.image.getWidth()
+                && playerY >= city.getY() && playerY <= city.getY() + city.image.getHeight()) {
             System.out.println("on city");
             //TODO: add questions
             int j = DaishiUtils.findLabel(daishi, "city");
             switchLine(j);
+            state = State.CUSTOM;
+            curQuestion = "city";
         }
         // check if player is on pesticide warning sign
-        else if (playerX >= pest.x && playerX <= pest.x + pest.image.getWidth() && playerY >= pest.y && playerY <= pest.y + pest.image.getHeight()) {
+        else if (playerX >= pest.getX() && playerX <= pest.getX() + pest.image.getWidth()
+                && playerY >= pest.getY() && playerY <= pest.getY() + pest.image.getHeight()) {
             System.out.println("on pest");
         }
         // check if player is on greenhouse gas emissions
-        else if (playerX >= gas.x && playerX <= gas.x + gas.image.getWidth() && playerY >= gas.y && playerY <= gas.y + gas.image.getHeight()) {
+        else if (playerX >= gas.getX() && playerX <= gas.getX() + gas.image.getWidth()
+                && playerY >= gas.getY() && playerY <= gas.getY() + gas.image.getHeight()) {
             System.out.println("on greenhouse gas");
+        }
+    }
+
+    /**
+     * checks if all questions have been answered correctly.
+     * If all questions were answered correctly, sets the stage state to COMPLETE.
+     */
+    private void checkAllAnswers() {
+        if (city.answeredCorrect && pest.answeredCorrect && gas.answeredCorrect) {
+            state = State.COMPLETE;
         }
     }
 
     @Override
     protected void handleLineSwitch() {
         Line cl = curLine();
-        switch (cl.action) {
+        if (cl.action != null) switch (cl.action) {
             case "":
                 state = State.INSTRUCTIONS;
                 break;
             case "explore":
                 state = State.EXPLORE;
+                break;
         }
     }
 
@@ -166,7 +198,11 @@ public class Reberu2 extends Reberu implements PlayableScreen {
 
     @Override
     public void closingScreen(float delta) {
-
+        elapsedToExit += delta;
+        renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
+        renderText(subtitleFont, "You finished this level.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 50);
+        if (elapsedToExit > 4f)
+            game.setScreen(new TitleScreen(game));
     }
 
 
@@ -174,16 +210,25 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         Gdx.input.setInputProcessor(null);
     }
 
-    class Item {
-        Texture image;
-        float x, y;
-        boolean answeredCorrect;
+}
 
-        public Item(Texture image, float x, float y) {
-            this.image = image;
-            this.x = x;
-            this.y = y;
-            this.answeredCorrect = false;
-        }
+class Item {
+    Texture image;
+    private float x, y;
+    boolean answeredCorrect;
+
+    public Item(Texture image, float x, float y) {
+        this.image = image;
+        this.x = x;
+        this.y = y;
+        this.answeredCorrect = false;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
     }
 }

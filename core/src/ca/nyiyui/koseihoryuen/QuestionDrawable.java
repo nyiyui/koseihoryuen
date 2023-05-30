@@ -107,7 +107,7 @@ public class QuestionDrawable extends BaseDrawable {
     }
 
     public void loadQuestion(Question q) {
-        state=State.ASKING;
+        state = State.ASKING;
         question = q;
         optsT.setTenText("Question!");
         StringBuilder opts = new StringBuilder();

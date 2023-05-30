@@ -113,6 +113,7 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
             switchLine(i);
         }
         if (cl.question != null) {
+            System.out.println("asking question");
             questionDrawable.loadQuestion(cl.question);
         }
     }
@@ -172,6 +173,14 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
         playerSpriteSmall.dispose();
     }
 
+    /**
+     * keeps n within the range of [lower, upper]. Used for player coordinates.
+     *
+     * @param n     the coordinate the method is clamping
+     * @param upper the upper limit
+     * @param lower the lower limit
+     * @return n, if n is in between lower and upper. Else, return lower if n < lower or return upper if n > upper
+     */
     protected float clamp(float n, float upper, float lower) {
         return n < lower ? lower : (n > upper ? upper : n);
     }
