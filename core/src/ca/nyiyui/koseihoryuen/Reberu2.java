@@ -29,15 +29,15 @@ public class Reberu2 extends Reberu implements PlayableScreen {
     /**
      * item for the city.
      */
-    private Item city;
+    private Reberu2Item city;
     /**
      * item for greenhouse gas emissions
      */
-    private Item gas;
+    private Reberu2Item gas;
     /**
      * image of pesticide warning sign.
      */
-    private Item pest;
+    private Reberu2Item pest;
     private String curQuestion;
 
     public Reberu2(Koseihoryuen game) {
@@ -51,9 +51,9 @@ public class Reberu2 extends Reberu implements PlayableScreen {
             throw new RuntimeException("loading daishi failed");
         }
         bg = new Texture(Gdx.files.internal("images/stage2-bg.png"));
-        city = new Item(new Texture(Gdx.files.internal("images/stage2-city.png")), 100, 450);
-        gas = new Item(new Texture(Gdx.files.internal("images/stage2-greenhouse-gas.png")), 160, 30);
-        pest = new Item(new Texture(Gdx.files.internal("images/stage2-pesticide-sign.png")), 600, 190);
+        city = new Reberu2Item(new Texture(Gdx.files.internal("images/stage2-city.png")), 100, 450);
+        gas = new Reberu2Item(new Texture(Gdx.files.internal("images/stage2-greenhouse-gas.png")), 160, 30);
+        pest = new Reberu2Item(new Texture(Gdx.files.internal("images/stage2-pesticide-sign.png")), 600, 190);
         playerX = game.camera.viewportWidth / 2;
         playerY = game.camera.viewportHeight / 2;
         switchLine(0);
@@ -212,12 +212,12 @@ public class Reberu2 extends Reberu implements PlayableScreen {
 
 }
 
-class Item {
+class Reberu2Item {
     Texture image;
     private float x, y;
     boolean answeredCorrect;
 
-    public Item(Texture image, float x, float y) {
+    public Reberu2Item(Texture image, float x, float y) {
         this.image = image;
         this.x = x;
         this.y = y;

@@ -9,9 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import java.util.Random;
 
 /**
- * A single item (e.g. a hand).
+ * A single item (e.g. a hand) that falls.
  */
-public class Item extends Actor {
+public class Fallee extends Actor {
     private final Koseihoryuen game;
     private Kind kind;
     private Body body;
@@ -24,7 +24,7 @@ public class Item extends Actor {
         DDT
     }
 
-    public Item(Koseihoryuen game, Body body) {
+    public Fallee(Koseihoryuen game, Body body) {
         this.body = body;
         this.game=game;
         kind = chooseKind();

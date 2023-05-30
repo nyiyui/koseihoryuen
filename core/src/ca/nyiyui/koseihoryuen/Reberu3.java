@@ -11,12 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class Reberu3 extends Reberu implements PlayableScreen {
     private Stage stage;
@@ -74,7 +68,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         fd.density = 1f;
         b.createFixture(fd);
         shape.dispose();
-        Item item = new Item(game, b);
+        Fallee item = new Fallee(game, b);
         stage.addActor(item);
     }
 

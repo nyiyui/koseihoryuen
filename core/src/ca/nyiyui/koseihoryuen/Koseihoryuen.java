@@ -44,7 +44,8 @@ public class Koseihoryuen extends Game {
         if (DEBUG_MODE)assetManager.finishLoading();
         Box2D.init();
 //        setScreen(new SplashScreen(this));
-        setScreen(new PlayScreen(this, new Reberu2(this)));
+//        setScreen(new PlayScreen(this, new Reberu2(this)));
+        setScreen(new PlayScreen(this, new Reberu3(this)));
     }
 
     @Override
