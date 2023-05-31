@@ -1,4 +1,4 @@
-all: daishi splash.jpg title.jpg images/logo-vi.png images/logo.png
+all: daishi splash.jpg title.jpg images/logo-vi.png images/logo.png images/stage3-ananas.png
 
 clean:
 	rm -f splash.jpg
@@ -22,3 +22,6 @@ images/logo-vi.png: src/logo-vi.png
 
 images/logo.png: src/logo.png
 	convert $< -resize x360 $@
+
+images/stage3-ananas.png: src/stage3-ananas.png
+	convert $< -resize 200x $@
