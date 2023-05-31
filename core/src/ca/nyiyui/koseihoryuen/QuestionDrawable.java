@@ -41,6 +41,7 @@ public class QuestionDrawable extends BaseDrawable {
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
         param.color = new Color(0xffffffff);
         param.size = 22;
+        param.borderColor = Color.BLACK;
         descFont = game.font.generateFont(param);
         param.size = 18;
         optsT.setBodyFont(game.font.generateFont(param));

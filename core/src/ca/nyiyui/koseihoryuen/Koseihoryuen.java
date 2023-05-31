@@ -36,16 +36,16 @@ public class Koseihoryuen extends Game {
         param.borderColor = new Color(0xffffffff);
         param.borderWidth = 2;
         debugFont = font.generateFont(param);
-        assetManager=new AssetManager();
+        assetManager = new AssetManager();
         assetManager.load("images/stage3-ananas.png", Texture.class);
         assetManager.load("images/human-hand.png", Texture.class);
         assetManager.load("images/flycatcher.png", Texture.class);
         assetManager.load("images/pollen.png", Texture.class);
-        if (DEBUG_MODE)assetManager.finishLoading();
+        if (DEBUG_MODE) assetManager.finishLoading();
         Box2D.init();
 //        setScreen(new SplashScreen(this));
-//        setScreen(new PlayScreen(this, new Reberu2(this)));
-        setScreen(new PlayScreen(this, new Reberu3(this)));
+        setScreen(new PlayScreen(this, new Reberu2(this)));
+//        setScreen(new PlayScreen(this, new Reberu3(this)));
     }
 
     @Override
