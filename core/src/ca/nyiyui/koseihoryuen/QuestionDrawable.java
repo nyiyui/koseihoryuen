@@ -4,6 +4,7 @@ import ca.nyiyui.koseihoryuen.data.Question;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -73,8 +74,10 @@ public class QuestionDrawable extends BaseDrawable {
                 descLabel.setAlignment(Align.left);
                 break;
             case CORRECT:
+                Texture bee = new Texture(Gdx.files.internal("images/beeExit.png"));
+                batch.draw(bee, (width - bee.getWidth()) / 2, (height - bee.getHeight()) / 2);
                 descLabel.setText("Correct!");
-                descLabel.setAlignment(Align.right);
+                descLabel.setAlignment(Align.center);
                 break;
             case WRONG:
                 descLabel.setText("Wrong! L BOZO!");

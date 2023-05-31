@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
 /**
@@ -53,7 +54,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         bg = new Texture(Gdx.files.internal("images/stage2-bg.png"));
         city = new Item(new Texture(Gdx.files.internal("images/stage2-city.png")), 100, 450);
         gas = new Item(new Texture(Gdx.files.internal("images/stage2-greenhouse-gas.png")), 160, 30);
-        pest = new Item(new Texture(Gdx.files.internal("images/stage2-pesticide-sign.png")), 600, 190);
+        pest = new Item(new Texture(Gdx.files.internal("images/stage2-pesticide-sign.png")), 570, 190);
         playerX = game.camera.viewportWidth / 2;
         playerY = game.camera.viewportHeight / 2;
         switchLine(0);
@@ -79,8 +80,6 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                                 playScreen.invokePause();
                                 throw new RuntimeException("not impld yet");
                             }
-                        } else if (questionDrawable.state != QuestionDrawable.State.ASKING) {
-                            switchLine(curLineIndex + 1);
                         }
                         break;
                     case Input.Keys.ESCAPE:
@@ -120,6 +119,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                     telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
                 break;
             case CUSTOM:
+                game.batch.draw(bg, 0, 0);
                 Line cl = curLine();
                 if (cl.question != null) {
                     renderQuestion();
@@ -133,7 +133,12 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                     } else if (curQuestion.equals("gas")) {
                         gas.answeredCorrect = true;
                     }
+                    goBackToExplore();
+
+                } else if (questionDrawable.state == QuestionDrawable.State.WRONG) {
+                    goBackToExplore();
                 }
+                break;
             case COMPLETE:
                 closingScreen(delta);
         }
@@ -147,6 +152,8 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                 && playerY >= city.getY() && playerY <= city.getY() + city.image.getHeight()) {
             System.out.println("on city");
             //TODO: add questions
+            if (city.answeredCorrect)
+                return;
             int j = DaishiUtils.findLabel(daishi, "city");
             switchLine(j);
             state = State.CUSTOM;
@@ -172,6 +179,23 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         if (city.answeredCorrect && pest.answeredCorrect && gas.answeredCorrect) {
             state = State.COMPLETE;
         }
+    }
+
+    /**
+     * Waits for 4 seconds before going back to exploration mode
+     * Used after user answers a question.
+     */
+    private void goBackToExplore() {
+        Timer.schedule(new Timer.Task() {
+            /**
+             * If this is the last time the task will be ran or the task is first cancelled, it may be scheduled again in this
+             * method.
+             */
+            @Override
+            public void run() {
+                state = State.EXPLORE;
+            }
+        }, 2.5f);
     }
 
     @Override
