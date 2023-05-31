@@ -2,9 +2,11 @@ package ca.nyiyui.koseihoryuen;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import java.util.Random;
 
@@ -32,7 +34,6 @@ public class Fallee extends Actor {
     }
 
     private void loadTexture() {
-        System.out.printf("kind %s",kind);
         switch (kind) {
             case FLYCATCHER:
                 texture = game.assetManager.get("images/flycatcher.png");
@@ -71,6 +72,5 @@ public class Fallee extends Actor {
         super.draw(batch, parentAlpha);
         Vector2 pos = body.getPosition();
         batch.draw(texture, pos.x - .25f, pos.y - .25f, .5f, .5f);
-//        System.out.printf("%f %f\n", pos.x, pos.y);
     }
 }
