@@ -236,7 +236,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
 
 }
 
-class Item {
+class Reberu2Item    {
     Texture image;
     private float x, y;
     boolean answeredCorrect;

@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 public class Reberu3 extends Reberu implements PlayableScreen {
+    private final Player player;
     private Stage stage;
     private Camera cam;
     World world;
@@ -28,11 +29,13 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         cam = new OrthographicCamera(16f, 13f);
         cam.update();
         stage = new Stage(new ExtendViewport(16f , 13f, cam), game.batch);
-        world = new World(new Vector2(0f, -10f), true);
+        world = new World(new Vector2(0f, -2f), true);
         debugRenderer = new Box2DDebugRenderer();
         setupDeadBodies();
         physicsDelta = new CumulativeDelta(1f / PHYSICS_FPS);
         spawnDelta = new CumulativeDelta(1f/10f);
+        player=new Player(game);
+        stage.addActor(player);
         new Timer().scheduleTask(new Timer.Task() {
             @Override
             public void run() {
@@ -47,6 +50,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         bd.type = BodyDef.BodyType.DynamicBody;
         bd.position.set(16 / 2, 13 / 2);
         body = world.createBody(bd);
+        body.applyForceToCenter(0,-2f,true);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(5, 5);
         FixtureDef fd = new FixtureDef();
@@ -109,7 +113,6 @@ public class Reberu3 extends Reberu implements PlayableScreen {
             boolean byebye = pos.x < -16f || pos.x > 16f;
             byebye |= pos.x < -13f || pos.y > 13f;
             if (byebye) world.destroyBody(b); // delete the evidence :)
-            System.out.println(b.getPosition());
             bodies.removeIndex(i);
         }
     }
