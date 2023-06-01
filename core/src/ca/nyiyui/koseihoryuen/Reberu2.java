@@ -68,18 +68,22 @@ public class Reberu2 extends Reberu implements PlayableScreen {
 
     @Override
     public void show() {
+        if (state == State.COMPLETE || state == State.CUSTOM)
+            return;
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 switch (keycode) {
                     case Input.Keys.SPACE:
                     case Input.Keys.ENTER:
-                        if (state != State.EXPLORE && questionDrawable.state != QuestionDrawable.State.ASKING) {
+                        if (state == State.INSTRUCTIONS && questionDrawable.state != QuestionDrawable.State.ASKING) {
                             switchLine(curLineIndex + 1);
                             if (curLineIndex >= daishi.lines.size()) {
                                 playScreen.invokePause();
                                 throw new RuntimeException("not impld yet");
                             }
+                        } else if (state == State.EXPLORE) {
+                            checkItemInteraction();
                         }
                         break;
                     case Input.Keys.ESCAPE:
@@ -96,19 +100,17 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         Gdx.gl.glClearColor(0, 0, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
-        game.batch.draw(bg, 0, 0);
         switch (state) {
             case EXPLORE:
+                game.batch.draw(bg, 0, 0);
                 game.batch.draw(city.image, city.getX(), city.getY());
                 game.batch.draw(pest.image, pest.getX(), pest.getY());
                 game.batch.draw(gas.image, gas.getX(), gas.getY());
                 handleMovement(delta);
                 game.batch.draw(playerSpriteSmall, playerX, playerY);
-                if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-                    checkItemInteraction();
-                }
                 break;
             case INSTRUCTIONS:
+                game.batch.draw(bg, 0, 0);
                 Sprite s = new Sprite(playerSpriteLarge);
                 s.setX(game.camera.viewportWidth / 4 - playerSpriteLarge.getWidth() / 2);
                 s.setY(game.camera.viewportWidth / 2 - playerSpriteLarge.getHeight() / 2);
@@ -140,13 +142,20 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                 }
                 break;
             case COMPLETE:
+                game.batch.draw(bg, 0, 0);
                 closingScreen(delta);
+                break;
         }
         checkAllAnswers();
         game.batch.end();
     }
 
+    /**
+     * checks if player coordinates are on an item/object. If they are, initiates question dialogue.
+     */
     private void checkItemInteraction() {
+        if (state == State.COMPLETE)
+            return;
         // check if player is on city
         if (playerX >= city.getX() && playerX <= city.getX() + city.image.getWidth()
                 && playerY >= city.getY() && playerY <= city.getY() + city.image.getHeight()) {
@@ -176,6 +185,13 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         else if (playerX >= gas.getX() && playerX <= gas.getX() + gas.image.getWidth()
                 && playerY >= gas.getY() && playerY <= gas.getY() + gas.image.getHeight()) {
             System.out.println("on greenhouse gas");
+            if (gas.answeredCorrect) {
+                return;
+            }
+            int j = DaishiUtils.findLabel(daishi, "badgas");
+            switchLine(j);
+            state = State.CUSTOM;
+            curQuestion = "gas";
         }
     }
 
@@ -231,11 +247,14 @@ public class Reberu2 extends Reberu implements PlayableScreen {
     @Override
     public void closingScreen(float delta) {
         elapsedToExit += delta;
+        game.batch.draw(bg, 0, 0);
         renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
-        renderText(subtitleFont, "You finished this level.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 50);
-        if (elapsedToExit > 4f)
+        renderText(subtitleFont, "You're a BEE-nius", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 50);
+        if (elapsedToExit >= 4f)
             game.setScreen(new TitleScreen(game));
     }
+
+}
 
 
     public void hide() {
@@ -246,8 +265,8 @@ public class Reberu2 extends Reberu implements PlayableScreen {
 
 class Reberu2Item {
     Texture image;
-    private float x, y;
     boolean answeredCorrect;
+    private float x, y;
 
     public Reberu2Item(Texture image, float x, float y) {
         this.image = image;

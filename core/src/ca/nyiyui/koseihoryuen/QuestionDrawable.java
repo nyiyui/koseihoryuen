@@ -40,10 +40,12 @@ public class QuestionDrawable extends BaseDrawable {
         this.optsT = optsT;
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
         param.color = new Color(0xffffffff);
-        param.size = 22;
+        param.size = 25;
         param.borderColor = Color.BLACK;
+        param.borderWidth = 3;
         descFont = game.font.generateFont(param);
         param.size = 18;
+        param.borderWidth = 0;
         optsT.setBodyFont(game.font.generateFont(param));
         Label.LabelStyle ls = new Label.LabelStyle();
         ls.font = descFont;
@@ -82,15 +84,15 @@ public class QuestionDrawable extends BaseDrawable {
                 break;
             case WRONG:
                 descLabel.setText("Wrong! L BOZO!");
-                descLabel.setAlignment(Align.right);
+                descLabel.setAlignment(Align.center);
         }
 
         final float padding = 20;
         optsT.draw(batch, x, y, width, 200);
         descLabel.setWidth(width / 2 - 2 * padding);
         descLabel.setHeight(height - 2 * padding);
-        descLabel.setX(x + padding);
-        descLabel.setY(y + padding);
+        descLabel.setX(x + 2 * padding);
+        descLabel.setY(y + 3 * padding);
         descLabel.draw(batch, 1);
     }
 
