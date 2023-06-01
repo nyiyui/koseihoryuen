@@ -73,7 +73,7 @@ public class LevelsScreen extends SelectScreen {
     protected float getX(int i) {
         return BASE_X + i * 300;
     }
-F
+
     @Override
     protected float getY(int i) {
         return BASE_Y + 200 * (options.length - i - 1);

@@ -78,7 +78,7 @@ public class QuestionDrawable extends BaseDrawable {
                 break;
             case CORRECT:
                 Texture bee = new Texture(Gdx.files.internal("images/beeExit.png"));
-                batch.draw(bee, (width - bee.getWidth()) / 2, (height) / 2 - bee.getHeight() / 4);
+                batch.draw(bee, (width - bee.getWidth() / 2) / 2, (height) / 2 - bee.getHeight() / 4);
                 descLabel.setText("Correct!");
                 descLabel.setAlignment(Align.center);
                 break;
