@@ -2,6 +2,8 @@ package ca.nyiyui.koseihoryuen;
 
 import ca.nyiyui.koseihoryuen.data.Line;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -24,6 +26,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     private final Player player;
     private final BitmapFont debugFont;
     private final ExtendViewport viewport;
+    private final CumulativeDelta cleanupDelta;
     private Viewport overlayViewport;
     private Stage overlayStage;
     private Camera overlayCamera;
@@ -41,23 +44,22 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         super(game);
         cam = new OrthographicCamera(16f, 13f);
         cam.update();
+        // viewports, stage, and camera for main game section
         viewport = new ExtendViewport(16f, 13f, cam);
         stage = new Stage(viewport, game.batch);
+        // viewports, stage, and camera for overlay section
         overlayCamera = new OrthographicCamera();
         overlayViewport = new ExtendViewport(16 * 60, 13 * 60, overlayCamera);
         overlayStage = new Stage(overlayViewport, game.batch);
+        // Box2D
         debugRenderer = new Box2DDebugRenderer();
         world = new World(new Vector2(0f, -2f), true);
         setupDeadBodies();
         physicsDelta = new CumulativeDelta(1f / PHYSICS_FPS);
-        spawnDelta = new CumulativeDelta(1f / 10f);
         player = new Player(game);
         stage.addActor(player);
-        new Timer().scheduleTask(new Timer.Task() {@Override
-            public void run() {
-                cleanupBodies();
-            }
-        }, 1, 1, -1);
+        spawnDelta = new CumulativeDelta(1f / 10f);
+        cleanupDelta = new CumulativeDelta(1);
         textureAnanas = new Texture(Gdx.files.internal("images/stage3-ananas.png"));
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
         param.size = 22;
@@ -82,6 +84,31 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     @Override
     protected void handleLineSwitch() {
 
+    }
+
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                switch (keycode) {
+                    case Input.Keys.SPACE:
+                    case Input.Keys.ENTER:
+                        if (state != State.EXPLORE && questionDrawable.state != QuestionDrawable.State.ASKING) {
+                            switchLine(curLineIndex + 1);
+                            if (curLineIndex >= daishi.lines.size()) {
+                                playScreen.invokePause();
+                                throw new RuntimeException("not impld yet");
+                            }
+                        }
+                        break;
+                    case Input.Keys.ESCAPE:
+                        playScreen.invokePause();
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     private void setupDeadBodies() {
@@ -129,11 +156,17 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         debugRenderer.render(world, cam.combined);
         game.batch.end();
         spawn();
-        System.out.println(stage.getActors().size);
         game.batch.begin();
         renderDebug();
         renderText(debugFont, "body", body.getPosition().x, body.getPosition().y);
         game.batch.end();
+
+        // cleanup
+        cleanupDelta.update();
+        if (cleanupDelta.ready()) {
+            cleanupDelta.reset();
+            cleanupBodies();
+        }
     }
 
     private void renderDebug() {
@@ -155,7 +188,6 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         if (world.isLocked()) return;
         Array<Body> bodies = new Array<>();
         world.getBodies(bodies);
-        System.out.println(bodies.size);
         for (int i = bodies.size - 1; i >= 0; i--) {
             Body b = bodies.get(i);
             Vector2 pos = b.getPosition();

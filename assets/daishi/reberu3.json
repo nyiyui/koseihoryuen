@@ -8,19 +8,7 @@
     },
     {
       "ten": "Instructions",
-      "body": "No one reads this lol"
-    },
-    {
-      "question": {
-        "question": "Recently, humans have started to build urban infrastructure in the surrounding area. This has caused our bee colony to lose its home! What is the best way to combat this issue?",
-        "options": {
-          "A": "Burn down the city.",
-          "B": "Do more research on what habitats are in the are you're trying to develop ;)",
-          "C": "Never be a loser!",
-          "D": "Ecological restoration to increase bee population and save the bees ;)"
-        },
-        "answer": "D"
-      }
+      "body": null
     }
   ]
 }
