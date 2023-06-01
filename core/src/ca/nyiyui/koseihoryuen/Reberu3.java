@@ -1,19 +1,32 @@
 package ca.nyiyui.koseihoryuen;
 
+import ca.nyiyui.koseihoryuen.data.Line;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.Random;
 
 public class Reberu3 extends Reberu implements PlayableScreen {
+    private final LineActor lineActor;
+    private final Reberu3Debug reberu3Debug;
     private final Player player;
+    private final BitmapFont debugFont;
+    private final ExtendViewport viewport;
+    private Viewport overlayViewport;
+    private Stage overlayStage;
+    private Camera overlayCamera;
     private Stage stage;
     private Camera cam;
     World world;
@@ -28,21 +41,47 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         super(game);
         cam = new OrthographicCamera(16f, 13f);
         cam.update();
-        stage = new Stage(new ExtendViewport(16f , 13f, cam), game.batch);
-        world = new World(new Vector2(0f, -2f), true);
+        viewport = new ExtendViewport(16f, 13f, cam);
+        stage = new Stage(viewport, game.batch);
+        overlayCamera = new OrthographicCamera();
+        overlayViewport = new ExtendViewport(16 * 60, 13 * 60, overlayCamera);
+        overlayStage = new Stage(overlayViewport, game.batch);
         debugRenderer = new Box2DDebugRenderer();
+        world = new World(new Vector2(0f, -2f), true);
         setupDeadBodies();
         physicsDelta = new CumulativeDelta(1f / PHYSICS_FPS);
-        spawnDelta = new CumulativeDelta(1f/10f);
-        player=new Player(game);
+        spawnDelta = new CumulativeDelta(1f / 10f);
+        player = new Player(game);
         stage.addActor(player);
-        new Timer().scheduleTask(new Timer.Task() {
-            @Override
+        new Timer().scheduleTask(new Timer.Task() {@Override
             public void run() {
                 cleanupBodies();
             }
         }, 1, 1, -1);
         textureAnanas = new Texture(Gdx.files.internal("images/stage3-ananas.png"));
+        FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        param.size = 22;
+        param.color = new Color(0x000000ff);
+        param.borderColor = new Color(0xffffffff);
+        param.borderWidth = 2;
+        debugFont = game.font.generateFont(param);
+        reberu3Debug = new Reberu3Debug(this);
+        overlayStage.addActor(reberu3Debug);
+        lineActor = new LineActor();
+        overlayStage.addActor(lineActor);
+        DAISHI_PATH = "daishi/reberu3.json";
+        try {
+            loadDaishi();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("loading daishi failed");
+        }
+        switchLine(0);
+    }
+
+    @Override
+    protected void handleLineSwitch() {
+
     }
 
     private void setupDeadBodies() {
@@ -50,7 +89,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         bd.type = BodyDef.BodyType.DynamicBody;
         bd.position.set(16 / 2, 13 / 2);
         body = world.createBody(bd);
-        body.applyForceToCenter(0,-2f,true);
+        body.applyForceToCenter(0, -2f, true);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(5, 5);
         FixtureDef fd = new FixtureDef();
@@ -63,7 +102,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     private void spawnItem() {
         BodyDef bd = new BodyDef();
         bd.type = BodyDef.BodyType.DynamicBody;
-        bd.position.set(8f, 13f);
+        bd.position.set(new Random().nextFloat(0, 16), 13f);
         Body b = world.createBody(bd);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(.25f, .25f);
@@ -81,15 +120,27 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stepPhysics();
-        stage.getCamera().update();
+        stage.getCamera().update(); // TODO: needed?
         stage.act(delta);
         stage.draw();
+        overlayStage.act(delta);
+        overlayStage.draw();
         game.batch.begin();
         debugRenderer.render(world, cam.combined);
+        game.batch.end();
         spawn();
         System.out.println(stage.getActors().size);
-//        renderText(game.debugFont, "body", body.getPosition().x, body.getPosition().y);
+        game.batch.begin();
+        renderDebug();
+        renderText(debugFont, "body", body.getPosition().x, body.getPosition().y);
         game.batch.end();
+    }
+
+    private void renderDebug() {
+    }
+
+    private void renderText(String text, float x, float y) {
+        renderText(debugFont, text, x, y);
     }
 
     private void spawn() {
@@ -126,10 +177,6 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     }
 
     @Override
-    protected void handleLineSwitch() {
-    }
-
-    @Override
     public void dispose() {
         super.dispose();
         world.dispose();
@@ -138,5 +185,51 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     @Override
     public void closingScreen(float delta) {
         throw new RuntimeException("not yet implemented");
+    }
+
+    public void resize(int width, int height) {
+        overlayViewport.update(width, height);
+        overlayCamera.update();
+    }
+
+    static class Reberu3Debug extends Actor {
+        private final Reberu3 reberu3;
+        private Label status;
+
+        Reberu3Debug(Reberu3 reberu3) {
+            this.reberu3 = reberu3;
+            Label.LabelStyle ls = new Label.LabelStyle();
+            ls.font = reberu3.debugFont;
+            ls.fontColor = new Color(0xffffffff);
+            status = new Label("debug status", ls);
+            status.setX(0);
+            status.setY(0);
+        }
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            Array<Body> bodies = new Array<>();
+            reberu3.world.getBodies(bodies);
+            status.setText(String.format("body%d", bodies.size));
+            status.draw(batch, parentAlpha);
+        }
+    }
+
+    class LineActor extends Actor {
+
+        LineActor() {
+        }
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            Line cl = curLine();
+            if (cl.ten != null || cl.body != null) {
+                telop.draw(batch, 0, 0, overlayCamera.viewportWidth, 200);
+            }
+            if (cl.question != null) {
+                questionDrawable.draw(batch, 0, 0, overlayCamera.viewportWidth, overlayCamera.viewportHeight);
+                questionDrawable.handleInput();
+            }
+        }
     }
 }
