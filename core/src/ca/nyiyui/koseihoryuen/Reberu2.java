@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
 /**
@@ -82,9 +81,10 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                                 playScreen.invokePause();
                                 throw new RuntimeException("not impld yet");
                             }
-                        } else if (state == State.EXPLORE) {
-                            checkItemInteraction();
                         }
+//                        else if (state == State.EXPLORE) {
+//                            checkItemInteraction();
+//                        }
                         break;
                     case Input.Keys.ESCAPE:
                         playScreen.invokePause();
@@ -108,6 +108,8 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                 game.batch.draw(gas.image, gas.getX(), gas.getY());
                 handleMovement(delta);
                 game.batch.draw(playerSpriteSmall, playerX, playerY);
+                if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.SPACE))
+                    checkItemInteraction();
                 break;
             case INSTRUCTIONS:
                 game.batch.draw(bg, 0, 0);
@@ -135,10 +137,10 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                     } else if (curQuestion.equals("gas")) {
                         gas.answeredCorrect = true;
                     }
-                    goBackToExplore();
+                    goBackToExplore(delta);
 
                 } else if (questionDrawable.state == QuestionDrawable.State.WRONG) {
-                    goBackToExplore();
+                    goBackToExplore(delta);
                 }
                 break;
             case COMPLETE:
@@ -209,17 +211,9 @@ public class Reberu2 extends Reberu implements PlayableScreen {
      * Waits for 4 seconds before going back to exploration mode
      * Used after user answers a question.
      */
-    private void goBackToExplore() {
-        Timer.schedule(new Timer.Task() {
-            /**
-             * If this is the last time the task will be ran or the task is first cancelled, it may be scheduled again in this
-             * method.
-             */
-            @Override
-            public void run() {
-                state = State.EXPLORE;
-            }
-        }, 2.5f);
+    private void goBackToExplore(float delta) {
+        elapsedToExit += delta;
+
     }
 
     @Override
@@ -253,8 +247,6 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         if (elapsedToExit >= 4f)
             game.setScreen(new TitleScreen(game));
     }
-
-}
 
 
     public void hide() {
