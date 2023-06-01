@@ -63,6 +63,7 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
         titleFont = game.font.generateFont(param);
         param.size = 36;
         subtitleFont = game.font.generateFont(param);
+        telop=new Telop(game);
         questionDrawableTelop = new Telop(game);
         questionDrawable = new QuestionDrawable(game, questionDrawableTelop);
         playerSpriteSmall = new Texture(Gdx.files.internal("images/player-sprite-small.png"));
@@ -93,6 +94,15 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
      */
     protected Line curLine() {
         return daishi.lines.get(curLineIndex);
+    }
+
+    /**
+     * Applies state changes to change from an unspecified to this line.
+     *
+     * @param label new line label
+     */
+    protected void switchLine(String label) {
+        switchLine(DaishiUtils.findLabel(daishi,label));
     }
 
     /**

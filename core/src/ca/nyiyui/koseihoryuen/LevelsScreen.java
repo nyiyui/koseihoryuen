@@ -61,6 +61,9 @@ public class LevelsScreen extends SelectScreen {
             case 1:
                 game.setScreen(new PlayScreen(game, new Reberu2(game)));
                 break;
+            case 2:
+                game.setScreen(new PlayScreen(game, new Reberu3(game)));
+                break;
             default:
                 throw new RuntimeException("L bozo");
         }
@@ -70,7 +73,7 @@ public class LevelsScreen extends SelectScreen {
     protected float getX(int i) {
         return BASE_X + i * 300;
     }
-
+F
     @Override
     protected float getY(int i) {
         return BASE_Y + 200 * (options.length - i - 1);
