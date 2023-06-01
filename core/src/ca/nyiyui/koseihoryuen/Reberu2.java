@@ -213,7 +213,10 @@ public class Reberu2 extends Reberu implements PlayableScreen {
      */
     private void goBackToExplore(float delta) {
         elapsedToExit += delta;
-
+        if (elapsedToExit >= 2.5f) {
+            elapsedToExit = 0;
+            state = State.EXPLORE;
+        }
     }
 
     @Override
