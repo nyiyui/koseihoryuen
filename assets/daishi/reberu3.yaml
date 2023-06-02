@@ -10,4 +10,5 @@ lines:
   - body: "However, be careful to be not hit by the flycatchers, pesticides, and EVIL human hands!"
   - body: "Once you collect enough pollen as indicated on the right, you win the game."
   - body: "Good luck out there, young bee warrior!"
-  - action: "explore"
+  - noInherit: true
+    action: "explore"
