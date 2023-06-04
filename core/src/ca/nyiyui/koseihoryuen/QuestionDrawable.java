@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Disposable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * A fullscreen question using Telop.
  */
-public class QuestionDrawable extends BaseDrawable {
+public class QuestionDrawable extends BaseDrawable implements Disposable {
     private final Telop optsT;
     private String descText;
     private Label descLabel;
@@ -26,6 +27,8 @@ public class QuestionDrawable extends BaseDrawable {
     private List<KeyPair<String>> keyPairs;
     private Question question;
     State state;
+    private Texture beeWrong, beeCorrect;
+
 
     enum State {
         DISABLED,
@@ -51,6 +54,8 @@ public class QuestionDrawable extends BaseDrawable {
         ls.font = descFont;
         descLabel = new Label(descText, ls);
         descLabel.setWrap(true);
+        beeCorrect = new Texture(Gdx.files.internal("images/beeExit.png"));
+        beeWrong = new Texture(Gdx.files.internal("images/beeWrong.png"));
     }
 
     public void setDescText(String descText) {
@@ -77,12 +82,12 @@ public class QuestionDrawable extends BaseDrawable {
                 descLabel.setAlignment(Align.left);
                 break;
             case CORRECT:
-                Texture bee = new Texture(Gdx.files.internal("images/beeExit.png"));
-                batch.draw(bee, (width - bee.getWidth() / 2) / 2, (height) / 2 - bee.getHeight() / 4);
+                batch.draw(beeCorrect, (width - beeCorrect.getWidth() / 2) / 2, (height) / 2 - beeCorrect.getHeight() / 4);
                 descLabel.setText("Correct!");
                 descLabel.setAlignment(Align.center);
                 break;
             case WRONG:
+                batch.draw(beeWrong, (width - beeWrong.getWidth() / 2) / 2, (height) / 2 - beeWrong.getHeight() / 4);
                 descLabel.setText("Wrong! L BOZO!");
                 descLabel.setAlignment(Align.center);
         }
@@ -145,5 +150,14 @@ public class QuestionDrawable extends BaseDrawable {
         }
         optsT.setBodyText(opts.toString());
         setDescText(q.question);
+    }
+
+    /**
+     * Releases all resources of this object.
+     */
+    @Override
+    public void dispose() {
+        beeWrong.dispose();
+        beeCorrect.dispose();
     }
 }
