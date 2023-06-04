@@ -6,11 +6,11 @@ import com.badlogic.gdx.Gdx;
  * Utility class to make threshold-based cumulative delta times.
  */
 public class CumulativeDelta {
-    private float delta=0;
+    private float delta = 0;
     private float threshold;
 
     CumulativeDelta(float threshold) {
-        this.threshold=threshold;
+        this.threshold = threshold;
     }
 
     /**
@@ -21,15 +21,27 @@ public class CumulativeDelta {
     }
 
     public void update(float delta) {
-        this.delta+=delta;
+        this.delta += delta;
+    }
+
+    /**
+     * Resets and returns the ready value before reset.
+     *
+     * @return ready value before reset.
+     */
+    public boolean step() {
+        boolean ready = ready();
+        if (ready) reset();
+        return ready;
     }
 
     /**
      * Whether cumulative delta time is ready to flush.
+     *
      * @return whether cumulative delta is over the threshold
      */
     public boolean ready() {
-        return delta>threshold;
+        return delta > threshold;
     }
 
     public float delta() {
@@ -40,6 +52,6 @@ public class CumulativeDelta {
      * Resets the cumulative delta counter.
      */
     public void reset() {
-        delta=0;
+        delta = 0;
     }
 }

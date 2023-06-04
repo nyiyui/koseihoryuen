@@ -8,7 +8,26 @@
     },
     {
       "ten": "Instructions",
-      "body": null
+      "body": "Every bee has a very important task in its life."
+    },
+    {
+      "body": "Which is to collect honey and pollinate the world! (triumph emoji)"
+    },
+    {
+      "body": "Fly around with the WASD keys and collect enough pollen for your bee colony!"
+    },
+    {
+      "body": "However, be careful to be not hit by the flycatchers, pesticides, and EVIL human hands!"
+    },
+    {
+      "body": "Once you collect enough pollen as indicated on the right, you win the game."
+    },
+    {
+      "body": "Good luck out there, young bee warrior!"
+    },
+    {
+      "noInherit": true,
+      "action": "explore"
     }
   ]
 }

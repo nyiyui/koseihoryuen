@@ -4,6 +4,7 @@ import ca.nyiyui.koseihoryuen.data.Line;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -18,7 +19,12 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.HashSet;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Reberu3 extends Reberu implements PlayableScreen {
     private final LineActor lineActor;
@@ -27,6 +33,10 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     private final BitmapFont debugFont;
     private final ExtendViewport viewport;
     private final CumulativeDelta cleanupDelta;
+    /**
+     * Queue of items to yeet (delete).
+     */
+    public Queue<Body> deleteQueue;
     private Viewport overlayViewport;
     private Stage overlayStage;
     private Camera overlayCamera;
@@ -39,6 +49,9 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     private CumulativeDelta spawnDelta;
     private static int PHYSICS_FPS = 60;
     private Texture textureAnanas;
+    private ContactListener contactListener;
+    private CumulativeDelta yeetDelta;
+    private Texture textureBg;
 
     public Reberu3(Koseihoryuen game) {
         super(game);
@@ -56,9 +69,10 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         world = new World(new Vector2(0f, -2f), true);
         setupDeadBodies();
         physicsDelta = new CumulativeDelta(1f / PHYSICS_FPS);
-        player = new Player(game);
+        player = new Player(game, this);
         stage.addActor(player);
         spawnDelta = new CumulativeDelta(1f / 10f);
+        yeetDelta = new CumulativeDelta(1f/60f);
         cleanupDelta = new CumulativeDelta(1);
         textureAnanas = new Texture(Gdx.files.internal("images/stage3-ananas.png"));
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -79,11 +93,22 @@ public class Reberu3 extends Reberu implements PlayableScreen {
             throw new RuntimeException("loading daishi failed");
         }
         switchLine(0);
+        deleteQueue = new LinkedBlockingQueue<>();
+        setupContactListener();
+        textureBg= game.assetManager.get("images/stage3-bg.png",Texture.class);
     }
 
     @Override
     protected void handleLineSwitch() {
-
+        Line cl = curLine();
+        if (cl.action != null) switch (cl.action) {
+            case "":
+                state = State.INSTRUCTIONS;
+                break;
+            case "explore":
+                state = State.EXPLORE;
+                break;
+        }
     }
 
     @Override
@@ -146,6 +171,9 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        game.batch.begin();
+        game.batch.draw(textureBg,0,0);
+        game.batch.end();
         stepPhysics();
         stage.getCamera().update(); // TODO: needed?
         stage.act(delta);
@@ -167,6 +195,53 @@ public class Reberu3 extends Reberu implements PlayableScreen {
             cleanupDelta.reset();
             cleanupBodies();
         }
+        yeetDelta.update();
+        if (yeetDelta.step()) {
+            yeetBodies();
+        }
+    }
+
+    private void setupContactListener() {
+        contactListener = new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+                Fixture a = contact.getFixtureA();
+                Fixture b = contact.getFixtureB();
+                Object oA = a.getBody().getUserData();
+                Object oB = b.getBody().getUserData();
+                if (oA instanceof Player && oB instanceof Fallee) {
+                    Player p = (Player) a.getBody().getUserData();
+                    Fallee f = (Fallee) b.getBody().getUserData();
+                    if (f.kind == Fallee.Kind.POLLEN) {
+                        p.point += f.pointDelta();
+                        f.visible = true;
+                        deleteQueue.add(f.body);
+                        System.out.println("pollen");
+                    }else {
+                        System.out.println("die");
+                    }
+                } else if (oA instanceof Fallee && oB instanceof Fallee) {
+                    // ignore
+                } else {
+                    System.out.println("unknown body collision");
+                    System.out.println(oA);
+                    System.out.println(oB);
+                }
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+            }
+        };
+        world.setContactListener(contactListener);
     }
 
     private void renderDebug() {
@@ -178,9 +253,8 @@ public class Reberu3 extends Reberu implements PlayableScreen {
 
     private void spawn() {
         spawnDelta.update();
-        if (spawnDelta.ready()) {
+        if (spawnDelta.step() && state == State.EXPLORE) {
             spawnItem();
-            spawnDelta.reset();
         }
     }
 
@@ -198,6 +272,14 @@ public class Reberu3 extends Reberu implements PlayableScreen {
             if (byebye) world.destroyBody(b); // delete the evidence :)
             bodies.removeIndex(i);
         }
+    }
+
+    /**
+     * Yeet the bodies in deleteQueue.
+     */
+    private void yeetBodies() {
+        while (deleteQueue.size() > 0)
+            world.destroyBody(deleteQueue.poll());
     }
 
     private void stepPhysics() {
