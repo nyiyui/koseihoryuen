@@ -13,9 +13,9 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 /**
  * Names: Ivy & Ken
  * Teacher: Ms Krasteva
- * Date: May 23, 2023
+ * Date: June 9, 2023
  * Purpose: runs when user plays the Testing stage.
- * Contributions: Ivy
+ * Contributions: Ivy --> everything
  */
 
 
@@ -38,7 +38,14 @@ public class Reberu2 extends Reberu implements PlayableScreen {
      * image of pesticide warning sign.
      */
     private Reberu2Item pest;
+    /**
+     * keeps track of which question the player is currently answering
+     */
     private String curQuestion;
+    /**
+     * image for progress bar
+     */
+    private Texture progressBar, correctButton, wrongButton;
 
     public Reberu2(Koseihoryuen game) {
         super(game);
@@ -51,9 +58,12 @@ public class Reberu2 extends Reberu implements PlayableScreen {
             throw new RuntimeException("loading daishi failed");
         }
         bg = new Texture(Gdx.files.internal("images/stage2-bg.png"));
+        progressBar = new Texture(Gdx.files.internal("images/stage2-rectangle.png"));
+        correctButton = new Texture(Gdx.files.internal("images/stage2-correct-button.png"));
+        wrongButton = new Texture(Gdx.files.internal("images/stage2-wrong-button.png"));
         city = new Reberu2Item(new Texture(Gdx.files.internal("images/stage2-city.png")), 100, 450);
         gas = new Reberu2Item(new Texture(Gdx.files.internal("images/stage2-greenhouse-gas.png")), 160, 30);
-        pest = new Reberu2Item(new Texture(Gdx.files.internal("images/stage2-pesticide-sign.png")), 570, 190);
+        pest = new Reberu2Item(new Texture(Gdx.files.internal("images/stage2-pesticide-sign.png")), 570, 300);
         playerX = game.camera.viewportWidth / 2;
         playerY = game.camera.viewportHeight / 2;
         switchLine(0);
@@ -82,9 +92,6 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                                 throw new RuntimeException("not impld yet");
                             }
                         }
-//                        else if (state == State.EXPLORE) {
-//                            checkItemInteraction();
-//                        }
                         break;
                     case Input.Keys.ESCAPE:
                         playScreen.invokePause();
@@ -108,6 +115,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
                 game.batch.draw(gas.image, gas.getX(), gas.getY());
                 handleMovement(delta);
                 game.batch.draw(playerSpriteSmall, playerX, playerY);
+                renderProgressBar();
                 if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.SPACE))
                     checkItemInteraction();
                 break;
@@ -162,7 +170,6 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         if (playerX >= city.getX() && playerX <= city.getX() + city.image.getWidth()
                 && playerY >= city.getY() && playerY <= city.getY() + city.image.getHeight()) {
             System.out.println("on city");
-            //TODO: add questions
             if (city.answeredCorrect) {
                 return;
             }
@@ -217,6 +224,26 @@ public class Reberu2 extends Reberu implements PlayableScreen {
             elapsedToExit = 0;
             state = State.EXPLORE;
         }
+    }
+
+    /**
+     * renders the rectangle in the bottom-right corner which contains which questions the user has answered correctly.
+     */
+    private void renderProgressBar() {
+        float x = game.camera.viewportWidth - progressBar.getWidth() - 20, y = 20;
+        game.batch.draw(progressBar, x, y);
+        if (city.answeredCorrect)
+            game.batch.draw(correctButton, x + progressBar.getWidth() / 4, y + (progressBar.getHeight() - 55) / 2);
+        else
+            game.batch.draw(wrongButton, x + progressBar.getWidth() / 4, y + (progressBar.getHeight() - 55) / 2);
+        if (gas.answeredCorrect)
+            game.batch.draw(correctButton, x + progressBar.getWidth() / 4 * 2, y + (progressBar.getHeight() - 55) / 2);
+        else
+            game.batch.draw(wrongButton, x + progressBar.getWidth() / 4 * 2, y + (progressBar.getHeight() - 55) / 2);
+        if (pest.answeredCorrect)
+            game.batch.draw(correctButton, x + progressBar.getWidth() / 4 * 3, y + (progressBar.getHeight() - 55) / 2);
+        else
+            game.batch.draw(wrongButton, x + progressBar.getWidth() / 4 * 3, y + (progressBar.getHeight() - 55) / 2);
     }
 
     @Override

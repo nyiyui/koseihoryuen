@@ -17,7 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A fullscreen question using Telop.
+ * Names: Ivy & Ken
+ * Teacher: Ms. Krasteva
+ * Date: Jun 9th, 2023
+ * Purpose: A fullscreen question using Telop.
+ * Contribution: Ivy --> visuals in draw methods, Ken --> everything else
  */
 public class QuestionDrawable extends BaseDrawable implements Disposable {
     private final Telop optsT;

@@ -10,6 +10,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.ArrayList;
 
+/**
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: June 9, 2023
+ * Purpose: runs the program's first stage, the Learning stage
+ * Contributions: Ken --> everything, Ivy --> closing screen
+ */
+
 public class Reberu1 extends Reberu {
     private static final float NPC_INTERACTION_RADIUS = 70;
     private final Texture background;
@@ -127,6 +135,9 @@ public class Reberu1 extends Reberu {
         game.batch.end();
     }
 
+    /**
+     * shows necessary information to team members when debugging program
+     */
     private void renderDebug() {
         renderText(game.debugFont, String.format("%f,%f", playerX, playerY), game.camera.viewportWidth / 2, 10);
         renderText(game.debugFont, curLine().toString(), game.camera.viewportWidth / 2, 20);
