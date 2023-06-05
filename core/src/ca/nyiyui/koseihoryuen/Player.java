@@ -4,13 +4,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+/**
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: May 23, 2023
+ * Purpose: stage 3 player
+ * Contributions: Ken did all of this class
+ */
+
 public class Player extends Actor {
     private static final float MOVEMENT_COEFF = 200;
+    private static final Vector2 MOVEMENT_MIN = new Vector2(1.5f, 1.5f);
+    private static final Vector2 MOVEMENT_MAX = new Vector2(8.3f, 11.9f);
     private final Reberu3 reberu3;
     private Koseihoryuen game;
     private Body body;
@@ -18,7 +27,9 @@ public class Player extends Actor {
     /**
      * Points this player has.
      */
-    float point;
+    int score=0;
+     int pollenCount=0;
+     int hp=7;
 
     Player(Koseihoryuen game, final Reberu3 reberu3) {
         this.game = game;
@@ -79,5 +90,15 @@ public class Player extends Actor {
         } else {
             body.setLinearVelocity(new Vector2());
         }
+        clampMovement();
+    }
+
+    private void clampMovement() {
+        Vector2 pos = body.getPosition();
+        if (pos.x < MOVEMENT_MIN.x) pos.x = MOVEMENT_MIN.x;
+        if (pos.y < MOVEMENT_MIN.y) pos.y = MOVEMENT_MIN.y;
+        if (pos.x > MOVEMENT_MAX.x) pos.x = MOVEMENT_MAX.x;
+        if (pos.y > MOVEMENT_MAX.y) pos.y = MOVEMENT_MAX.y;
+        body.setTransform(pos,0);
     }
 }

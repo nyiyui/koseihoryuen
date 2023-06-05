@@ -4,6 +4,14 @@ import ca.nyiyui.koseihoryuen.data.Daishi;
 
 import java.util.Objects;
 
+/**
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: May 23, 2023
+ * Purpose: utilities for daishi (scene files)
+ * Contributions: Ken did all of this class
+ */
+
 public class DaishiUtils {
     /**
      * Finds the Line with the given label.

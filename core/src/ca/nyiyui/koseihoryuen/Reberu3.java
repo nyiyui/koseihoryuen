@@ -4,7 +4,6 @@ import ca.nyiyui.koseihoryuen.data.Line;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,23 +14,28 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.HashSet;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+/**
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: May 23, 2023
+ * Purpose: stage 3
+ * Contributions: Ken did all of level 3
+ */
 
 public class Reberu3 extends Reberu implements PlayableScreen {
     private final LineActor lineActor;
     private final Reberu3Debug reberu3Debug;
     private final Player player;
     private final BitmapFont debugFont;
-    private final ExtendViewport viewport;
+    private final Viewport viewport;
     private final CumulativeDelta cleanupDelta;
     /**
      * Queue of items to yeet (delete).
@@ -52,13 +56,15 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     private ContactListener contactListener;
     private CumulativeDelta yeetDelta;
     private Texture textureBg;
+    private Texture textureBg2;
+    private HUD hud;
 
     public Reberu3(Koseihoryuen game) {
         super(game);
         cam = new OrthographicCamera(16f, 13f);
         cam.update();
         // viewports, stage, and camera for main game section
-        viewport = new ExtendViewport(16f, 13f, cam);
+        viewport = new FitViewport(16f, 13f, cam);
         stage = new Stage(viewport, game.batch);
         // viewports, stage, and camera for overlay section
         overlayCamera = new OrthographicCamera();
@@ -67,12 +73,12 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         // Box2D
         debugRenderer = new Box2DDebugRenderer();
         world = new World(new Vector2(0f, -2f), true);
-        setupDeadBodies();
+        setupWalls();
         physicsDelta = new CumulativeDelta(1f / PHYSICS_FPS);
         player = new Player(game, this);
         stage.addActor(player);
-        spawnDelta = new CumulativeDelta(1f / 10f);
-        yeetDelta = new CumulativeDelta(1f/60f);
+        spawnDelta = new CumulativeDelta(1f / 2f);
+        yeetDelta = new CumulativeDelta(1f / 60f);
         cleanupDelta = new CumulativeDelta(1);
         textureAnanas = new Texture(Gdx.files.internal("images/stage3-ananas.png"));
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -95,7 +101,10 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         switchLine(0);
         deleteQueue = new LinkedBlockingQueue<>();
         setupContactListener();
-        textureBg= game.assetManager.get("images/stage3-bg.png",Texture.class);
+        textureBg = game.assetManager.get("images/stage3-bg.png", Texture.class);
+        textureBg2 = game.assetManager.get("images/stage3-bg2.png", Texture.class);
+        hud=new HUD();
+        overlayStage.addActor(hud);
     }
 
     @Override
@@ -136,14 +145,21 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         });
     }
 
-    private void setupDeadBodies() {
+    private void setupWalls() {
+//        setupWall(5,1f,4f,.1f);
+        setupWall(5, 12.4f, 4f, .1f);
+        setupWall(1f, 3.4f, .1f, 9);
+        setupWall(8.8f, 3.4f, .1f, 9);
+    }
+
+    private void setupWall(float x, float y, float hx, float hy) {
         BodyDef bd = new BodyDef();
-        bd.type = BodyDef.BodyType.DynamicBody;
-        bd.position.set(16 / 2, 13 / 2);
+        bd.type = BodyDef.BodyType.StaticBody;
+        bd.position.set(x, y);
         body = world.createBody(bd);
         body.applyForceToCenter(0, -2f, true);
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(5, 5);
+        shape.setAsBox(hx, hy);
         FixtureDef fd = new FixtureDef();
         fd.shape = shape;
         fd.density = 1f;
@@ -154,7 +170,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     private void spawnItem() {
         BodyDef bd = new BodyDef();
         bd.type = BodyDef.BodyType.DynamicBody;
-        bd.position.set(new Random().nextFloat(0, 16), 13f);
+        bd.position.set(new Random().nextFloat(1.8f, 8), 12f);
         Body b = world.createBody(bd);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(.25f, .25f);
@@ -172,7 +188,8 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
-        game.batch.draw(textureBg,0,0);
+        game.batch.draw(textureBg, 0, 0);
+        game.batch.draw(textureBg2, 60, 60);
         game.batch.end();
         stepPhysics();
         stage.getCamera().update(); // TODO: needed?
@@ -213,11 +230,21 @@ public class Reberu3 extends Reberu implements PlayableScreen {
                     Player p = (Player) a.getBody().getUserData();
                     Fallee f = (Fallee) b.getBody().getUserData();
                     if (f.kind == Fallee.Kind.POLLEN) {
-                        p.point += f.pointDelta();
+                        p.score += f.pointDelta();
+                        p.pollenCount++;
                         f.visible = true;
                         deleteQueue.add(f.body);
-                        System.out.println("pollen");
-                    }else {
+                    } else if (f.kind == Fallee.Kind.HAND) {
+                        p.hp--;
+                    } else if (f.kind == Fallee.Kind.FLYCATCHER) {
+                        p.hp--;
+                        f.visible = true;
+                        deleteQueue.add(f.body);
+                    } else if (f.kind == Fallee.Kind.DDT) {
+                        p.hp -= 2;
+                        f.visible = true;
+                        deleteQueue.add(f.body);
+                    } else {
                         System.out.println("die");
                     }
                 } else if (oA instanceof Fallee && oB instanceof Fallee) {
@@ -304,6 +331,47 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     public void resize(int width, int height) {
         overlayViewport.update(width, height);
         overlayCamera.update();
+    }
+
+    class HUD extends Actor {
+        private Label hpLabel;
+        private Label bossHpLabel;
+        private Label pollenCountLabel;
+        private Label scoreLabel;
+        HUD() {
+            Label.LabelStyle ls = new Label.LabelStyle();
+            ls.font=debugFont;
+            ls.fontColor=new Color(0xffffffff);
+            hpLabel=new Label("HP: ",ls);
+            hpLabel.setX(11*60);
+            hpLabel.setY(10*60);
+            bossHpLabel=new Label("Boss HP: ",ls);
+            bossHpLabel.setX(11*60);
+            bossHpLabel.setY(10*60-30);
+            pollenCountLabel=new Label("Pollen Count: ",ls);
+            pollenCountLabel.setX(11*60);
+            pollenCountLabel.setY(10*60-30*2);
+            scoreLabel=new Label("Score: ",ls);
+            scoreLabel.setX(11*60);
+            scoreLabel.setY(10*60-30*3);
+        }
+
+        @Override
+        public void act(float delta) {
+            super.act(delta);
+            hpLabel.setText(String.format("HP: %d",player.hp));
+            pollenCountLabel.setText(String.format("Pollen Count: %d",player.pollenCount));
+            scoreLabel.setText(String.format("Score: %d",(int)(MafUtils.sigmoid(player.score/1e3f)*1e6)));
+        }
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            super.draw(batch, parentAlpha);
+            hpLabel.draw(batch,parentAlpha);
+            bossHpLabel.draw(batch, parentAlpha);
+            pollenCountLabel.draw(batch, parentAlpha);
+            scoreLabel.draw(batch, parentAlpha);
+        }
     }
 
     static class Reberu3Debug extends Actor {

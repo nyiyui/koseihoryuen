@@ -11,6 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import java.util.Random;
 
 /**
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: May 23, 2023
+ * Purpose: stage 3 fallee (item)
+ * Contributions: Ken did all of this class
+ */
+
+/**
  * A single item (e.g. a hand) that falls.
  */
 public class Fallee extends Actor {
