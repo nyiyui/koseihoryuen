@@ -71,7 +71,9 @@ public class SplashScreen extends ScreenAdapter2 {
             s.setY(game.camera.viewportHeight / 2 - logo.getHeight() / 2);
             s.draw(game.batch);
         } else if (elapsed >= 7000) {
+            if (game.assetManager.isFinished())
             game.setScreen(new TitleScreen(game));
+            game.assetManager.update(100);
         }
         game.batch.end();
     }
