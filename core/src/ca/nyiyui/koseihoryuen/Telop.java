@@ -130,7 +130,6 @@ public class Telop extends BaseDrawable {
         final GlyphLayout gl = new GlyphLayout(hintFont, hint);
         hintFont.draw(batch, hint, width - padding - gl.width, y + gl.height / 2 + padding);
         if (!Objects.equals(personaName, "")) {
-//            System.out.println(personaName);
             Texture tex = personaTexture.get(personaName);
             if (tex != null) {
                 batch.draw(tex, 14 * 60, 3 * 60 - 20, 80, 80);

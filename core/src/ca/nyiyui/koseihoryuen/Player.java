@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
  */
 
 public class Player extends Actor {
-    private static final float MOVEMENT_COEFF = 200;
+    private static final float MOVEMENT_COEFF = 400;
     private static final Vector2 MOVEMENT_MIN = new Vector2(1.5f, 1.5f);
     private static final Vector2 MOVEMENT_MAX = new Vector2(8.3f, 11.9f);
     private final Reberu3 reberu3;

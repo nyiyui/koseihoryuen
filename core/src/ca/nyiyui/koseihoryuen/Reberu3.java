@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -48,7 +49,6 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     private Camera cam;
     World world;
     Box2DDebugRenderer debugRenderer;
-    private Body body;
     private CumulativeDelta physicsDelta;
     private CumulativeDelta spawnDelta;
     private static int PHYSICS_FPS = 60;
@@ -72,7 +72,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         overlayStage = new Stage(overlayViewport, game.batch);
         // Box2D
         debugRenderer = new Box2DDebugRenderer();
-        world = new World(new Vector2(0f, -2f), true);
+        world = new World(new Vector2(0, -3f), true);
         setupWalls();
         physicsDelta = new CumulativeDelta(1f / PHYSICS_FPS);
         player = new Player(game, this);
@@ -103,7 +103,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         setupContactListener();
         textureBg = game.assetManager.get("images/stage3-bg.png", Texture.class);
         textureBg2 = game.assetManager.get("images/stage3-bg2.png", Texture.class);
-        hud=new HUD();
+        hud = new HUD();
         overlayStage.addActor(hud);
     }
 
@@ -117,6 +117,9 @@ public class Reberu3 extends Reberu implements PlayableScreen {
             case "explore":
                 state = State.EXPLORE;
                 break;
+        }
+        if (Objects.equals(cl.label, "gameover-msg")) {
+            telop.setBodyText(String.format("Sadge... You died. Your score was %d, btw.", hud.score()));
         }
     }
 
@@ -156,7 +159,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         BodyDef bd = new BodyDef();
         bd.type = BodyDef.BodyType.StaticBody;
         bd.position.set(x, y);
-        body = world.createBody(bd);
+        Body body = world.createBody(bd);
         body.applyForceToCenter(0, -2f, true);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(hx, hy);
@@ -167,11 +170,18 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         shape.dispose();
     }
 
+    private void checkHp() {
+        if (player.hp > 0) return;
+        switchLine("gameover");
+    }
+
     private void spawnItem() {
         BodyDef bd = new BodyDef();
         bd.type = BodyDef.BodyType.DynamicBody;
         bd.position.set(new Random().nextFloat(1.8f, 8), 12f);
         Body b = world.createBody(bd);
+         final float impulseMagnitude=3;
+        b.applyLinearImpulse(new Random().nextFloat(-impulseMagnitude, impulseMagnitude), new Random().nextFloat(-impulseMagnitude, impulseMagnitude), 0, 0, true);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(.25f, .25f);
         FixtureDef fd = new FixtureDef();
@@ -191,10 +201,14 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         game.batch.draw(textureBg, 0, 0);
         game.batch.draw(textureBg2, 60, 60);
         game.batch.end();
-        stepPhysics();
-        stage.getCamera().update(); // TODO: needed?
-        stage.act(delta);
-        stage.draw();
+        switch (state) {
+            case EXPLORE:
+                stepPhysics();
+                stage.getCamera().update(); // TODO: needed?
+                stage.act(delta);
+                stage.draw();
+                break;
+        }
         overlayStage.act(delta);
         overlayStage.draw();
         game.batch.begin();
@@ -203,7 +217,6 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         spawn();
         game.batch.begin();
         renderDebug();
-        renderText(debugFont, "body", body.getPosition().x, body.getPosition().y);
         game.batch.end();
 
         // cleanup
@@ -216,6 +229,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         if (yeetDelta.step()) {
             yeetBodies();
         }
+        checkHp();
     }
 
     private void setupContactListener() {
@@ -338,36 +352,41 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         private Label bossHpLabel;
         private Label pollenCountLabel;
         private Label scoreLabel;
+
         HUD() {
             Label.LabelStyle ls = new Label.LabelStyle();
-            ls.font=debugFont;
-            ls.fontColor=new Color(0xffffffff);
-            hpLabel=new Label("HP: ",ls);
-            hpLabel.setX(11*60);
-            hpLabel.setY(10*60);
-            bossHpLabel=new Label("Boss HP: ",ls);
-            bossHpLabel.setX(11*60);
-            bossHpLabel.setY(10*60-30);
-            pollenCountLabel=new Label("Pollen Count: ",ls);
-            pollenCountLabel.setX(11*60);
-            pollenCountLabel.setY(10*60-30*2);
-            scoreLabel=new Label("Score: ",ls);
-            scoreLabel.setX(11*60);
-            scoreLabel.setY(10*60-30*3);
+            ls.font = debugFont;
+            ls.fontColor = new Color(0xffffffff);
+            hpLabel = new Label("HP: ", ls);
+            hpLabel.setX(11 * 60);
+            hpLabel.setY(10 * 60);
+            bossHpLabel = new Label("Boss HP: ", ls);
+            bossHpLabel.setX(11 * 60);
+            bossHpLabel.setY(10 * 60 - 30);
+            pollenCountLabel = new Label("Pollen Count: ", ls);
+            pollenCountLabel.setX(11 * 60);
+            pollenCountLabel.setY(10 * 60 - 30 * 2);
+            scoreLabel = new Label("Score: ", ls);
+            scoreLabel.setX(11 * 60);
+            scoreLabel.setY(10 * 60 - 30 * 3);
         }
 
         @Override
         public void act(float delta) {
             super.act(delta);
-            hpLabel.setText(String.format("HP: %d",player.hp));
-            pollenCountLabel.setText(String.format("Pollen Count: %d",player.pollenCount));
-            scoreLabel.setText(String.format("Score: %d",(int)(MafUtils.sigmoid(player.score/1e3f)*1e6)));
+            hpLabel.setText(String.format("HP: %d", player.hp));
+            pollenCountLabel.setText(String.format("Pollen Count: %d", player.pollenCount));
+            scoreLabel.setText(String.format("Score: %d", score()));
+        }
+
+        private int score() {
+            return (int) (MafUtils.sigmoid(player.score / 1e3f) * 1e6);
         }
 
         @Override
         public void draw(Batch batch, float parentAlpha) {
             super.draw(batch, parentAlpha);
-            hpLabel.draw(batch,parentAlpha);
+            hpLabel.draw(batch, parentAlpha);
             bossHpLabel.draw(batch, parentAlpha);
             pollenCountLabel.draw(batch, parentAlpha);
             scoreLabel.draw(batch, parentAlpha);

@@ -29,6 +29,19 @@
     {
       "noInherit": true,
       "action": "explore"
+    },
+    {
+      "label": "gameover",
+      "action": "",
+      "chain": true
+    },
+    {
+      "label": "gameover-msg",
+      "ten": "Instructions",
+      "body": "Sadge...You died."
+    },
+    {
+      "jump": "start"
     }
   ]
 }
