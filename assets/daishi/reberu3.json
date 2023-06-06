@@ -4,7 +4,8 @@
     {
       "label": "start",
       "action": "",
-      "chain": true
+      "chain": true,
+      "persona": "bee"
     },
     {
       "ten": "Instructions",

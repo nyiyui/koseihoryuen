@@ -3,6 +3,7 @@ lines:
   - label: start
     action: ""
     chain: true
+    persona: "bee"
   - ten: Instructions
     body: "Every bee has a very important task in its life."
   - body: "Which is to collect honey and pollinate the world! (triumph emoji)"

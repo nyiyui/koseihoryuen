@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -57,13 +58,13 @@ public class Reberu2 extends Reberu implements PlayableScreen {
             e.printStackTrace();
             throw new RuntimeException("loading daishi failed");
         }
-        bg = new Texture(Gdx.files.internal("images/stage2-bg.png"));
-        progressBar = new Texture(Gdx.files.internal("images/stage2-rectangle.png"));
-        correctButton = new Texture(Gdx.files.internal("images/stage2-correct-button.png"));
-        wrongButton = new Texture(Gdx.files.internal("images/stage2-wrong-button.png"));
-        city = new Reberu2Item(new Texture(Gdx.files.internal("images/stage2-city.png")), 100, 450);
-        gas = new Reberu2Item(new Texture(Gdx.files.internal("images/stage2-greenhouse-gas.png")), 160, 30);
-        pest = new Reberu2Item(new Texture(Gdx.files.internal("images/stage2-pesticide-sign.png")), 570, 300);
+        progressBar = game.assetManager.get("images/stage2-rectangle.png");
+        correctButton = game.assetManager.get("images/stage2-correct-button.png");
+        wrongButton = game.assetManager.get("images/stage2-wrong-button.png");
+        bg = game.assetManager.get("images/stage2-bg.png");
+        city = new Reberu2Item(game.assetManager.<Texture>get("images/stage2-city.png"), 100, 450);
+        gas = new Reberu2Item(game.assetManager.<Texture>get("images/stage2-greenhouse-gas.png"), 160, 30);
+        pest = new Reberu2Item(game.assetManager.<Texture>get("images/stage2-pesticide-sign.png"), 570, 190);
         playerX = game.camera.viewportWidth / 2;
         playerY = game.camera.viewportHeight / 2;
         switchLine(0);
