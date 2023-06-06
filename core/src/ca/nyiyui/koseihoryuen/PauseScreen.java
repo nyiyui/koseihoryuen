@@ -33,8 +33,8 @@ public class PauseScreen extends ScreenAdapter2 implements PlayableScreen {
 
     public PauseScreen(Koseihoryuen game) {
         super(game);
-        bg = new Texture(Gdx.files.internal("images/pause-bg.png"));
-        bee = new Texture(Gdx.files.internal("images/sneaky-enstars-ref.png"));
+        bg = game.assetManager.get("images/pause-bg.png");
+        bee = game.assetManager.get("images/sneaky-enstars-ref.png");
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
         param.color = new Color(Color.BLACK);
         param.size = 36;
