@@ -21,16 +21,25 @@ import java.util.List;
  * Teacher: Ms. Krasteva
  * Date: Jun 9th, 2023
  * Purpose: A fullscreen question using Telop.
- * Contribution: Ivy --> visuals in draw methods, Ken --> everything else
+ * Contribution: Ivy --> visuals in draw methods and comments, Ken --> everything else
  */
 public class QuestionDrawable extends BaseDrawable implements Disposable {
+    /**
+     * Telop where question and options are drawn
+     */
     private final Telop optsT;
+    /**
+     *
+     */
     private String descText;
     private Label descLabel;
     private BitmapFont descFont;
     private List<KeyPair<String>> keyPairs;
     private Question question;
     State state;
+    /**
+     * image shown when user gets question right or wrong.
+     */
     private Texture beeWrong, beeCorrect;
 
 
@@ -163,5 +172,6 @@ public class QuestionDrawable extends BaseDrawable implements Disposable {
     public void dispose() {
         beeWrong.dispose();
         beeCorrect.dispose();
+        descFont.dispose();
     }
 }

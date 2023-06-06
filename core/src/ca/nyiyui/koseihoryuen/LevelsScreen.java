@@ -4,8 +4,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+
+/**
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: June 9, 2023
+ * Purpose: screen shown to user when choosing which stage/level to play
+ * Contributions: Ivy --> extra visuals (background and funky stars), Ken --> everything else
+ */
 
 public class LevelsScreen extends SelectScreen {
+    private Texture bg;
+
     LevelsScreen(Koseihoryuen game) {
         super(game);
         options = new String[]{
@@ -15,6 +26,7 @@ public class LevelsScreen extends SelectScreen {
         };
         BASE_X = 200;
         BASE_Y = 200;
+        bg = new Texture(Gdx.files.internal("images/yukarikamome.png"));
     }
 
     @Override
@@ -52,6 +64,9 @@ public class LevelsScreen extends SelectScreen {
         Gdx.input.setInputProcessor(null);
     }
 
+    /**
+     * switches screen to PlayScreen and plays the game
+     */
     @Override
     protected void act() {
         switch (optionSel) {
@@ -84,10 +99,17 @@ public class LevelsScreen extends SelectScreen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
+        game.batch.draw(bg, 0, 0);
         for (int i = 0; i < options.length; i++) {
             // TODO: star
             renderText(optionSel == i ? optionSelFont : optionFont, options[i], getX(i), getY(i));
         }
         game.batch.end();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        bg.dispose();
     }
 }
