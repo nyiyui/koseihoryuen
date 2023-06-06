@@ -64,8 +64,10 @@ public class PauseScreen extends ScreenAdapter2 implements PlayableScreen {
                 switch (keycode) {
                     case Input.Keys.ESCAPE:
                         playScreen.invokePlay();
+                        break;
                     case Input.Keys.ENTER:
                         game.setScreen(new TitleScreen(game));
+                        break;
                 }
                 return true;
             }

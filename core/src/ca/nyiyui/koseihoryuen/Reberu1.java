@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * Teacher: Ms Krasteva
  * Date: June 9, 2023
  * Purpose: runs the program's first stage, the Learning stage
- * Contributions: Ken --> everything, Ivy --> closing screen
+ * Contributions: Ken --> everything, Ivy --> closing screen, comments, debugging
  */
 
 public class Reberu1 extends Reberu {
@@ -99,6 +99,8 @@ public class Reberu1 extends Reberu {
         switch (state) {
             case INSTRUCTIONS:
                 game.batch.draw(background, 0, 0);
+                if (curLine().body != null && !curLine().body.equals(""))
+                    telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
                 Sprite s = new Sprite(playerSpriteLarge);
                 s.setX(game.camera.viewportWidth / 4 - playerSpriteLarge.getWidth() / 2);
                 s.setY(game.camera.viewportWidth / 2 - playerSpriteLarge.getHeight() / 2);
@@ -127,11 +129,7 @@ public class Reberu1 extends Reberu {
                 closingScreen(delta);
                 break;
         }
-        if (curLine().body != null && !curLine().body.equals(""))
-            telop.draw(game.batch, 0, 0, game.camera.viewportWidth, 200);
-        Line cl = curLine();
-        if (cl.question != null) renderQuestion();
-        renderDebug();
+//        renderDebug();
         game.batch.end();
     }
 
@@ -157,6 +155,8 @@ public class Reberu1 extends Reberu {
     }
 
     private void checkNPCInteraction() {
+        if (state == State.COMPLETE)
+            return;
         boolean inRadius = false;
         for (int i = 0; i < npcs.size(); i++) {
             NPC npc = npcs.get(i);
@@ -176,6 +176,8 @@ public class Reberu1 extends Reberu {
 
     @Override
     protected void handleLineSwitch() {
+        if (state == State.COMPLETE)
+            return;
         Line cl = curLine();
         if (cl.action != null) switch (cl.action) {
             case "":
