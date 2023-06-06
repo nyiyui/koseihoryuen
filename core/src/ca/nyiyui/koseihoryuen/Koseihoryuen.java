@@ -53,6 +53,7 @@ public class Koseihoryuen extends Game {
         assetManager.load("images/flycatcher.png", Texture.class);
         assetManager.load("images/pollen.png", Texture.class);
         assetManager.load("images/pesticides.png", Texture.class);
+        assetManager.load("images/beeNPC.png", Texture.class);
         assetManager.finishLoading();
         Box2D.init();
         setScreen(new SplashScreen(this));

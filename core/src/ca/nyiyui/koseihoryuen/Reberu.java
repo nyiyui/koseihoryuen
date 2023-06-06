@@ -116,6 +116,7 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
         telop = new Telop(game);
         telop.setBodyText(cl.body);
         telop.setTenText(cl.ten);
+        telop.setPersonaName(cl.persona);
         handleLineSwitch();
         if (cl.chain) switchLine(curLineIndex + 1);
         if (cl.jump != null && cl.jump.length() != 0) {

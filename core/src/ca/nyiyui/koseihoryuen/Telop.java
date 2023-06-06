@@ -2,6 +2,7 @@ package ca.nyiyui.koseihoryuen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -12,8 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Align;
+import org.w3c.dom.Text;
 
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Draws an adjustable-width telop.
@@ -34,12 +39,18 @@ public class Telop extends BaseDrawable {
      * Text for main sub-box (ten).
      */
     private String bodyText;
+    /**
+     * Name for persona to use.
+     */
+    private String personaName;
     private BitmapFont tenFont;
     private BitmapFont hintFont;
     private Koseihoryuen game;
+    private Map<String, Texture> personaTexture = new HashMap<>();
 
     Telop(Koseihoryuen game) {
         super();
+        personaTexture.put("bee", game.assetManager.<Texture>get("images/beeNPC.png"));
         this.game = game;
         tex1 = new Texture(Gdx.files.internal("images/telop1.png"));
         TextureRegion tex1Middle = new TextureRegion(tex1, tex1.getWidth() / 4, 0, tex1.getWidth() / 2, tex1.getHeight());
@@ -48,7 +59,7 @@ public class Telop extends BaseDrawable {
         TextureRegion tex2Middle = new TextureRegion(tex2, tex2.getWidth() / 4, 0, tex2.getWidth() / 2, tex2.getHeight());
         tex2MiddleTile = new TiledDrawable(tex2Middle);
         labelStyle = new Label.LabelStyle();
-        labelStyle.font=game.debugFont; // placeholder
+        labelStyle.font = game.debugFont; // placeholder
         label = new Label(bodyText, labelStyle);
         label.setWrap(true);
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -79,8 +90,12 @@ public class Telop extends BaseDrawable {
 
     public void setBodyFont(BitmapFont bodyFont) {
         Label.LabelStyle ls = label.getStyle();
-        ls.font=bodyFont;
+        ls.font = bodyFont;
         label.setStyle(ls);
+    }
+
+    public void setPersonaName(String personaName) {
+        this.personaName = personaName;
     }
 
     public BitmapFont getBodyFont() {
@@ -117,5 +132,12 @@ public class Telop extends BaseDrawable {
         String hint = "Press [Enter] to continue";
         final GlyphLayout gl = new GlyphLayout(hintFont, hint);
         hintFont.draw(batch, hint, width - padding - gl.width, y + gl.height / 2 + padding);
+        if (!Objects.equals(personaName, "")) {
+            System.out.println(personaName);
+            Texture tex = personaTexture.get(personaName);
+            if (tex != null) {
+                batch.draw(tex, 14*60, 3*60-20,80,80);
+            }
+        }
     }
 }
