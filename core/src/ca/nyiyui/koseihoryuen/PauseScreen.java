@@ -49,7 +49,7 @@ public class PauseScreen extends ScreenAdapter2 implements PlayableScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
         game.batch.draw(bg, 0, 0);
-        game.batch.draw(bee, 0, 0);
+        game.batch.draw(bee, 0, 0, 100, 100);
         renderText(font, "Game Paused.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 + 100);
         renderText(font, "Press ESC to go back to the game.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
         renderText(font, "Press ENTER to go back to Main Menu.", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 100);

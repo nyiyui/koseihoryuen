@@ -129,6 +129,9 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
         }
     }
 
+    /**
+     * handles line switching when program reads daishi.
+     */
     protected abstract void handleLineSwitch();
 
     public Daishi getDaishi() {

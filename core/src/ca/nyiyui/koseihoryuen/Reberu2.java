@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -170,7 +169,6 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         // check if player is on city
         if (playerX >= city.getX() && playerX <= city.getX() + city.image.getWidth()
                 && playerY >= city.getY() && playerY <= city.getY() + city.image.getHeight()) {
-            System.out.println("on city");
             if (city.answeredCorrect) {
                 return;
             }
@@ -182,7 +180,6 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         // check if player is on pesticide warning sign
         else if (playerX >= pest.getX() && playerX <= pest.getX() + pest.image.getWidth()
                 && playerY >= pest.getY() && playerY <= pest.getY() + pest.image.getHeight()) {
-            System.out.println("on pest");
             if (pest.answeredCorrect) {
                 return;
             }
@@ -194,7 +191,6 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         // check if player is on greenhouse gas emissions
         else if (playerX >= gas.getX() && playerX <= gas.getX() + gas.image.getWidth()
                 && playerY >= gas.getY() && playerY <= gas.getY() + gas.image.getHeight()) {
-            System.out.println("on greenhouse gas");
             if (gas.answeredCorrect) {
                 return;
             }
@@ -234,17 +230,17 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         float x = game.camera.viewportWidth - progressBar.getWidth() - 20, y = 20;
         game.batch.draw(progressBar, x, y);
         if (city.answeredCorrect)
-            game.batch.draw(correctButton, x + progressBar.getWidth() / 4, y + (progressBar.getHeight() - 55) / 2);
+            game.batch.draw(correctButton, x + progressBar.getWidth() / 4 - progressBar.getWidth() / 8, y + (progressBar.getHeight() - 55) / 2);
         else
-            game.batch.draw(wrongButton, x + progressBar.getWidth() / 4, y + (progressBar.getHeight() - 55) / 2);
+            game.batch.draw(wrongButton, x + progressBar.getWidth() / 4 - progressBar.getWidth() / 8, y + (progressBar.getHeight() - 55) / 2);
         if (gas.answeredCorrect)
-            game.batch.draw(correctButton, x + progressBar.getWidth() / 4 * 2, y + (progressBar.getHeight() - 55) / 2);
+            game.batch.draw(correctButton, x + progressBar.getWidth() / 4 * 2 - progressBar.getWidth() / 8, y + (progressBar.getHeight() - 55) / 2);
         else
-            game.batch.draw(wrongButton, x + progressBar.getWidth() / 4 * 2, y + (progressBar.getHeight() - 55) / 2);
+            game.batch.draw(wrongButton, x + progressBar.getWidth() / 4 * 2 - progressBar.getWidth() / 8, y + (progressBar.getHeight() - 55) / 2);
         if (pest.answeredCorrect)
-            game.batch.draw(correctButton, x + progressBar.getWidth() / 4 * 3, y + (progressBar.getHeight() - 55) / 2);
+            game.batch.draw(correctButton, x + progressBar.getWidth() / 4 * 3 - progressBar.getWidth() / 8, y + (progressBar.getHeight() - 55) / 2);
         else
-            game.batch.draw(wrongButton, x + progressBar.getWidth() / 4 * 3, y + (progressBar.getHeight() - 55) / 2);
+            game.batch.draw(wrongButton, x + progressBar.getWidth() / 4 * 3 - progressBar.getWidth() / 8, y + (progressBar.getHeight() - 55) / 2);
     }
 
     @Override
