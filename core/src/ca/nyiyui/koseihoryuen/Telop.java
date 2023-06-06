@@ -2,7 +2,6 @@ package ca.nyiyui.koseihoryuen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,9 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Align;
-import org.w3c.dom.Text;
 
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -133,10 +130,10 @@ public class Telop extends BaseDrawable {
         final GlyphLayout gl = new GlyphLayout(hintFont, hint);
         hintFont.draw(batch, hint, width - padding - gl.width, y + gl.height / 2 + padding);
         if (!Objects.equals(personaName, "")) {
-            System.out.println(personaName);
+//            System.out.println(personaName);
             Texture tex = personaTexture.get(personaName);
             if (tex != null) {
-                batch.draw(tex, 14*60, 3*60-20,80,80);
+                batch.draw(tex, 14 * 60, 3 * 60 - 20, 80, 80);
             }
         }
     }
