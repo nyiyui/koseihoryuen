@@ -45,6 +45,10 @@ public class Koseihoryuen extends Game {
         param.borderWidth = 2;
         debugFont = font.generateFont(param);
         assetManager = new AssetManager();
+        assetManager.load("images/stage2-bg.png", Texture.class);
+        assetManager.load("images/stage2-city.png", Texture.class);
+        assetManager.load("images/stage2-greenhouse-gas.png", Texture.class);
+        assetManager.load("images/stage2-pesticide-sign.png", Texture.class);
         assetManager.load("images/player-sprite-small.png", Texture.class);
         assetManager.load("images/stage3-ananas.png", Texture.class);
         assetManager.load("images/stage3-bg.png", Texture.class);
