@@ -1,4 +1,11 @@
 package ca.nyiyui.koseihoryuen;
+/**
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: June 9, 2023
+ * Purpose: screen shown to user when choosing which stage/level to play
+ * Contributions: Ken --> basically everything, Ivy --> cleaning up/debugging
+ */
 
 import ca.nyiyui.koseihoryuen.data.Daishi;
 import ca.nyiyui.koseihoryuen.data.Line;
@@ -133,14 +140,6 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
      * handles line switching when program reads daishi.
      */
     protected abstract void handleLineSwitch();
-
-    public Daishi getDaishi() {
-        return daishi;
-    }
-
-    public void setDaishi(Daishi daishi) {
-        this.daishi = daishi;
-    }
 
     /**
      * Render the questionDrawable. Assumes questionDrawable is in a renderable state.
