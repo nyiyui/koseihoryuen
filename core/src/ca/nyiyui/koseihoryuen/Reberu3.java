@@ -32,9 +32,10 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 
 public class Reberu3 extends Reberu implements PlayableScreen {
+
     private final LineActor lineActor;
     private final Reberu3Debug reberu3Debug;
-    private final Player player;
+    private Player player;
     private final BitmapFont debugFont;
     private final Viewport viewport;
     private final CumulativeDelta cleanupDelta;
@@ -107,6 +108,12 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         overlayStage.addActor(hud);
     }
 
+    private void reset() {
+        System.out.println("RESET");
+        player.reset();
+        // TODO: reset bodies
+    }
+
     @Override
     protected void handleLineSwitch() {
         Line cl = curLine();
@@ -116,6 +123,14 @@ public class Reberu3 extends Reberu implements PlayableScreen {
                 break;
             case "explore":
                 state = State.EXPLORE;
+                reset();
+                player.unghost();
+                break;
+            case "reset":
+                state = State.COMPLETE;
+                player.body.setLinearVelocity(new Vector2());
+                player.ghost();
+                player.hp = 0; // bodge :)
                 break;
         }
         if (Objects.equals(cl.label, "gameover-msg")) {
@@ -131,7 +146,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
                 switch (keycode) {
                     case Input.Keys.SPACE:
                     case Input.Keys.ENTER:
-                        if (state != State.EXPLORE && questionDrawable.state != QuestionDrawable.State.ASKING) {
+                        if (state == State.INSTRUCTIONS && questionDrawable.state != QuestionDrawable.State.ASKING) {
                             switchLine(curLineIndex + 1);
                             if (curLineIndex >= daishi.lines.size()) {
                                 playScreen.invokePause();
@@ -180,7 +195,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         bd.type = BodyDef.BodyType.DynamicBody;
         bd.position.set(new Random().nextFloat(1.8f, 8), 12f);
         Body b = world.createBody(bd);
-         final float impulseMagnitude=3;
+        final float impulseMagnitude = 3;
         b.applyLinearImpulse(new Random().nextFloat(-impulseMagnitude, impulseMagnitude), new Random().nextFloat(-impulseMagnitude, impulseMagnitude), 0, 0, true);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(.25f, .25f);
@@ -203,6 +218,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         game.batch.end();
         switch (state) {
             case EXPLORE:
+            case COMPLETE:
                 stepPhysics();
                 stage.getCamera().update(); // TODO: needed?
                 stage.act(delta);
@@ -294,7 +310,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
 
     private void spawn() {
         spawnDelta.update();
-        if (spawnDelta.step() && state == State.EXPLORE) {
+        if (spawnDelta.step() && (state == State.EXPLORE || state == State.COMPLETE)) {
             spawnItem();
         }
     }
@@ -396,6 +412,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     static class Reberu3Debug extends Actor {
         private final Reberu3 reberu3;
         private Label status;
+        private Label fps;
 
         Reberu3Debug(Reberu3 reberu3) {
             this.reberu3 = reberu3;
@@ -405,6 +422,8 @@ public class Reberu3 extends Reberu implements PlayableScreen {
             status = new Label("debug status", ls);
             status.setX(0);
             status.setY(0);
+            fps = new Label("fps", ls);
+            fps.setY(reberu3.overlayViewport.getWorldHeight() - 30);
         }
 
         @Override
@@ -413,6 +432,8 @@ public class Reberu3 extends Reberu implements PlayableScreen {
             reberu3.world.getBodies(bodies);
             status.setText(String.format("body%d", bodies.size));
             status.draw(batch, parentAlpha);
+            fps.setText(String.format("%d fps", Gdx.graphics.getFramesPerSecond()));
+            fps.draw(batch, parentAlpha);
         }
     }
 

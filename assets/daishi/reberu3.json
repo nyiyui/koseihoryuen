@@ -37,6 +37,7 @@
     },
     {
       "label": "gameover-msg",
+      "action": "reset",
       "ten": "Instructions",
       "body": "Sadge...You died."
     },
