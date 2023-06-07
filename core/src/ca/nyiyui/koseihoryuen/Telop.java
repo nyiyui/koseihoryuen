@@ -23,10 +23,6 @@ import java.util.Objects;
  * Purpose: Draws an adjustable-width telop.
  * Contributions: Ken --> everything
  */
-
-/**
- * TODO: support showing character in an inset (like nightmelon)
- */
 public class Telop extends BaseDrawable {
     private final Label.LabelStyle labelStyle;
     private Label label;
