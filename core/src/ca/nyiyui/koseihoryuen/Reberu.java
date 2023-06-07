@@ -66,8 +66,8 @@ public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
         telop = new Telop(game);
         questionDrawableTelop = new Telop(game);
         questionDrawable = new QuestionDrawable(game, questionDrawableTelop);
-        playerSpriteSmall = new Texture(Gdx.files.internal("images/player-sprite-small.png"));
-        playerSpriteLarge = new Texture(Gdx.files.internal("images/player-sprite-large.png"));
+        playerSpriteSmall = game.assetManager.get("images/player-sprite-small.png");
+        playerSpriteLarge = game.assetManager.get("images/player-sprite-large.png");
     }
 
     /**

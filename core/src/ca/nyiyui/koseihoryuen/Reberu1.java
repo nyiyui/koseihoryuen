@@ -47,9 +47,9 @@ public class Reberu1 extends Reberu {
             e.printStackTrace();
             throw new RuntimeException("loading daishi failed");
         }
-        background = new Texture(Gdx.files.internal("images/stage1-bg.png"));
-        pathway = new Texture(Gdx.files.internal("images/stage1-pathway.png"));
-        spriteBeeNPC = new Texture(Gdx.files.internal("images/beeNPC.png"));
+        background = game.assetManager.get("images/stage1-bg.png");
+        pathway = game.assetManager.get("images/stage1-pathway.png");
+        spriteBeeNPC = game.assetManager.get("images/beeNPC.png");
         playerX = 0;
         playerY = 0;
         npcs = new ArrayList<>();

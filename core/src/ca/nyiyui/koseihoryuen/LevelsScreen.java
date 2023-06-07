@@ -26,7 +26,7 @@ public class LevelsScreen extends SelectScreen {
         };
         BASE_X = 200;
         BASE_Y = 200;
-        bg = new Texture(Gdx.files.internal("images/yukarikamome.png"));
+        bg = game.assetManager.get("images/yukarikamome.png");
     }
 
     @Override
