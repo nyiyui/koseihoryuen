@@ -19,8 +19,8 @@ public class ExitScreen extends ScreenAdapter2 {
         param.size = 40;
         param.color = new Color(240, 237, 63, 1);
         byeFont = game.font.generateFont(param);
-        bee = new Texture(Gdx.files.internal("images/beeExit.png"));
-        backdrop = new Texture(Gdx.files.internal("images/title-screen-bg.png"));
+        bee = game.assetManager.get("images/beeExit.png");
+        backdrop = game.assetManager.get("images/pause-bg.png");
         xPos = (int) game.camera.viewportWidth;
     }
 

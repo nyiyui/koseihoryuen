@@ -1,6 +1,5 @@
 package ca.nyiyui.koseihoryuen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -49,10 +48,10 @@ public class Telop extends BaseDrawable {
         super();
         personaTexture.put("bee", game.assetManager.<Texture>get("images/beeNPC.png"));
         this.game = game;
-        tex1 = new Texture(Gdx.files.internal("images/telop1.png"));
+        tex1 = game.assetManager.get("images/telop1.png");
         TextureRegion tex1Middle = new TextureRegion(tex1, tex1.getWidth() / 4, 0, tex1.getWidth() / 2, tex1.getHeight());
         tex1MiddleTile = new TiledDrawable(tex1Middle);
-        tex2 = new Texture(Gdx.files.internal("images/telop2.png"));
+        tex2 = game.assetManager.get("images/telop2.png");
         TextureRegion tex2Middle = new TextureRegion(tex2, tex2.getWidth() / 4, 0, tex2.getWidth() / 2, tex2.getHeight());
         tex2MiddleTile = new TiledDrawable(tex2Middle);
         labelStyle = new Label.LabelStyle();

@@ -269,8 +269,8 @@ public class Reberu2 extends Reberu implements PlayableScreen {
     public void closingScreen(float delta) {
         elapsedToExit += delta;
         game.batch.draw(bg, 0, 0);
-        renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2);
-        renderText(subtitleFont, "You're a BEE-nius", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 50);
+        renderText(titleFont, "Congratulations!", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 + 25);
+        renderText(subtitleFont, "You're a BEE-nius", game.camera.viewportWidth / 2, game.camera.viewportHeight / 2 - 25);
         if (elapsedToExit >= 4f)
             game.setScreen(new TitleScreen(game));
     }

@@ -68,7 +68,9 @@ public class Koseihoryuen extends Game {
         assetManager.load("images/stage1-bg.png", Texture.class);
         assetManager.load("images/stage1-pathway.png", Texture.class);
         assetManager.load("images/player-sprite-large.png", Texture.class);
-        assetManager.load("images/beeNPC.png", Texture.class);
+        assetManager.load("images/yukarikamome.png", Texture.class);
+        assetManager.load("images/telop1.png", Texture.class);
+        assetManager.load("images/telop2.png", Texture.class);
         assetManager.finishLoading();
         Box2D.init();
 //        setScreen(new SplashScreen(this));
