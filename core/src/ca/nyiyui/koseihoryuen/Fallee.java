@@ -3,6 +3,7 @@ package ca.nyiyui.koseihoryuen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -27,6 +28,7 @@ public class Fallee extends Actor {
     Kind kind;
     Body body;
     private Texture texture;
+    private Sprite sprite;
 
     enum Kind {
         FLYCATCHER,
@@ -41,6 +43,7 @@ public class Fallee extends Actor {
         visible = true;
         kind = chooseKind();
         loadTexture();
+        sprite=new Sprite(texture);
         body.setUserData(this);
     }
 
@@ -92,6 +95,9 @@ public class Fallee extends Actor {
         super.draw(batch, parentAlpha);
         if (!visible) return;
         Vector2 pos = body.getPosition();
-        batch.draw(texture, pos.x - .25f, pos.y - .25f, .5f, .5f);
+
+        sprite.setBounds(pos.x - .25f,pos.y-.25f,.5f,.5f);
+//        sprite.setRotation((float) Math.toDegrees(body.getTransform().getRotation()));
+        sprite.draw(batch);
     }
 }

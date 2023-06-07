@@ -59,6 +59,9 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     private Texture textureBg;
     private Texture textureBg2;
     private HUD hud;
+    private float prevItemX=-1;
+    private float prevItemY=0;
+    private static float PREV_ITEM_THRESHOLD=0.1f;
 
     public Reberu3(Koseihoryuen game) {
         super(game);
@@ -190,12 +193,31 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         switchLine("gameover");
     }
 
+    private float impulseMagnitude() {
+        return 2 + player.score / 5f;
+    }
+
     private void spawnItem() {
+        float x, y;
+        while (true) {
+            x = new Random().nextFloat(1.8f, 8);
+            y = new Random().nextFloat(11f,12f);
+            if (Math.abs(prevItemX-x)<PREV_ITEM_THRESHOLD||Math.abs(prevItemY-y)<PREV_ITEM_THRESHOLD) {
+                continue;
+            }
+            Actor intersected = stage.hit(x, y, false);
+            if (intersected != null) {
+                continue;
+            }
+            break;
+        }
+        prevItemX=x;
+        prevItemY=y;
         BodyDef bd = new BodyDef();
         bd.type = BodyDef.BodyType.DynamicBody;
-        bd.position.set(new Random().nextFloat(1.8f, 8), 12f);
+        bd.position.set(x, y);
         Body b = world.createBody(bd);
-        final float impulseMagnitude = 3;
+        final float impulseMagnitude = impulseMagnitude();
         b.applyLinearImpulse(new Random().nextFloat(-impulseMagnitude, impulseMagnitude), new Random().nextFloat(-impulseMagnitude, impulseMagnitude), 0, 0, true);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(.25f, .25f);
@@ -396,7 +418,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         }
 
         private int score() {
-            return (int) (MafUtils.sigmoid(player.score / 1e3f) * 1e6);
+            return (int) (MafUtils.sigmoid(player.score / 1e3f) * 1e6 - 5e5);
         }
 
         @Override
@@ -430,7 +452,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         public void draw(Batch batch, float parentAlpha) {
             Array<Body> bodies = new Array<>();
             reberu3.world.getBodies(bodies);
-            status.setText(String.format("body%d", bodies.size));
+            status.setText(String.format("body%d im%f", bodies.size, reberu3.impulseMagnitude()));
             status.draw(batch, parentAlpha);
             fps.setText(String.format("%d fps", Gdx.graphics.getFramesPerSecond()));
             fps.draw(batch, parentAlpha);
