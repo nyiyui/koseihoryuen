@@ -17,7 +17,14 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Draws an adjustable-width telop.
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: June 9, 2023
+ * Purpose: Draws an adjustable-width telop.
+ * Contributions: Ken --> everything
+ */
+
+/**
  * TODO: support showing character in an inset (like nightmelon)
  */
 public class Telop extends BaseDrawable {

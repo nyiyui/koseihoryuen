@@ -71,11 +71,14 @@ public class Koseihoryuen extends Game {
         assetManager.load("images/yukarikamome.png", Texture.class);
         assetManager.load("images/telop1.png", Texture.class);
         assetManager.load("images/telop2.png", Texture.class);
+        assetManager.load("images/star1.png", Texture.class);
+        assetManager.load("images/star2.png", Texture.class);
         assetManager.finishLoading();
         Box2D.init();
 //        setScreen(new SplashScreen(this));
+        setScreen(new LevelsScreen(this));
 //        setScreen(new PlayScreen(this, new Reberu2(this)));
-        setScreen(new PlayScreen(this, new Reberu3(this)));
+//        setScreen(new PlayScreen(this, new Reberu3(this)));
     }
 
     @Override

@@ -7,6 +7,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
+/**
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: June 9, 2023
+ * Purpose: screen shown to user exits the program
+ * Contributions: Ivy --> everything
+ */
+
 public class ExitScreen extends ScreenAdapter2 {
 
     private Texture bee, backdrop;

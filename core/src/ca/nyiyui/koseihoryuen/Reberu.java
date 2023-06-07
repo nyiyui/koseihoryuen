@@ -1,11 +1,4 @@
 package ca.nyiyui.koseihoryuen;
-/**
- * Names: Ivy & Ken
- * Teacher: Ms Krasteva
- * Date: June 9, 2023
- * Purpose: screen shown to user when choosing which stage/level to play
- * Contributions: Ken --> basically everything, Ivy --> cleaning up/debugging
- */
 
 import ca.nyiyui.koseihoryuen.data.Daishi;
 import ca.nyiyui.koseihoryuen.data.Line;
@@ -19,6 +12,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
+/**
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: June 9, 2023
+ * Purpose: screen shown to user when choosing which stage/level to play
+ * Contributions: Ken --> basically everything, Ivy --> cleaning up/debugging
+ */
 public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
     protected static final int MOVEMENT_COEFF = 0xff;
     /**

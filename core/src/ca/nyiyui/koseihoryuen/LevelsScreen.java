@@ -16,6 +16,14 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class LevelsScreen extends SelectScreen {
     private Texture bg;
+    /**
+     * star for unselected options
+     */
+    private Texture unselStar;
+    /**
+     * star for selected option
+     */
+    private Texture selStar;
 
     LevelsScreen(Koseihoryuen game) {
         super(game);
@@ -24,9 +32,11 @@ public class LevelsScreen extends SelectScreen {
                 "Testing",
                 "Gaming",
         };
-        BASE_X = 200;
+        BASE_X = 250;
         BASE_Y = 200;
         bg = game.assetManager.get("images/yukarikamome.png");
+        unselStar = game.assetManager.get("images/star1.png");
+        selStar = game.assetManager.get("images/star2.png");
     }
 
     @Override
@@ -101,8 +111,13 @@ public class LevelsScreen extends SelectScreen {
         game.batch.begin();
         game.batch.draw(bg, 0, 0);
         for (int i = 0; i < options.length; i++) {
-            // TODO: star
-            renderText(optionSel == i ? optionSelFont : optionFont, options[i], getX(i), getY(i));
+            if (optionSel == i) {
+                game.batch.draw(selStar, 80 + 300 * i, getY(i) - unselStar.getHeight() / 2);
+                renderText(optionSelFont, options[i], getX(i), getY(i));
+            } else {
+                game.batch.draw(unselStar, 80 + 300 * i, getY(i) - unselStar.getHeight() / 2);
+                renderText(optionFont, options[i], getX(i), getY(i));
+            }
         }
         game.batch.end();
     }
