@@ -17,7 +17,7 @@ lines:
     action: ""
     chain: true
   - label: gameover-msg
+    action: "reset"
     ten: Instructions
     body: "Sadge...You died."
   - jump: start
-    # TODO: jump doesn't work

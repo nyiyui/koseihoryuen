@@ -9,7 +9,7 @@ public class PlayScreen extends ScreenAdapter2 {
     private static final int GAME_STATE_PAUSED = 2;
     private int gameState = GAME_STATE_RUNNING;
     private PauseScreen pauseScreen;
-    private PlayableScreen gameScreen;
+    PlayableScreen gameScreen;
 
     public PlayScreen(Koseihoryuen game, PlayableScreen gameScreen) {
         super(game);

@@ -22,14 +22,38 @@ public class Player extends Actor {
     private static final Vector2 MOVEMENT_MAX = new Vector2(8.3f, 11.9f);
     private final Reberu3 reberu3;
     private Koseihoryuen game;
-    private Body body;
+    Body body;
     private Texture texture;
     /**
      * Points this player has.
      */
-    int score=0;
-     int pollenCount=0;
-     int hp=7;
+    int score;
+    int pollenCount;
+    int hp;
+
+    void reset() {
+        score = 0;
+        pollenCount = 0;
+        hp = 7;
+    }
+
+    /**
+     * Make everything phase through the player (set mask bits on all fixtures to 0)
+     */
+    void ghost() {
+        for (Fixture f : body.getFixtureList()) {
+            f.getFilterData().maskBits=0;
+        }
+    }
+
+    /**
+     * Make everything NOT phase through the player (set mask bits on all fixtures to 1)
+     */
+    void unghost() {
+        for (Fixture f : body.getFixtureList()) {
+            f.getFilterData().categoryBits = 1;
+        }
+    }
 
     Player(Koseihoryuen game, final Reberu3 reberu3) {
         this.game = game;
@@ -37,6 +61,7 @@ public class Player extends Actor {
         texture = game.assetManager.get("images/player-sprite-small.png");
         setupBody();
         body.setUserData(this);
+        reset();
     }
 
     private void setupBody() {
@@ -99,6 +124,6 @@ public class Player extends Actor {
         if (pos.y < MOVEMENT_MIN.y) pos.y = MOVEMENT_MIN.y;
         if (pos.x > MOVEMENT_MAX.x) pos.x = MOVEMENT_MAX.x;
         if (pos.y > MOVEMENT_MAX.y) pos.y = MOVEMENT_MAX.y;
-        body.setTransform(pos,0);
+        body.setTransform(pos, 0);
     }
 }
