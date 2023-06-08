@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
 /**
  * Names: Ivy & Ken
@@ -111,11 +112,13 @@ public class LevelsScreen extends SelectScreen {
         game.batch.begin();
         game.batch.draw(bg, 0, 0);
         for (int i = 0; i < options.length; i++) {
+            final GlyphLayout layout = new GlyphLayout(optionSelFont, options[i]);
+            final float offset=-64;
             if (optionSel == i) {
-                game.batch.draw(selStar, 80 + 300 * i, getY(i) - unselStar.getHeight() / 2);
+                game.batch.draw(selStar, getX(i)-layout.width/2+offset, getY(i) - unselStar.getHeight() / 2);
                 renderText(optionSelFont, options[i], getX(i), getY(i));
             } else {
-                game.batch.draw(unselStar, 80 + 300 * i, getY(i) - unselStar.getHeight() / 2);
+                game.batch.draw(unselStar, getX(i)-layout.width/2+offset, getY(i) - unselStar.getHeight() / 2);
                 renderText(optionFont, options[i], getX(i), getY(i));
             }
         }

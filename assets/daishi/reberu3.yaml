@@ -14,10 +14,23 @@ lines:
   - noInherit: true
     action: "explore"
   - label: gameover
+    noInherit: true
     action: ""
     chain: true
   - label: gameover-msg
-    action: "reset"
+    action: "complete"
     ten: Instructions
     body: "Sadge...You died."
-  - jump: start
+  - noInherit: true
+    action: reset
+  - label: "clear"
+    noInherit: true
+    ten: Instructions
+    body: "Wowzers! You completed the stage! You can continue by pressing [W], and exit by pressing [Enter]."
+    action: "complete"
+  - label: clear-msg
+    ten: Instructions
+    body: "You got a pog score! Play again nya~"
+    chain: true
+  - noInherit: true
+    action: reset

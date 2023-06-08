@@ -59,9 +59,9 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     private Texture textureBg;
     private Texture textureBg2;
     private HUD hud;
-    private float prevItemX=-1;
-    private float prevItemY=0;
-    private static float PREV_ITEM_THRESHOLD=0.1f;
+    private float prevItemX = -1;
+    private float prevItemY = 0;
+    private static float PREV_ITEM_THRESHOLD = 0.1f;
 
     public Reberu3(Koseihoryuen game) {
         super(game);
@@ -117,6 +117,12 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         // TODO: reset bodies
     }
 
+    private void checkClear() {
+        if (hud.score() > 1000) {
+            switchLine("clear");
+        }
+    }
+
     @Override
     protected void handleLineSwitch() {
         Line cl = curLine();
@@ -126,14 +132,15 @@ public class Reberu3 extends Reberu implements PlayableScreen {
                 break;
             case "explore":
                 state = State.EXPLORE;
-                reset();
-                player.unghost();
                 break;
-            case "reset":
+            case "complete":
                 state = State.COMPLETE;
                 player.body.setLinearVelocity(new Vector2());
                 player.ghost();
                 player.hp = 0; // bodge :)
+                break;
+            case "reset":
+                game.setScreen(new TitleScreen(game));
                 break;
         }
         if (Objects.equals(cl.label, "gameover-msg")) {
@@ -149,12 +156,16 @@ public class Reberu3 extends Reberu implements PlayableScreen {
                 switch (keycode) {
                     case Input.Keys.SPACE:
                     case Input.Keys.ENTER:
-                        if (state == State.INSTRUCTIONS && questionDrawable.state != QuestionDrawable.State.ASKING) {
-                            switchLine(curLineIndex + 1);
-                            if (curLineIndex >= daishi.lines.size()) {
-                                playScreen.invokePause();
-                                throw new RuntimeException("not impld yet");
-                            }
+                        switch (state) {
+                            case INSTRUCTIONS:
+                            case COMPLETE:
+                                if (questionDrawable.state != QuestionDrawable.State.ASKING) {
+                                    switchLine(curLineIndex + 1);
+                                    if (curLineIndex >= daishi.lines.size()) {
+                                        playScreen.invokePause();
+                                        throw new RuntimeException("not impld yet");
+                                    }
+                                }
                         }
                         break;
                     case Input.Keys.ESCAPE:
@@ -201,8 +212,8 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         float x, y;
         while (true) {
             x = new Random().nextFloat(1.8f, 8);
-            y = new Random().nextFloat(11f,12f);
-            if (Math.abs(prevItemX-x)<PREV_ITEM_THRESHOLD||Math.abs(prevItemY-y)<PREV_ITEM_THRESHOLD) {
+            y = new Random().nextFloat(11f, 12f);
+            if (Math.abs(prevItemX - x) < PREV_ITEM_THRESHOLD || Math.abs(prevItemY - y) < PREV_ITEM_THRESHOLD) {
                 continue;
             }
             Actor intersected = stage.hit(x, y, false);
@@ -211,8 +222,8 @@ public class Reberu3 extends Reberu implements PlayableScreen {
             }
             break;
         }
-        prevItemX=x;
-        prevItemY=y;
+        prevItemX = x;
+        prevItemY = y;
         BodyDef bd = new BodyDef();
         bd.type = BodyDef.BodyType.DynamicBody;
         bd.position.set(x, y);
@@ -268,6 +279,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
             yeetBodies();
         }
         checkHp();
+        checkClear();
     }
 
     private void setupContactListener() {
@@ -332,7 +344,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
 
     private void spawn() {
         spawnDelta.update();
-        if (spawnDelta.step() && (state == State.EXPLORE || state == State.COMPLETE)) {
+        if (spawnDelta.step() && (state == State.EXPLORE)) {
             spawnItem();
         }
     }
