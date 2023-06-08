@@ -1,3 +1,7 @@
+out-windows64/*
+out-windows64/!koseihoryuen*
+
+
 ## Direnv
 .direnv
 ## Java
