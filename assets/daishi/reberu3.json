@@ -50,7 +50,7 @@
       "label": "clear",
       "noInherit": true,
       "ten": "Instructions",
-      "body": "Wowzers! You completed the stage! Exit by pressing [Enter].",
+      "body": "Wowzers! You completed the stage! You can continue by pressing [W], and exit by pressing [Enter].",
       "action": "complete"
     },
     {
