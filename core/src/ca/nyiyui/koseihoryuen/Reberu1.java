@@ -69,7 +69,7 @@ public class Reberu1 extends Reberu {
                 switch (keycode) {
                     case Input.Keys.SPACE:
                     case Input.Keys.ENTER:
-                        if (state != State.EXPLORE && questionDrawable.state != QuestionDrawable.State.ASKING) {
+                        if (state != State.EXPLORE && state != State.COMPLETE && questionDrawable.state != QuestionDrawable.State.ASKING) {
                             switchLine(curLineIndex + 1);
                             if (curLineIndex >= daishi.lines.size()) {
                                 playScreen.invokePause();
