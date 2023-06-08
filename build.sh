@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+./gradlew desktop:dist
 java -jar './packr-all-4.0.0.jar' \
   --platform 'windows64' \
   --jdk './OpenJDK15U-jdk_x64_windows_hotspot_15.0.2_7.zip' \
