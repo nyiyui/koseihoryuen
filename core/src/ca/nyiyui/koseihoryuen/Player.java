@@ -51,7 +51,7 @@ public class Player extends Actor {
      */
     void unghost() {
         for (Fixture f : body.getFixtureList()) {
-            f.getFilterData().categoryBits = 1;
+            f.getFilterData().maskBits = 1;
         }
     }
 

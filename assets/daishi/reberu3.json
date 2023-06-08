@@ -27,6 +27,7 @@
       "body": "Good luck out there, young bee warrior!"
     },
     {
+      "label": "play",
       "noInherit": true,
       "action": "explore"
     },
@@ -51,7 +52,7 @@
       "noInherit": true,
       "ten": "Instructions",
       "body": "Wowzers! You completed the stage! You can continue by pressing [W], and exit by pressing [Enter].",
-      "action": "complete"
+      "action": "complete-w"
     },
     {
       "label": "clear-msg",

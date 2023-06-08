@@ -11,7 +11,8 @@ lines:
   - body: "However, be careful to be not hit by the flycatchers, pesticides, and EVIL human hands!"
   - body: "Once you collect enough pollen as indicated on the right, you win the game."
   - body: "Good luck out there, young bee warrior!"
-  - noInherit: true
+  - label: play
+    noInherit: true
     action: "explore"
   - label: gameover
     noInherit: true
@@ -27,7 +28,7 @@ lines:
     noInherit: true
     ten: Instructions
     body: "Wowzers! You completed the stage! You can continue by pressing [W], and exit by pressing [Enter]."
-    action: "complete"
+    action: "complete-w"
   - label: clear-msg
     ten: Instructions
     body: "You got a pog score! Play again nya~"
