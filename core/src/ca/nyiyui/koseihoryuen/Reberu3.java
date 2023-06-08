@@ -62,6 +62,11 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     private float prevItemX = -1;
     private float prevItemY = 0;
     private static float PREV_ITEM_THRESHOLD = 0.1f;
+    private boolean allowContinue = false;
+    /**
+     * whether player wants to play past completion.
+     */
+    private boolean pastCompletion = false;
 
     public Reberu3(Koseihoryuen game) {
         super(game);
@@ -92,7 +97,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         param.borderWidth = 2;
         debugFont = game.font.generateFont(param);
         reberu3Debug = new Reberu3Debug(this);
-        if (game.DEBUG_MODE)overlayStage.addActor(reberu3Debug);
+        if (game.DEBUG_MODE) overlayStage.addActor(reberu3Debug);
         lineActor = new LineActor();
         overlayStage.addActor(lineActor);
         DAISHI_PATH = "daishi/reberu3.json";
@@ -118,7 +123,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     }
 
     private void checkClear() {
-        if (hud.score() > 1000) {
+        if (hud.score() > 1000 && !pastCompletion) {
             switchLine("clear");
         }
     }
@@ -133,11 +138,12 @@ public class Reberu3 extends Reberu implements PlayableScreen {
             case "explore":
                 state = State.EXPLORE;
                 break;
+            case "complete-w":
+                allowContinue = true;
             case "complete":
                 state = State.COMPLETE;
                 player.body.setLinearVelocity(new Vector2());
                 player.ghost();
-                player.hp = 0; // bodge :)
                 break;
             case "reset":
                 game.setScreen(new TitleScreen(game));
@@ -166,6 +172,14 @@ public class Reberu3 extends Reberu implements PlayableScreen {
                                         throw new RuntimeException("not impld yet");
                                     }
                                 }
+                        }
+                        break;
+                    case Input.Keys.W:
+                        if (allowContinue) {
+                            pastCompletion = true;
+                            state = State.EXPLORE;
+                            player.unghost();
+                            switchLine("play");
                         }
                         break;
                     case Input.Keys.ESCAPE:
@@ -261,7 +275,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         overlayStage.act(delta);
         overlayStage.draw();
         game.batch.begin();
-        if (game.DEBUG_MODE)debugRenderer.render(world, cam.combined);
+        if (game.DEBUG_MODE) debugRenderer.render(world, cam.combined);
         game.batch.end();
         spawn();
         game.batch.begin();
@@ -424,7 +438,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         @Override
         public void act(float delta) {
             super.act(delta);
-            hpLabel.setText(String.format("HP: %d", player.hp));
+            hpLabel.setText(String.format("HP: %d", player.hp > 0 ? player.hp : 0));
             pollenCountLabel.setText(String.format("Pollen Count: %d", player.pollenCount));
             scoreLabel.setText(String.format("Score: %d", score()));
         }
