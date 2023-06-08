@@ -13,6 +13,7 @@
         openjdk
         imagemagick
         yq
+        zstd
       ];
     };
   });

@@ -1,6 +1,4 @@
-out-windows64/*
-out-windows64/!koseihoryuen*
-
+out-windows64
 
 ## Direnv
 .direnv
