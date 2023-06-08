@@ -30,7 +30,7 @@ public class Koseihoryuen extends Game {
     BitmapFont debugFont;
     AssetManager assetManager;
 
-    public static boolean DEBUG_MODE = true;
+    public static boolean DEBUG_MODE = false;
 
     @Override
     public void create() {

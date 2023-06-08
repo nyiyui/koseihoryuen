@@ -92,7 +92,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         param.borderWidth = 2;
         debugFont = game.font.generateFont(param);
         reberu3Debug = new Reberu3Debug(this);
-        overlayStage.addActor(reberu3Debug);
+        if (game.DEBUG_MODE)overlayStage.addActor(reberu3Debug);
         lineActor = new LineActor();
         overlayStage.addActor(lineActor);
         DAISHI_PATH = "daishi/reberu3.json";
@@ -261,7 +261,7 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         overlayStage.act(delta);
         overlayStage.draw();
         game.batch.begin();
-        debugRenderer.render(world, cam.combined);
+        if (game.DEBUG_MODE)debugRenderer.render(world, cam.combined);
         game.batch.end();
         spawn();
         game.batch.begin();
