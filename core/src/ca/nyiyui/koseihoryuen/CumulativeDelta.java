@@ -3,6 +3,14 @@ package ca.nyiyui.koseihoryuen;
 import com.badlogic.gdx.Gdx;
 
 /**
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: June 9, 2023
+ * Purpose: helper class to accumulate delta time (between frames) and take action (e.g. run physics simulation step every 1/30th of a second)
+ * Contributions: Ken --> everything
+ */
+
+/**
  * Utility class to make threshold-based cumulative delta times.
  */
 public class CumulativeDelta {
