@@ -18,9 +18,12 @@ Dependencies: GNU make, JDK 18
 - Run DesktopLauncher - `cd core/src/ca/nyiyui/koseihoryuen/DesktopLauncher.java`
 
 ### How to Play
-To continue to through dialogue and interact with NPCs/objects --> Enter key
-To move --> WASD or arrow keys
+**To continue to through dialogue and interact with NPCs/objects** --> Enter key
+**To move** --> WASD or arrow keys
 Or, just follow the instructions on the screen :D
+**In Testing Stage** --> answer questions by selecting options with ABCD keys
+**In Gaming Stage** --> only collect pollen (yellow stuff), don't touch any other objects or you'll lose HP!
+
 
 ## Bibliography
 
