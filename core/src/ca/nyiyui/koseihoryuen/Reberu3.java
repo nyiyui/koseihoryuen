@@ -243,7 +243,8 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         bd.position.set(x, y);
         Body b = world.createBody(bd);
         final float impulseMagnitude = impulseMagnitude();
-        b.applyLinearImpulse(new Random().nextFloat(-impulseMagnitude, impulseMagnitude), new Random().nextFloat(-impulseMagnitude, impulseMagnitude), 0, 0, true);
+        float rand = new Random().nextFloat() * 2 * impulseMagnitude - impulseMagnitude;
+        b.applyLinearImpulse(rand, rand, 0, 0, true);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(.25f, .25f);
         FixtureDef fd = new FixtureDef();
