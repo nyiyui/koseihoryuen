@@ -4,6 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 
+/**
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: June 9, 2023
+ * Purpose: handles pausing
+ * Contributions: Ken -> everything
+ */
+
 public class PlayScreen extends ScreenAdapter2 {
     private static final int GAME_STATE_RUNNING = 1;
     private static final int GAME_STATE_PAUSED = 2;

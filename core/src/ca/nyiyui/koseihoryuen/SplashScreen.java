@@ -10,6 +10,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
+/**
+ * Names: Ivy & Ken
+ * Teacher: Ms. Krasteva
+ * Date: Jun 9th, 2023
+ * Purpose: Splash screen!
+ * Contribution: Ken -> everything
+ */
+
 public class SplashScreen extends ScreenAdapter2 {
     private Texture logoVi;
     private Texture logo;

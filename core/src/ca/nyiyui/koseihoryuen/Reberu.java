@@ -18,6 +18,7 @@ import java.io.IOException;
  * Date: June 9, 2023
  * Purpose: screen shown to user when choosing which stage/level to play
  * Contributions: Ken --> basically everything, Ivy --> cleaning up/debugging
+ *   orz Ivy how so good tyvm for cleaning up -nyiyui
  */
 public abstract class Reberu extends ScreenAdapter2 implements PlayableScreen {
     protected static final int MOVEMENT_COEFF = 0xff;

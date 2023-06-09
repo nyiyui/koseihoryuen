@@ -7,6 +7,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
+/**
+ * Names: Ivy & Ken
+ * Teacher: Ms Krasteva
+ * Date: June 9, 2023
+ * Purpose: generic Screen for selecting multiple options (e.g. main menu, level select)
+ * Contributions: Ken -> everything
+ */
+
 public abstract class SelectScreen extends ScreenAdapter2 {
     protected String options[];
     BitmapFont optionFont;

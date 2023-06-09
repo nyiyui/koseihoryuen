@@ -15,7 +15,7 @@ import java.util.Random;
  * Names: Ivy & Ken
  * Teacher: Ms Krasteva
  * Date: May 23, 2023
- * Purpose: stage 3 fallee (item)
+ * Purpose: stage 3 fallee (items like hands and pollen)
  * Contributions: Ken did all of this class
  */
 

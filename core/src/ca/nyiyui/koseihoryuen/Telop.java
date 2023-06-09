@@ -20,7 +20,7 @@ import java.util.Objects;
  * Names: Ivy & Ken
  * Teacher: Ms Krasteva
  * Date: June 9, 2023
- * Purpose: Draws an adjustable-width telop.
+ * Purpose: Draws an adjustable-width telop (superimposed text in a box).
  * Contributions: Ken --> everything
  */
 public class Telop extends BaseDrawable {

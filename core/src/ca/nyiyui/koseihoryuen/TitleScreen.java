@@ -4,6 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
+/**
+ * Names: Ivy & Ken
+ * Teacher: Ms. Krasteva
+ * Date: Jun 9th, 2023
+ * Purpose: Title screen / main menu!
+ * Contribution: Ken -> everything
+ */
+
 public class TitleScreen extends SelectScreen {
     private Texture backdrop;
 
