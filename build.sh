@@ -12,4 +12,4 @@ java -jar './packr-all-4.0.0.jar' \
   --resources 'assets' \
   --output 'out-windows64'
 tar czvf out-windows64.tar.zst out-windows64
-git lfs track 'out-windows64.tar.zst'
+#git lfs track 'out-windows64.tar.zst'

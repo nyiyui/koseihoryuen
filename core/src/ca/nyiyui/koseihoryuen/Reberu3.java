@@ -414,7 +414,6 @@ public class Reberu3 extends Reberu implements PlayableScreen {
 
     class HUD extends Actor {
         private Label hpLabel;
-        private Label bossHpLabel;
         private Label pollenCountLabel;
         private Label scoreLabel;
 
@@ -425,15 +424,12 @@ public class Reberu3 extends Reberu implements PlayableScreen {
             hpLabel = new Label("HP: ", ls);
             hpLabel.setX(11 * 60);
             hpLabel.setY(10 * 60);
-            bossHpLabel = new Label("Boss HP: ", ls);
-            bossHpLabel.setX(11 * 60);
-            bossHpLabel.setY(10 * 60 - 30);
             pollenCountLabel = new Label("Pollen Count: ", ls);
             pollenCountLabel.setX(11 * 60);
-            pollenCountLabel.setY(10 * 60 - 30 * 2);
+            pollenCountLabel.setY(10 * 60 - 30);
             scoreLabel = new Label("Score: ", ls);
             scoreLabel.setX(11 * 60);
-            scoreLabel.setY(10 * 60 - 30 * 3);
+            scoreLabel.setY(10 * 60 - 30 * 2);
         }
 
         @Override
@@ -452,7 +448,6 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         public void draw(Batch batch, float parentAlpha) {
             super.draw(batch, parentAlpha);
             hpLabel.draw(batch, parentAlpha);
-            bossHpLabel.draw(batch, parentAlpha);
             pollenCountLabel.draw(batch, parentAlpha);
             scoreLabel.draw(batch, parentAlpha);
         }
