@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*; // i love star imports
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -225,8 +225,8 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     private void spawnItem() {
         float x, y;
         while (true) {
-            x = new Random().nextFloat(1.8f, 8);
-            y = new Random().nextFloat(11f, 12f);
+            x = new Random().nextFloat() * (8f - 1.8f) + 1.8f;
+            y = new Random().nextFloat() + 11f;
             if (Math.abs(prevItemX - x) < PREV_ITEM_THRESHOLD || Math.abs(prevItemY - y) < PREV_ITEM_THRESHOLD) {
                 continue;
             }
