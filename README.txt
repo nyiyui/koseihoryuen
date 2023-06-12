@@ -27,5 +27,4 @@ Or, just follow the instructions on the screen :D
 
 ## Bibliography
 
-- `assets/src/stage3-ananas.png` - from https://www.irasutoya.com/2012/11/blog-post_5.html (retrieved 2023-05-30)
 - `assets/images/cirno.png` - from https://www.pixiv.net/en/artworks/108954025 (retrieved 2023-05-30)
