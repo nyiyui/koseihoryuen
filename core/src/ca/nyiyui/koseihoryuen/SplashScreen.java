@@ -51,6 +51,8 @@ public class SplashScreen extends ScreenAdapter2 {
         elapsed += (long) (delta * 1000);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        if (!game.assetManager.isFinished())
+            game.assetManager.update(1);
         game.batch.begin();
         if (elapsed < 2000) {
             Sprite logoSprite = new Sprite(logoVi);
@@ -79,9 +81,11 @@ public class SplashScreen extends ScreenAdapter2 {
             s.setY(game.camera.viewportHeight / 2 - logo.getHeight() / 2);
             s.draw(game.batch);
         } else if (elapsed >= 7000) {
-            if (game.assetManager.isFinished())
-            game.setScreen(new TitleScreen(game));
-            game.assetManager.update(100);
+            if (game.assetManager.update(100))
+                game.setScreen(new TitleScreen(game));
+        }
+        if (game.assetManager.isFinished()) {
+            renderText(game.debugFont, "Assets loaded.", game.camera.viewportWidth / 2, 50);
         }
         game.batch.end();
     }

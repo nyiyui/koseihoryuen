@@ -39,7 +39,7 @@ public class Koseihoryuen extends Game {
         img = new Texture("badlogic.jpg");
         font = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoMono/RobotoMono-VariableFont_wght.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        param.size = 12;
+        param.size = 16;
         param.color = new Color(0x000000ff);
         param.borderColor = new Color(0xffffffff);
         param.borderWidth = 2;
@@ -73,7 +73,6 @@ public class Koseihoryuen extends Game {
         assetManager.load("images/telop2.png", Texture.class);
         assetManager.load("images/star1.png", Texture.class);
         assetManager.load("images/star2.png", Texture.class);
-        assetManager.finishLoading();
         Box2D.init();
         setScreen(new SplashScreen(this));
     }
