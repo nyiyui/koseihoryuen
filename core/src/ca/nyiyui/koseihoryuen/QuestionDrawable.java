@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
@@ -67,8 +68,8 @@ public class QuestionDrawable extends BaseDrawable implements Disposable {
         ls.font = descFont;
         descLabel = new Label(descText, ls);
         descLabel.setWrap(true);
-        beeCorrect = new Texture(Gdx.files.internal("images/beeExit.png"));
-        beeWrong = new Texture(Gdx.files.internal("images/beeWrong.png"));
+        beeCorrect=game.assetManager.get("images/beeExit.png");
+        beeWrong=game.assetManager.get("images/beeWrong.png");
     }
 
     public void setDescText(String descText) {

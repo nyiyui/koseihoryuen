@@ -21,8 +21,7 @@ public class TitleScreen extends SelectScreen {
                 "Game Start",
                 "Exit",
         };
-//        backdrop = new Texture(Gdx.files.internal("images/title-screen-bg.png"));
-    backdrop = new Texture(Gdx.files.internal("images/yukarikamome.png"));
+        backdrop=game.assetManager.get("images/yukarikamome.png");
     }
 
     @Override

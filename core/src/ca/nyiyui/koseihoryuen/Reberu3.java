@@ -53,7 +53,6 @@ public class Reberu3 extends Reberu implements PlayableScreen {
     private CumulativeDelta physicsDelta;
     private CumulativeDelta spawnDelta;
     private static int PHYSICS_FPS = 60;
-    private Texture textureAnanas;
     private ContactListener contactListener;
     private CumulativeDelta yeetDelta;
     private Texture textureBg;
@@ -89,7 +88,6 @@ public class Reberu3 extends Reberu implements PlayableScreen {
         spawnDelta = new CumulativeDelta(1f / 2f);
         yeetDelta = new CumulativeDelta(1f / 60f);
         cleanupDelta = new CumulativeDelta(1);
-        textureAnanas = new Texture(Gdx.files.internal("images/stage3-ananas.png"));
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
         param.size = 22;
         param.color = new Color(0x000000ff);

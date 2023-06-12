@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
  */
 
 public class SplashScreen extends ScreenAdapter2 {
+    private final Texture cirno;
     private Texture logoVi;
     private Texture logo;
     BitmapFont presentsFont;
@@ -32,6 +33,7 @@ public class SplashScreen extends ScreenAdapter2 {
         presentsFont = game.font.generateFont(param);
         logoVi = new Texture(Gdx.files.internal("images/logo-vi.png"));
         logo = new Texture(Gdx.files.internal("images/logo.png"));
+        cirno = new Texture(Gdx.files.internal("images/cirno.png"));
     }
 
     @Override
@@ -85,7 +87,12 @@ public class SplashScreen extends ScreenAdapter2 {
                 game.setScreen(new TitleScreen(game));
         }
         if (game.assetManager.isFinished()) {
-            renderText(game.debugFont, "Assets loaded.", game.camera.viewportWidth / 2, 50);
+            game.batch.draw(cirno, 0, 0, 80, 80);
+            game.debugFont.draw(game.batch, "All assets loaded.", 100, 50);
+        } else {
+            float progress = game.assetManager.getProgress();
+            game.batch.draw(cirno, 0, (1 - progress) * (game.camera.viewportHeight), 80, 80);
+            game.debugFont.draw(game.batch, String.format("%2s%%", (int) (100 * progress)), 100, 50);
         }
         game.batch.end();
     }
