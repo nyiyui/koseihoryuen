@@ -1,4 +1,4 @@
-# Survibee! \~南方 虹西方龍園\~
+# Survibee! ~南方 虹西方龍園~
 
 
 High school ICS course final project: Survibee! ~Nampou Kōseihōryūən~
@@ -22,10 +22,9 @@ Dependencies: GNU make, JDK 18
 **To move** --> WASD or arrow keys
 Or, just follow the instructions on the screen :D
 **In Testing Stage** --> answer questions by selecting options with ABCD keys
-**In Gaming Stage** --> only collect pollen (yellow stuff), don't touch any other objects or you'll lose HP!
+**In Gaming Stage** --> only collect pollen (circular yellow stuff with no overlaps), don't touch any other objects or you'll lose HP!
 
 
 ## Bibliography
 
-- `assets/src/stage3-ananas.png` - from https://www.irasutoya.com/2012/11/blog-post_5.html (retrieved 2023-05-30)
 - `assets/images/cirno.png` - from https://www.pixiv.net/en/artworks/108954025 (retrieved 2023-05-30)
