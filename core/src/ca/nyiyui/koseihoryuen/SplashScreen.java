@@ -41,7 +41,7 @@ public class SplashScreen extends ScreenAdapter2 {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
-                if (keycode == Input.Keys.SPACE)
+                if (keycode == Input.Keys.SPACE&& game.assetManager.isFinished())
                     game.setScreen(new TitleScreen(game));
                 return true;
             }
