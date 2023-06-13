@@ -27,6 +27,10 @@ public class Reberu2 extends Reberu implements PlayableScreen {
      */
     private Texture bg;
     /**
+     * on screen instructions for how to move interact with items.
+     */
+    private Texture inst;
+    /**
      * item for the city.
      */
     private Reberu2Item city;
@@ -60,6 +64,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         progressBar = game.assetManager.get("images/stage2-rectangle.png");
         correctButton = game.assetManager.get("images/stage2-correct-button.png");
         wrongButton = game.assetManager.get("images/stage2-wrong-button.png");
+        inst = game.assetManager.get("images/instruction1.png");
         bg = game.assetManager.get("images/stage2-bg.png");
         city = new Reberu2Item(game.assetManager.<Texture>get("images/stage2-city.png"), 100, 450);
         gas = new Reberu2Item(game.assetManager.<Texture>get("images/stage2-greenhouse-gas.png"), 160, 30);
@@ -110,6 +115,7 @@ public class Reberu2 extends Reberu implements PlayableScreen {
         switch (state) {
             case EXPLORE:
                 game.batch.draw(bg, 0, 0);
+                game.batch.draw(inst, game.camera.viewportWidth - inst.getWidth() - 10, game.camera.viewportHeight - inst.getHeight() - 10);
                 game.batch.draw(city.image, city.getX(), city.getY());
                 game.batch.draw(pest.image, pest.getX(), pest.getY());
                 game.batch.draw(gas.image, gas.getX(), gas.getY());

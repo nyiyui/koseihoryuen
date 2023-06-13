@@ -1,9 +1,8 @@
 package ca.nyiyui.koseihoryuen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
@@ -22,9 +21,14 @@ public abstract class SelectScreen extends ScreenAdapter2 {
     int optionSel = 0;
     protected int BASE_X = 800;
     protected int BASE_Y = 200;
+    /**
+     * tells user instruction for selecting options
+     */
+    protected Texture inst;
 
     public SelectScreen(Koseihoryuen game) {
         super(game);
+        inst = game.assetManager.get("images/instruction2.png");
         FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
         param.size = 36;
         param.borderColor = new Color(0x86cecbff);
@@ -37,34 +41,13 @@ public abstract class SelectScreen extends ScreenAdapter2 {
     }
 
     @Override
-    public void show() {
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyDown(int keycode) {
-                switch (keycode) {
-                    case Input.Keys.SPACE:
-                    case Input.Keys.ENTER:
-                        act();
-                    case Input.Keys.UP:
-                        optionSel--;
-                        optionSel += options.length;
-                        optionSel %= options.length;
-                        break;
-                    case Input.Keys.DOWN:
-                        optionSel++;
-                        optionSel += options.length;
-                        optionSel %= options.length;
-                        break;
-                }
-                return true;
-            }
-        });
-    }
+    public abstract void show();
 
     abstract protected void act();
 
     /**
      * Returns the x coord of the ith entry.
+     *
      * @param i entry index
      * @return
      */
@@ -74,11 +57,12 @@ public abstract class SelectScreen extends ScreenAdapter2 {
 
     /**
      * Returns the y coord of the ith entry.
+     *
      * @param i entry index
      * @return
      */
     protected float getY(int i) {
-        return BASE_Y +70*(options.length-i-1);
+        return BASE_Y + 70 * (options.length - i - 1);
     }
 
     @Override

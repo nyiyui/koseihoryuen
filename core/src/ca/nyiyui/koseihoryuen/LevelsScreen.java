@@ -111,14 +111,15 @@ public class LevelsScreen extends SelectScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
         game.batch.draw(bg, 0, 0);
+        game.batch.draw(inst, 0, 10, 450, 450);
         for (int i = 0; i < options.length; i++) {
             final GlyphLayout layout = new GlyphLayout(optionSelFont, options[i]);
-            final float offset=-64;
+            final float offset = -64;
             if (optionSel == i) {
-                game.batch.draw(selStar, getX(i)-layout.width/2+offset, getY(i) - unselStar.getHeight() / 2);
+                game.batch.draw(selStar, getX(i) - layout.width / 2 + offset, getY(i) - unselStar.getHeight() / 2);
                 renderText(optionSelFont, options[i], getX(i), getY(i));
             } else {
-                game.batch.draw(unselStar, getX(i)-layout.width/2+offset, getY(i) - unselStar.getHeight() / 2);
+                game.batch.draw(unselStar, getX(i) - layout.width / 2 + offset, getY(i) - unselStar.getHeight() / 2);
                 renderText(optionFont, options[i], getX(i), getY(i));
             }
         }

@@ -23,6 +23,7 @@ public class Reberu1 extends Reberu {
     private final Texture background;
     private final Texture pathway;
     private final Texture spriteBeeNPC;
+    private final Texture inst;
     private boolean playerSpriteIsLarge;
     private ArrayList<NPC> npcs;
     /**
@@ -50,6 +51,7 @@ public class Reberu1 extends Reberu {
         background = game.assetManager.get("images/stage1-bg.png");
         pathway = game.assetManager.get("images/stage1-pathway.png");
         spriteBeeNPC = game.assetManager.get("images/beeNPC.png");
+        inst = game.assetManager.get("images/instruction1.png");
         playerX = 0;
         playerY = 0;
         npcs = new ArrayList<>();
@@ -116,13 +118,14 @@ public class Reberu1 extends Reberu {
                 break;
             case EXPLORE:
                 game.batch.draw(pathway, 0, 0);
+                game.batch.draw(inst, game.camera.viewportWidth - inst.getWidth() - 10, 10);
                 for (int i = 0; i < npcs.size(); i++) {
                     NPC npc = npcs.get(i);
                     game.batch.draw(spriteBeeNPC, npc.x - spriteBeeNPC.getWidth() / 2, npc.y - spriteBeeNPC.getHeight() / 2);
                 }
                 handleMovement(delta);
                 checkNPCInteraction();
-                game.batch.draw(playerSpriteIsLarge ? playerSpriteLarge : playerSpriteSmall, playerX - playerSpriteSmall.getWidth() / 2, playerY - playerSpriteSmall.getHeight() / 2);
+                game.batch.draw(playerSpriteIsLarge ? playerSpriteLarge : playerSpriteSmall, playerX, playerY);
                 break;
             case COMPLETE:
                 game.batch.draw(background, 0, 0);
