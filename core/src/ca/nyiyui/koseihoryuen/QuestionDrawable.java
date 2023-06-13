@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
@@ -30,10 +29,16 @@ public class QuestionDrawable extends BaseDrawable implements Disposable {
      */
     private final Telop optsT;
     /**
-     *
+     * contains question text
      */
     private String descText;
+    /**
+     * label for question text, defines text bounds
+     */
     private Label descLabel;
+    /**
+     * font question is displayed in
+     */
     private BitmapFont descFont;
     private List<KeyPair<String>> keyPairs;
     private Question question;
@@ -42,6 +47,7 @@ public class QuestionDrawable extends BaseDrawable implements Disposable {
      * image shown when user gets question right or wrong.
      */
     private Texture beeWrong, beeCorrect;
+    private Texture inst;
 
 
     enum State {
@@ -68,8 +74,9 @@ public class QuestionDrawable extends BaseDrawable implements Disposable {
         ls.font = descFont;
         descLabel = new Label(descText, ls);
         descLabel.setWrap(true);
-        beeCorrect=game.assetManager.get("images/beeExit.png");
-        beeWrong=game.assetManager.get("images/beeWrong.png");
+        beeCorrect = game.assetManager.get("images/beeExit.png");
+        beeWrong = game.assetManager.get("images/beeWrong.png");
+        inst = game.assetManager.get("images/instruction3.png");
     }
 
     public void setDescText(String descText) {
@@ -96,12 +103,12 @@ public class QuestionDrawable extends BaseDrawable implements Disposable {
                 descLabel.setAlignment(Align.left);
                 break;
             case CORRECT:
-                batch.draw(beeCorrect, (width - beeCorrect.getWidth() / 2) / 2, (height) / 2 - beeCorrect.getHeight() / 4);
+                batch.draw(beeCorrect, (width - beeCorrect.getWidth() / 2) / 2, (height) / 2 - beeCorrect.getHeight() / 2);
                 descLabel.setText("Correct!");
                 descLabel.setAlignment(Align.center);
                 break;
             case WRONG:
-                batch.draw(beeWrong, (width - beeWrong.getWidth() / 2) / 2, (height) / 2 - beeWrong.getHeight() / 4);
+                batch.draw(beeWrong, (width - beeWrong.getWidth() / 2) / 2, (height) / 2 - beeWrong.getHeight() / 2);
                 descLabel.setText("Wrong! L BOZO!");
                 descLabel.setAlignment(Align.center);
         }
@@ -113,6 +120,7 @@ public class QuestionDrawable extends BaseDrawable implements Disposable {
         descLabel.setX(x + 2 * padding);
         descLabel.setY(y + 3 * padding);
         descLabel.draw(batch, 1);
+        batch.draw(inst, width - inst.getWidth() - 10, height - inst.getHeight() - 10);
     }
 
     public void handleInput() {

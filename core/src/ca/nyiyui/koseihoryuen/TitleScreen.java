@@ -75,6 +75,7 @@ public class TitleScreen extends SelectScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
         game.batch.draw(backdrop, 0, 0);
+        game.batch.draw(inst, 0, 10, 450, 450);
         super.render(delta);
         game.batch.end();
     }
