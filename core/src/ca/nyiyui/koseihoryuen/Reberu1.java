@@ -58,7 +58,7 @@ public class Reberu1 extends Reberu {
         npcs.add(new NPC(380, 700, "idobee1"));
         npcs.add(new NPC(850, 550, "bee2"));
         npcs.add(new NPC(520, 260, "immabee3"));
-        npcs.add(new NPC(50, 240, "exit"));
+        npcs.add(new NPC(70, 270, "exit"));
         npcInteractions = new boolean[npcs.size()];
         switchLine(0);
     }
@@ -119,6 +119,7 @@ public class Reberu1 extends Reberu {
             case EXPLORE:
                 game.batch.draw(pathway, 0, 0);
                 game.batch.draw(inst, game.camera.viewportWidth - inst.getWidth() - 10, 10);
+                renderText(titleFont, "EXIT", 70, game.camera.viewportHeight / 2 + 10);
                 for (int i = 0; i < npcs.size(); i++) {
                     NPC npc = npcs.get(i);
                     game.batch.draw(spriteBeeNPC, npc.x - spriteBeeNPC.getWidth() / 2, npc.y - spriteBeeNPC.getHeight() / 2);

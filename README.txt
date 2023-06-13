@@ -9,6 +9,7 @@ DesktopLauncher: Run the Gradle task `other:run`
 
 HTML/web: Run the Gradle task `superDev`
 
+Google Classroom: run `out-windows64/koseihoryuen.exe` in the `out-windows64` folder (as the working directory).
 
 ### Without Gradle
 
